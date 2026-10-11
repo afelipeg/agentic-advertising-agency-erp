@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: Existing tag to (re)build assets for
+        description: Tag to create (if missing) on the selected branch and publish assets for, e.g. v0.3.0
         required: true
 permissions:
   contents: write
@@ -16,9 +16,8 @@ jobs:
       TAG: ${{ github.event.inputs.tag || github.ref_name }}
       GH_TOKEN: ${{ github.token }}
     steps:
+      # Tag push: builds the tagged commit. Manual run: builds the selected branch and creates the tag on it.
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.TAG }}
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -31,6 +30,6 @@ jobs:
       - name: Create or update the GitHub release
         run: |
           if ! gh release view "$TAG" >/dev/null 2>&1; then
-            gh release create "$TAG" --title "Agency ERP $TAG" --notes-file .github/release-notes.md
+            gh release create "$TAG" --target "$GITHUB_SHA" --title "Agency ERP $TAG" --notes-file .github/release-notes.md --latest
           fi
           gh release upload "$TAG" dist/release/* --clobber
