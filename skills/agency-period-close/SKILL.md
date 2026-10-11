@@ -1,6 +1,6 @@
 ---
 name: agency-period-close
-description: "Sequence and verify the agency monthly and fiscal-year close: subledger pre-close, ordered close jobs, mandatory gates, post-close reconciliations, reopen cascade and year re-close. Use when a month or year must be closed or reopened. Do not post entries, lock periods or overwrite posted history in a closed period."
+description: "Sequences the monthly and year-end close: subledger pre-close, ordered close jobs, mandatory gates, reconciliations and reopen rules. Use to close or reopen a period."
 ---
 
 # Agency Period Close

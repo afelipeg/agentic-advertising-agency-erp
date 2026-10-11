@@ -1,6 +1,6 @@
 ---
 name: agency-contract-po
-description: "Turn signed client agreements and client purchase orders into enforceable PO limits, document links, PO transfers and budget-reserve rules. Use when a client PO or reserve must govern estimates and media plans. Do not treat an unsigned quote as spending authority or link documents created before the PO."
+description: "Turns signed client agreements and client POs into PO limits, document links, transfers and budget reserves. Use when a client PO must govern spend. Unsigned quotes are not authority."
 ---
 
 # Client Agreements and POs

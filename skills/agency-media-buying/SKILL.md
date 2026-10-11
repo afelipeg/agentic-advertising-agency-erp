@@ -1,6 +1,6 @@
 ---
 name: agency-media-buying
-description: "Prepare insertion orders from client-approved schedules: split keys, approval and credit gates, buy pricing, versioning that cancels and replaces, send packs, close and reopen guards, vendor changes. Use when spots must be ordered or an order changed. Do not treat a draft order or an unapproved plan as a commitment."
+description: "Prepares insertion orders from client-approved schedules with credit gates, versioning (cancels and replaces), sending and close/reopen rules. Use when spots must be ordered or changed."
 ---
 
 # Media Buying: Insertion Orders

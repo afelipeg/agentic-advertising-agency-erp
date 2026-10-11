@@ -37,7 +37,7 @@ def check():
         else:
             try:
                 description=json.loads(match[2])
-                if not 40<=len(description)<=1024: errors.append(f'{skill.name}: description length outside 40..1024')
+                if not 40<=len(description)<=200: errors.append(f'{skill.name}: description length outside 40..200 (Claude app upload limit)')
                 if skill.name in by_name and by_name[skill.name]['description']!=description: errors.append(f'{skill.name}: description differs from workflow catalogue')
             except ValueError: errors.append(f'{skill.name}: invalid description string')
         if len(text.splitlines())>500 or '[TODO' in text: errors.append(f'{skill.name}: unfinished or oversized instructions')
@@ -65,8 +65,10 @@ def check():
     if uncovered: errors.append('Skills without behavior scenarios: '+', '.join(uncovered))
     for path in ROOT.rglob('*.json'):
         if '.git' not in path.parts and 'node_modules' not in path.parts: json.loads(path.read_text())
-    for required in ('README.md','README.es.md','LICENSE','AGENTS.md','docs/workflow.md','docs/architecture.md','docs/erp-reference/e2e-circuit.md','tools/mcp_server.py','scripts/demo.py','.claude-plugin/marketplace.json','.claude-plugin/plugin.json'):
+    for required in ('README.md','README.es.md','LICENSE','AGENTS.md','docs/workflow.md','docs/architecture.md','docs/erp-reference/e2e-circuit.md','tools/mcp_server.py','scripts/demo.py','.claude-plugin/marketplace.json','.claude-plugin/plugin.json','gemini-extension.json','GEMINI.md','scripts/build_release.py'):
         if not (ROOT/required).is_file(): errors.append('Missing '+required)
+    versions={json.loads((ROOT/f).read_text())['version'] for f in ('package.json','.claude-plugin/plugin.json','gemini-extension.json')}
+    if len(versions)!=1: errors.append('package.json, plugin.json and gemini-extension.json versions differ')
     if errors: print('\n'.join(errors),file=sys.stderr);return 1
     print(f'Package checks passed: {len(names)} skills, {len(SCHEMAS)} local tools, {len(cases)} synthetic behavior cases, self-contained resources.')
     return 0

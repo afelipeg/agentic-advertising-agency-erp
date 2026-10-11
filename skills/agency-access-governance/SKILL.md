@@ -1,6 +1,6 @@
 ---
 name: agency-access-governance
-description: "Reviews agency ERP access: roles and profiles, action levels 1-6, cost visibility A-D, approval powers as capabilities, SoD conflicts, configuration-change control, audit evidence and offboarding. Use when granting, reviewing or removing access or changing system parameters. Do not grant access yourself or approve your own change."
+description: "Reviews roles, approval powers, cost visibility and segregation of duties; controls config changes and offboarding. Use when granting or auditing access. Never grants access itself."
 ---
 
 # Govern Access and Configuration

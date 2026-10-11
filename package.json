@@ -1,6 +1,6 @@
 {
   "name": "agentic-advertising-agency-erp",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Portable agency ERP agent skills (42) with deterministic calculators, MCP wiring, an ERP functional reference and evaluation contracts.",
   "license": "MIT",
   "author": {
@@ -51,7 +51,9 @@
     "LICENSE",
     "README.md",
     "README.es.md",
-    "CONTRIBUTING.md"
+    "CONTRIBUTING.md",
+    "gemini-extension.json",
+    "GEMINI.md"
   ],
   "scripts": {
     "test": "python3 -m unittest discover -s tests -v && node --test tests/installer.test.mjs",
@@ -60,7 +62,8 @@
     "prepare-release": "npm run sync && npm run check && npm test && npm run eval",
     "demo": "node bin/agency-erp.mjs demo",
     "mcp": "python3 tools/mcp_server.py",
-    "sync": "python3 scripts/sync_resources.py"
+    "sync": "python3 scripts/sync_resources.py",
+    "release-assets": "python3 scripts/build_release.py"
   },
   "repository": {
     "type": "git",
@@ -75,8 +78,11 @@
     "agent-skills",
     "claude-code",
     "claude-plugin",
+    "claude-skills",
     "codex",
     "erp",
+    "gemini-cli",
+    "gemini-extension",
     "mcp",
     "media-buying"
   ],

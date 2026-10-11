@@ -1,6 +1,6 @@
 ---
 name: agency-profitability
-description: "Analyzes job, client and media profitability: gross income, valued hours, direct expenses, contribution margin and overhead allocated by contribution share, with managed media spend kept apart. Use for job P&L, client profitability or margin reviews. Do not treat campaign ROAS or pass-through spend as agency profit, and do not post entries."
+description: "Analyzes job, client and media profitability: gross income, valued hours, expenses, contribution and overhead allocation, with media spend kept apart. Use for margin reviews."
 ---
 
 # Agency Profitability

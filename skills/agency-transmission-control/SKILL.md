@@ -1,6 +1,6 @@
 ---
 name: agency-transmission-control
-description: "Verify that ordered TV and radio spots aired: import monitoring files, map codes, auto match in normal or tolerance mode, manual and bulk control, ordered-not-aired and aired-not-ordered lists, makegood proposals and close prerequisites. Use before closing orders. Do not certify delivery because a supplier invoice exists."
+description: "Checks ordered TV and radio spots against monitoring data: auto and manual matching, missing or extra spots, makegoods, close readiness. Use before closing orders. An invoice is not proof."
 ---
 
 # Transmission Control (Spot Verification)

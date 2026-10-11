@@ -1,6 +1,6 @@
 ---
 name: agency-ooh-inventory
-description: "Run seller-side billboard inventory for a media owner: faces and states, availability, reservations converted to orders with monthly sub-orders, face and motif assignment, posting batches, and advertiser agreements with prepaid balance. Use when selling or posting OOH faces you own. Do not use for an agency buying OOH from vendors."
+description: "Runs a media owner's billboard inventory: faces, availability, reservations to orders, posting batches and prepaid advertiser agreements. Use when selling OOH faces you own."
 ---
 
 # OOH Inventory (Media-Owner Vertical)

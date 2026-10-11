@@ -1,6 +1,6 @@
 ---
 name: agency-collections
-description: "Prepare customer receipts applying cash, cheques, transfers and withholding certificates to open invoices, customer advances and re-application, plus credit exposure, aging and collection follow-up worklists. Use for cobranzas and overdue chasing. Do not post receipts, deposit funds, send reminders or write off balances without approval."
+description: "Prepares customer receipts applying cash, cheques, transfers and withholding certificates, plus advances, aging, credit exposure and follow-up lists. Use for collections and overdue chasing."
 ---
 
 # Collections

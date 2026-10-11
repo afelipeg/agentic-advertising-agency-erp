@@ -1,6 +1,6 @@
 ---
 name: agency-digital-planning
-description: "Build digital media plans by platform, format and buy type (CPM, CPC, CPV, CPA), render naming taxonomy and UTM strings, add ad-server costs, sync planned vs actual and reprice ordered items from Google or Meta invoices matched by taxonomy. Use for digital plan items and invoice-based order adjustment. Do not launch campaigns or post invoices."
+description: "Plans digital buys (CPM, CPC, CPV, CPA), builds naming taxonomy and UTMs, syncs planned vs actual and reprices orders from Google or Meta invoices. Use for digital plans. Never launches."
 ---
 
 # Digital Planning

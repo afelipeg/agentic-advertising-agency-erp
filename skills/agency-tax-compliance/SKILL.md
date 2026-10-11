@@ -1,6 +1,6 @@
 ---
 name: agency-tax-compliance
-description: "Prepare e-invoice authorization (MX CFDI via PAC, AR CAE), fiscal numbering checks, VAT books, withholding and perception regimes, certificates, VAT and gross-receipts positions and statutory exports from host-supplied country tables. Use for tax steps around invoices and month end. Do not invent rates, or stamp, file or post without approval."
+description: "Prepares e-invoice authorization (Mexico CFDI, Argentina CAE), VAT books, withholdings, certificates and tax positions from your tax tables. Use for tax steps. Never stamps or files itself."
 ---
 
 # Tax Compliance

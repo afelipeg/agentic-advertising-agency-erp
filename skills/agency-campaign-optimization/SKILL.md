@@ -1,6 +1,6 @@
 ---
 name: agency-campaign-optimization
-description: "Diagnose pacing and performance against the approved plan (planned vs actual, objective deviation, TRP, CPR, CPM, frequency) and propose bounded bid, budget, audience or creative changes within fixed commitments. Use for in-flight reviews. Do not move ordered or contracted spend as if it were free platform budget."
+description: "Diagnoses pacing and performance vs the approved plan and proposes bounded bid, budget, audience or creative changes. Use for in-flight reviews. Fixed commitments are not free budget."
 ---
 
 # Campaign Optimization

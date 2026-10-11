@@ -1,6 +1,6 @@
 ---
 name: agency-revenue-budget
-description: "Build and version the yearly agency revenue budget by client, product and month: investment, commission %, cost-difference %, fees and rebates, with copy-with-actuals, supervisor lock and projection. Use when planning or comparing agency income against actuals. Do not edit a locked version or treat managed media spend as agency revenue."
+description: "Builds the yearly revenue budget by client, product and month (investment, commission, fees, rebates) in versions vs actuals. Use for income planning. Media spend is not revenue."
 ---
 
 # Revenue Budget

@@ -1,6 +1,6 @@
 ---
 name: agency-onboarding
-description: "Prepares client intake in the agency ERP: trade-name (owner) client versus legal billing clients, products and brands, attention groups, strategic brief and contact reports, routed through the provisional master approval chain. Use when a client or brand is won or changed. Do not infer legal or tax facts from a website or open jobs here."
+description: "Onboards a client or brand: owner vs billing clients, products, attention groups, brief and contact reports. Use when a client is won or changes. No legal or tax facts from websites."
 ---
 
 # Onboard a Client and Brand

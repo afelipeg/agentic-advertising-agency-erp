@@ -1,6 +1,6 @@
 ---
 name: agency-payables
-description: "Log supplier documents in the reception register, check duplicates and arithmetic, pick the load type and prepare registration with accounts derived from media, production or expense type. Use when supplier invoices or credit notes arrive or need posting proposals. Do not post, pay or override supplier tax data without authorized execution."
+description: "Logs supplier invoices, checks duplicates and math, picks the load type and prepares registration with derived accounts. Use when supplier documents arrive. Never posts or pays itself."
 ---
 
 # Register Supplier Invoices

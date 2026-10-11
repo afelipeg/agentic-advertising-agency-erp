@@ -1,6 +1,6 @@
 ---
 name: agency-general-ledger
-description: "Prepare and validate agency general-ledger structure and manual journal entries: chart of accounts, rubros, observation codes, voucher types, provisional entries, templates, recurring and opening balances. Use when an account or entry needs drafting or checking. Do not post, delete posted entries or run month-end close jobs."
+description: "Drafts and validates chart of accounts, account tags, voucher types and manual journal entries, templates and opening balances. Use when an account or entry needs checking."
 ---
 
 # Agency General Ledger

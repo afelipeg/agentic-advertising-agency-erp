@@ -1,6 +1,6 @@
 ---
 name: agency-rebates
-description: "Calculate supplier overcommissions, volume rebates, incentives and finder fees under documented contracts with the five scale engines, monthly provision vs bill flags, retroactivity and client rebate shares. Use for rebate pendings and settlement proposals. Do not approximate tiers with a flat rate, post provisions or issue rebate documents."
+description: "Calculates supplier overcommissions, volume rebates, incentives and finder fees with five scale engines, monthly provision vs bill and client shares. Use for rebate proposals."
 ---
 
 # Rebates

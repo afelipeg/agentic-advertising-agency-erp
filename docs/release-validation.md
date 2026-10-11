@@ -1,4 +1,4 @@
-# 0.2.0 release candidate validation
+# 0.3.0 release candidate validation
 
 Validation date: 2026-10-11. Portable skill package, ERP functional reference and local read-only tooling. It does not certify a production ERP or autonomous execution.
 
@@ -15,6 +15,8 @@ Validation date: 2026-10-11. Portable skill package, ERP functional reference an
 | Install from packed tarball | All 42 skills installed for Codex (`.agents/skills`) and Claude Code (`.claude/skills`) in a fresh project; calculator executed from an installed skill folder. |
 | Claude.ai bundle | `bundle --skill agency-tax-compliance` produced a self-contained zip (23 files). |
 | Claude Code plugin | `claude plugin validate .` passed with one expected warning (root `CLAUDE.md` is maintainer guidance, not plugin context). |
+| App bundles (0.3.0) | `scripts/build_release.py` produced 42 skill zips plus the ChatGPT/Gem pack; all 42 extracted bundles passed the official `skills-ref validate`; descriptions are 200 characters or fewer; build is deterministic (identical checksums on rebuild). |
+| Gemini | `agency-erp install --agent gemini` installs into `.gemini/skills`; `gemini-extension.json` declares the calculator MCP with `${extensionPath}`. Not run inside Gemini CLI or the Gemini app in this environment. |
 | Verbatim-overlap scan | 10-word overlaps with the source manual are limited to guide/menu titles and state names used as citations; no copied prose. |
 
 An independent reviewer, working without the authoring context, audited the calculators, the sync and check scripts, six skills against their cited rules, the packaging and the registry. It found these issues:

@@ -1,6 +1,6 @@
 ---
 name: agency-expenses
-description: "Prepare agency overhead spend: expense contracts and requests with the PO gate, employee expense sheets and settlements, cost sheets against approved estimate items, petty cash, deferral over N months and expense budget. Use when non-media spend needs control. Do not let a claimant approve their own spend or post settlements."
+description: "Controls agency overhead: expense contracts and requests, employee expense sheets, cost sheets vs estimates, petty cash and expense budget. Use for non-media spend. No self-approval."
 ---
 
 # Control Agency Expenses and Petty Cash

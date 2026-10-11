@@ -1,6 +1,6 @@
 ---
 name: agency-payment-run
-description: "Propose supplier payment lists, payment orders, withholdings and release instruments for human two-person approval. Use when preparing a weekly payment run, a manual payment order, an advance, a client refund or a bank payment file. Do not approve lists, release payments, send bank files or annul orders without authenticated approval."
+description: "Proposes supplier payment lists, payment orders, withholdings and release instruments for two-person approval. Use for a payment run or bank file. Never approves or releases payments."
 ---
 
 # Prepare the Supplier Payment Run

@@ -1,6 +1,6 @@
 ---
 name: agency-fee-contracts
-description: "Draft fixed and hourly client fee contracts: instalments, media/production split, JobNumber attachment by list or pattern, monthly hourly settlement and two-step approval. Use when agency remuneration is a fee instead of commission. Do not add agency commission to fee-linked documents or recognize advances as revenue automatically."
+description: "Drafts fixed and hourly fee contracts: instalments, media/production split, job attachment and monthly hourly settlement. Use when the agency is paid by fee. No commission on fee jobs."
 ---
 
 # Fee Contracts

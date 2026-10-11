@@ -6,7 +6,7 @@ Start with agency-orchestrator and agency-integrations; run only relevant stages
 
 ## agency-orchestrator
 
-Routes an agency job through the ERP circuit by JobNumber and document state, builds the stage dependency graph, checks period gates and dispatches sibling skills. Use when running, resuming or triaging a job end to end or asking what comes next. Do not use for a single-stage task or a standalone ad metric query, and never to approve.
+Runs an agency job end to end: reads JobNumber and document state, maps the next ERP stages and routes to the right skill. Use to start, resume or triage a job. Never approves.
 
 **Inputs:** Trusted tenant/client/job ids and JobNumber; JobNumber state and documents with revisions; period state per subledger; approval-circuit configuration; commercial scope; prior checkpoints; run ceilings; available tools.
 
@@ -26,7 +26,7 @@ Routes an agency job through the ERP circuit by JobNumber and document state, bu
 
 ## agency-onboarding
 
-Prepares client intake in the agency ERP: trade-name (owner) client versus legal billing clients, products and brands, attention groups, strategic brief and contact reports, routed through the provisional master approval chain. Use when a client or brand is won or changed. Do not infer legal or tax facts from a website or open jobs here.
+Onboards a client or brand: owner vs billing clients, products, attention groups, brief and contact reports. Use when a client is won or changes. No legal or tax facts from websites.
 
 **Inputs:** Tenant id; trade name; billing-client references from trusted CxC records; product names and agreed commission percentages; provisional-master and hierarchy configuration; brief recipients and body; registered contact attendees.
 
@@ -45,7 +45,7 @@ Prepares client intake in the agency ERP: trade-name (owner) client versus legal
 
 ## agency-master-data
 
-Maintains agency ERP masters: clients, products, billing-client links, suppliers, media masters (type, outlet, programme, dayparts, duration factors, publication types), observation-coded GL links, cost centers and divisions. Use when creating, validating, mapping or deactivating masters. Do not delete used records or merge on name alone.
+Maintains agency masters: clients, suppliers, media outlets, programs, dayparts, GL account tags, cost centers. Use to create, map or deactivate records. Never deletes used records.
 
 **Inputs:** Tenant id; master type and payload; current records with usage status; legal identity evidence under restricted access; chart of accounts with observation codes; bridge-account and provisional-master configuration.
 
@@ -64,7 +64,7 @@ Maintains agency ERP masters: clients, products, billing-client links, suppliers
 
 ## agency-integrations
 
-Plans connector wiring per agency ERP stage from the provider registry, verifies live tools and scopes by discovery, applies least privilege and falls back to file mode. Use when connecting ad platforms, ledgers, e-invoicing or documents, or diagnosing missing access. Do not request secrets in chat or treat installation as tested access.
+Plans which connectors each ERP stage needs (ad platforms, ledgers, e-invoicing, docs), verifies live access and falls back to files. Use when connecting tools. Never asks for secrets.
 
 **Inputs:** Host type; stages in scope; tenant, client and platform account ids from trusted records; enabled marketplace apps and MCP servers; approved tool policy; host approval, sandbox and idempotency support; country context.
 
@@ -83,7 +83,7 @@ Plans connector wiring per agency ERP stage from the provider registry, verifies
 
 ## agency-access-governance
 
-Reviews agency ERP access: roles and profiles, action levels 1-6, cost visibility A-D, approval powers as capabilities, SoD conflicts, configuration-change control, audit evidence and offboarding. Use when granting, reviewing or removing access or changing system parameters. Do not grant access yourself or approve your own change.
+Reviews roles, approval powers, cost visibility and segregation of duties; controls config changes and offboarding. Use when granting or auditing access. Never grants access itself.
 
 **Inputs:** Tenant id; users, profiles, roles, specific activities and expense approval caps; agency SoD matrix; security policy; for parameter changes current and proposed values with reason; for offboarding the leaver, successor and owned open items.
 
@@ -102,7 +102,7 @@ Reviews agency ERP access: roles and profiles, action levels 1-6, cost visibilit
 
 ## agency-job-lifecycle
 
-Compose, open, move, substitute, re-bill and close agency JobNumbers under typology and billing-code rules, with the two-step accounts then finance close. Use when a campaign job must be created, changed or closed. Do not create estimates, plans or invoices, and do not close jobs that still carry pending documents.
+Creates, moves, re-bills and closes campaign JobNumbers under typology and billing-code rules, with the two-step close. Use when a job is opened, changed or closed.
 
 **Inputs:** Tenant ID; titular client and product codes; requested action; start year, typology, billing code and billing client for opens; job content listing with document statuses and open tasks; acting user's department type and level; inactivity-days configuration.
 
@@ -121,7 +121,7 @@ Compose, open, move, substitute, re-bill and close agency JobNumbers under typol
 
 ## agency-contract-po
 
-Turn signed client agreements and client purchase orders into enforceable PO limits, document links, PO transfers and budget-reserve rules. Use when a client PO or reserve must govern estimates and media plans. Do not treat an unsigned quote as spending authority or link documents created before the PO.
+Turns signed client agreements and client POs into PO limits, document links, transfers and budget reserves. Use when a client PO must govern spend. Unsigned quotes are not authority.
 
 **Inputs:** Tenant ID; titular and billing client; signed PO or agreement with signer evidence; amount net of tax, currency and validity; documents to link with creation dates; transfer source document and POs; reserve control type and pool areas.
 
@@ -140,7 +140,7 @@ Turn signed client agreements and client purchase orders into enforceable PO lim
 
 ## agency-budget-control
 
-Check client PO, budget-reserve and credit-limit headroom before client approval and separate reservations from commitments and spend. Use when an estimate, media plan or order needs an availability or credit gate. Do not equate an arithmetic check with an atomic reservation or approve a credit override.
+Checks client PO, budget reserve and credit-limit headroom before client approval, keeping reservations apart from spend. Use when an estimate, plan or order needs a budget gate.
 
 **Inputs:** Tenant ID; billing client; JobNumber; document id, revision and amount; PO or reserve authorized, spent, committed and reserved balances; credit limit, open receivables and approved unbilled work; approval circuit configuration.
 
@@ -159,7 +159,7 @@ Check client PO, budget-reserve and credit-limit headroom before client approval
 
 ## agency-fee-contracts
 
-Draft fixed and hourly client fee contracts: instalments, media/production split, JobNumber attachment by list or pattern, monthly hourly settlement and two-step approval. Use when agency remuneration is a fee instead of commission. Do not add agency commission to fee-linked documents or recognize advances as revenue automatically.
+Drafts fixed and hourly fee contracts: instalments, media/production split, job attachment and monthly hourly settlement. Use when the agency is paid by fee. No commission on fee jobs.
 
 **Inputs:** Tenant ID; titular client; signed agreement; fixed or hourly kind and contract type; instalment months and amounts; single currency and rate; media/production split; jobs with percentages or pattern; approved hours and client rates for hourly contracts; open fiscal periods.
 
@@ -178,7 +178,7 @@ Draft fixed and hourly client fee contracts: instalments, media/production split
 
 ## agency-tasks-timesheets
 
-Dispatch and track internal job tasks through their state machine and validate, approve and value timesheet hours at cost and sale with chargeability. Use when work requests, task follow-up or hour capture on JobNumbers need control. Do not approve your own hours or tasks, or book hours to closed jobs or closed timesheet periods.
+Tracks job tasks through their states and validates, approves and values timesheet hours with chargeability. Use for work requests and hour control. No self-approval of hours.
 
 **Inputs:** Tenant ID; open non-generic JobNumber; task record, three task dates, recipient and actor role; timesheet lines in hundredths with daily total and allocation mode; approved hours with internal cost and client rates; timesheet closing date and configuration flags.
 
@@ -197,7 +197,7 @@ Dispatch and track internal job tasks through their state machine and validate, 
 
 ## agency-revenue-budget
 
-Build and version the yearly agency revenue budget by client, product and month: investment, commission %, cost-difference %, fees and rebates, with copy-with-actuals, supervisor lock and projection. Use when planning or comparing agency income against actuals. Do not edit a locked version or treat managed media spend as agency revenue.
+Builds the yearly revenue budget by client, product and month (investment, commission, fees, rebates) in versions vs actuals. Use for income planning. Media spend is not revenue.
 
 **Inputs:** Tenant ID; budget year, version name and loading method; client x product x division lines with media/supplier or production-type rows; monthly investment, commission and cost-difference bps; projected fees, rebates and refunds; actuals and last closed month; supervisor identity.
 
@@ -216,7 +216,7 @@ Build and version the yearly agency revenue budget by client, product and month:
 
 ## agency-production-estimating
 
-Builds and governs production estimates: line kinds, price lists, supplier quotes and award, client approval with credit check, approval for billing, purchase orders, advances and Post Buy variance. Use when quoting or revising non-media work on a JobNumber. Do not approve, order, invoice or pay on your own; prepare and verify only.
+Builds production estimates: line types, price lists, supplier quotes and award, client approval with credit check, POs and Post Buy variance. Use to quote or revise non-media work.
 
 **Inputs:** Job number state; production type catalogue; supplier master; estimate header terms; line quotes; client credit position; config flags.
 
@@ -235,7 +235,7 @@ Builds and governs production estimates: line kinds, price lists, supplier quote
 
 ## agency-production
 
-Runs creative delivery after estimate approval: asset QA, royalty and talent contracts (months or repetitions, expiry, extension), event staff request, assignment and evaluation, and a rights check that blocks release. Use when delivering or clearing production work. Do not publish assets or infer usage rights from possession of a file.
+Runs creative delivery: asset QA, talent and royalty contracts, event staff and a rights check that blocks release. Use when delivering production work. Never publishes or assumes rights.
 
 **Inputs:** Approved estimate lines; asset versions; deliverable specs; royalty contracts; event staff master; config flags.
 
@@ -254,7 +254,7 @@ Runs creative delivery after estimate approval: asset QA, royalty and talent con
 
 ## agency-media-ranking
 
-Ingest a licensed rating book (one market, recent period), derive discontinuous-market books and build rankings with planning and negotiation targets, affinity, CPR and CPM. Use before TV, radio or digital planning. Do not fabricate or edit ratings, merge markets, or treat a ranking as a booking or budget approval.
+Loads a licensed rating book and builds rankings with targets, affinity, CPR and CPM. Use before TV, radio or digital planning. Never invents ratings; a ranking is not a booking.
 
 **Inputs:** Open JobNumber and holder client (client rankings); licensed rating book export for one market and period with targets and population data; provider and market code mappings; planning and negotiation targets; time window, weekdays and outlets; rate-card settings and approved FX reference.
 
@@ -274,7 +274,7 @@ Ingest a licensed rating book (one market, recent period), derive discontinuous-
 
 ## agency-media-planning
 
-Compose a media plan from an open JobNumber: header defaults, up to 12 monthly schedules, items and spots priced per media type, agency fee, objectives, client approval circuit, credit override and approve-for-billing release. Use for plan builds and approvals. Do not issue orders, self-approve, or bypass credit or approval gates.
+Builds a media plan from a JobNumber: monthly schedules, spots priced per media type, agency fee, client approval and credit gates, billing release. Use for plans and approvals.
 
 **Inputs:** Open JobNumber with billing client, product, typology, division and billing code; media type and validity; outlets with default vendors and publication types; fee settings; currency and monthly reference FX; rating criterion and targets; contracts and rate cards; approval configuration; authoritative credit limit, open AR and approved-unbilled amounts.
 
@@ -294,7 +294,7 @@ Compose a media plan from an open JobNumber: header defaults, up to 12 monthly s
 
 ## agency-tv-radio-planning
 
-Plan TV, radio and cable schedules by program or daypart from a ranking: duration-factor pricing, spot distribution within 99 spots per day, material distribution with royalty checks, traffic instructions and pre/post evaluation. Use for broadcast schedules. Do not book stations, invent ratings or edit controlled or billed spots.
+Plans TV, radio and cable schedules by program or daypart: duration pricing, spot spread, materials, traffic instructions and pre/post evaluation. Use for broadcast schedules.
 
 **Inputs:** Saved ranking linked to an open JobNumber; programs with airing days and hours; daypart set and cut-off hour; contracts or rate cards; base duration, pricing mode and coefficient tables; materials with durations and royalty contracts; spot counts or objectives; evaluation provider settings.
 
@@ -314,7 +314,7 @@ Plan TV, radio and cable schedules by program or daypart from a ranking: duratio
 
 ## agency-ooh-planning
 
-Plan agency-side OOH, DOOH and print lines: circuits times rate, faces and exposure days, press cm by columns with surcharges, package month splits and the evidence each supplier must deliver. Use for out-of-home and press plan items. Do not treat booked faces or photos as delivered exposure, or manage media-owner inventory.
+Plans agency-side out-of-home, DOOH and print: circuits x rate, faces, press size, month splits and evidence to request. Use for OOH and press lines. Booked faces are not exposure.
 
 **Inputs:** Open JobNumber and plan header; supplier quotes or rate cards per circuit, face or press unit; site, circuit, screen or publication data; tariff type Normal or Package; production, installation, permit and dismantling costs; evidence policy agreed with the client.
 
@@ -333,7 +333,7 @@ Plan agency-side OOH, DOOH and print lines: circuits times rate, faces and expos
 
 ## agency-digital-planning
 
-Build digital media plans by platform, format and buy type (CPM, CPC, CPV, CPA), render naming taxonomy and UTM strings, add ad-server costs, sync planned vs actual and reprice ordered items from Google or Meta invoices matched by taxonomy. Use for digital plan items and invoice-based order adjustment. Do not launch campaigns or post invoices.
+Plans digital buys (CPM, CPC, CPV, CPA), builds naming taxonomy and UTMs, syncs planned vs actual and reprices orders from Google or Meta invoices. Use for digital plans. Never launches.
 
 **Inputs:** Open JobNumber and linked ranking; digital masters (platforms, formats, buy types, calc types, tracking and placement types, AdServers); per-item quantities, rates, vendor, contract and currency; taxonomy templates and external codes; read-only actuals exports; platform invoices registered with taxonomy order codes.
 
@@ -353,7 +353,7 @@ Build digital media plans by platform, format and buy type (CPM, CPC, CPV, CPA),
 
 ## agency-rate-cards-contracts
 
-Maintain media rate cards (buy and sell price sets, printed vs client cards, base-card inheritance, validity) and media buy contracts (caps, installments, parent/child, share, adjustments, transfers, balance). Use when pricing references or vendor contract terms change. Do not issue insertion orders or bill clients here.
+Maintains media rate cards (buy and sell prices, client cards, validity) and media buy contracts (caps, installments, adjustments, balance). Use when pricing or vendor terms change.
 
 **Inputs:** Medium or provider with media type; holder client or printed scope; currency and exponent; validity; calculation type; base or copy source with coefficient; contract consumption/control type, payment condition, cap, VAT flag, discounts, commission, assignment, rate cards by date range; installment advance % and count; authoritative contract current account for adjustments and transfers; vendor negotiation evidence.
 
@@ -373,7 +373,7 @@ Maintain media rate cards (buy and sell price sets, printed vs client cards, bas
 
 ## agency-media-buying
 
-Prepare insertion orders from client-approved schedules: split keys, approval and credit gates, buy pricing, versioning that cancels and replaces, send packs, close and reopen guards, vendor changes. Use when spots must be ordered or an order changed. Do not treat a draft order or an unapproved plan as a commitment.
+Prepares insertion orders from client-approved schedules with credit gates, versioning (cancels and replaces), sending and close/reopen rules. Use when spots must be ordered or changed.
 
 **Inputs:** Client-approved plan and schedule revision; credit limit, open AR and approved unbilled or override approval; outlet and linked vendor per line; rate card or manual buy price; currency and exponent; VAT attributes; split criterion and cut-off; PO numbers; for changes the order number, version, sent status, reason and supplier-invoice status.
 
@@ -392,7 +392,7 @@ Prepare insertion orders from client-approved schedules: split keys, approval an
 
 ## agency-transmission-control
 
-Verify that ordered TV and radio spots aired: import monitoring files, map codes, auto match in normal or tolerance mode, manual and bulk control, ordered-not-aired and aired-not-ordered lists, makegood proposals and close prerequisites. Use before closing orders. Do not certify delivery because a supplier invoice exists.
+Checks ordered TV and radio spots against monitoring data: auto and manual matching, missing or extra spots, makegoods, close readiness. Use before closing orders. An invoice is not proof.
 
 **Inputs:** Ordered spots with station, date, window, material and order version; monitoring file or certificate with provider, timezone, cut-off and hash; default OK and deficient audit codes; code links; tolerance and match options; makegood policy; licensed ratings for post-buy.
 
@@ -411,7 +411,7 @@ Verify that ordered TV and radio spots aired: import monitoring files, map codes
 
 ## agency-plan-changes
 
-Revise approved or ordered media plans as new revisions: diff against the baseline, honour locks on ordered, controlled and billed spots, reschedule dropped spots and prepare order versions that cancel and replace. Use for changes after approval or ordering. Do not overwrite history, delete spots or treat budget-neutral changes as authorized.
+Revises approved or ordered media plans as new versions: diff vs baseline, locks on ordered or billed spots, rescheduling and order versions. Use for changes after approval.
 
 **Inputs:** Plan number with approved and latest revisions; authenticated change request with reason category and deadline; spot states and order numbers/versions (sent or unsent); authoritative PO and reserve balances; contracts, rate cards, materials and royalty validity for new dates; approval configuration.
 
@@ -431,7 +431,7 @@ Revise approved or ordered media plans as new revisions: diff against the baseli
 
 ## agency-campaign-activation
 
-Prepare and, after approval, execute digital campaign setup through verified write tools (Meta Ads, Google Ads, Zernio): taxonomy naming, paused staging, budget checks, readback and external IDs. Use when an ordered digital plan must go live. Do not use a query-only connector for creation or enable delivery without approval.
+Prepares and, after approval, launches digital campaigns via verified tools (Meta Ads, Google Ads, Zernio) with paused staging and readback. Use when a digital plan must go live.
 
 **Inputs:** Approved digital plan and issued order items; platform account with verified write tool; account currency and timezone; item platform, format, buy type, rates, flights and ordered net; budget snapshot and host reservation; taxonomy templates; creatives with rights; URLs and conversion events; authenticated approval reference.
 
@@ -450,7 +450,7 @@ Prepare and, after approval, execute digital campaign setup through verified wri
 
 ## agency-campaign-optimization
 
-Diagnose pacing and performance against the approved plan (planned vs actual, objective deviation, TRP, CPR, CPM, frequency) and propose bounded bid, budget, audience or creative changes within fixed commitments. Use for in-flight reviews. Do not move ordered or contracted spend as if it were free platform budget.
+Diagnoses pacing and performance vs the approved plan and proposes bounded bid, budget, audience or creative changes. Use for in-flight reviews. Fixed commitments are not free budget.
 
 **Inputs:** Approved plan revision with investment, TRP and reach objectives and planning target; dated actuals with source, window, attribution and lag; licensed ratings and universe; committed order and contract amounts; budget snapshot; change history.
 
@@ -469,7 +469,7 @@ Diagnose pacing and performance against the approved plan (planned vs actual, ob
 
 ## agency-ooh-inventory
 
-Run seller-side billboard inventory for a media owner: faces and states, availability, reservations converted to orders with monthly sub-orders, face and motif assignment, posting batches, and advertiser agreements with prepaid balance. Use when selling or posting OOH faces you own. Do not use for an agency buying OOH from vendors.
+Runs a media owner's billboard inventory: faces, availability, reservations to orders, posting batches and prepaid advertiser agreements. Use when selling OOH faces you own.
 
 **Inputs:** JobNumber; billboard type and zone; salesperson; OOH rate card and item; tariff type, faces, outings, start date, rate, currency and FX; payment terms and client PO; face states and permits; motifs with shares; posting date; agreement level, validity, type, payment, billable and bonus amounts.
 
@@ -489,7 +489,7 @@ Run seller-side billboard inventory for a media owner: faces and states, availab
 
 ## agency-delivery-reconciliation
 
-Control supplier documents against the pending-to-receive balance per spot, production item or expense request line and classify differences by origin. Use when matching media, production or expense invoices to closed orders. Do not post invoices, write off pendings without approval or edit supplier figures to force a match.
+Matches supplier invoices to closed orders, production items or expense requests and classifies differences by origin. Use when an invoice must be checked. Never edits supplier figures.
 
 **Inputs:** Supplier document header and declared total; pendings per spot/item/request line with expected net; order close and certification status; estimate approval and PO status; tolerance policy.
 
@@ -509,7 +509,7 @@ Control supplier documents against the pending-to-receive balance per spot, prod
 
 ## agency-payables
 
-Log supplier documents in the reception register, check duplicates and arithmetic, pick the load type and prepare registration with accounts derived from media, production or expense type. Use when supplier invoices or credit notes arrive or need posting proposals. Do not post, pay or override supplier tax data without authorized execution.
+Logs supplier invoices, checks duplicates and math, picks the load type and prepares registration with derived accounts. Use when supplier documents arrive. Never posts or pays itself.
 
 **Inputs:** Supplier document with type, letter, number, dates, currency, declared total and source hash; saved control; VAT accounts and perceptions; payment term; accounts on media/production/expense types; period status.
 
@@ -529,7 +529,7 @@ Log supplier documents in the reception register, check duplicates and arithmeti
 
 ## agency-payment-run
 
-Propose supplier payment lists, payment orders, withholdings and release instruments for human two-person approval. Use when preparing a weekly payment run, a manual payment order, an advance, a client refund or a bank payment file. Do not approve lists, release payments, send bank files or annul orders without authenticated approval.
+Proposes supplier payment lists, payment orders, withholdings and release instruments for two-person approval. Use for a payment run or bank file. Never approves or releases payments.
 
 **Inputs:** Payment date, due window, currency, method and bank account; open items with balances and locks; client-collection evidence; supplier tax profiles, overrides and host rates; availability and checkbook state; FX rates.
 
@@ -549,7 +549,7 @@ Propose supplier payment lists, payment orders, withholdings and release instrum
 
 ## agency-cash-settlement
 
-Prepare bank and cash records: deposits, inter-bank transfers, bank charges, manual bank reconciliation with balance proof, own and third-party cheque lifecycle and rejection, corporate card statements and availability. Use when treasury must record or reconcile cash movements. Do not move money, post entries or invent tax or withholding policy.
+Prepares deposits, transfers, bank charges, bank reconciliation, cheque lifecycle and card statements. Use when treasury must record or reconcile cash. Never moves money.
 
 **Inputs:** Bank account and statement balances and lines; last definitive reconciliation; treasury movements; portfolio cheques; bank charge details; checkbook and cheque status; card statements; rejection details.
 
@@ -569,7 +569,7 @@ Prepare bank and cash records: deposits, inter-bank transfers, bank charges, man
 
 ## agency-client-billing
 
-Prepare client invoices and credit/debit notes from approved-for-billing plans, estimates and fee instalments: selection controls, agency fee, VAT, partial and split billing. Use when turning pending-to-bill into sales documents. Do not issue, stamp, post or send documents, or bill work not approved for billing.
+Prepares client invoices and credit/debit notes from plans, estimates and fees approved for billing: fee, VAT, partial and split billing. Use to turn pending-to-bill into invoices.
 
 **Inputs:** Billing client master; pending to bill extract; billing readiness; tax tables; split codes; advance sale balances.
 
@@ -589,7 +589,7 @@ Prepare client invoices and credit/debit notes from approved-for-billing plans, 
 
 ## agency-billing-requirements
 
-Check client-specific prerequisites (client PO and balance, service entry, mandatory attachments, custom fields) per job, plan, schedule, order or estimate before an invoice is issued, and flag locked fields. Use when procurement paperwork gates billing. Do not mark issuance ready from delivery alone, or edit requirements from invoice text.
+Checks client-specific prerequisites (client PO, service entry, attachments, custom fields) before an invoice is issued. Use when procurement paperwork gates billing.
 
 **Inputs:** Requirement catalogue; source documents; client po records; attachments; issued invoices.
 
@@ -608,7 +608,7 @@ Check client-specific prerequisites (client PO and balance, service entry, manda
 
 ## agency-collections
 
-Prepare customer receipts applying cash, cheques, transfers and withholding certificates to open invoices, customer advances and re-application, plus credit exposure, aging and collection follow-up worklists. Use for cobranzas and overdue chasing. Do not post receipts, deposit funds, send reminders or write off balances without approval.
+Prepares customer receipts applying cash, cheques, transfers and withholding certificates, plus advances, aging, credit exposure and follow-up lists. Use for collections and overdue chasing.
 
 **Inputs:** Open items; remittance evidence; withholding certificates; credit limits; tax tables; fx rates; client contacts.
 
@@ -627,7 +627,7 @@ Prepare customer receipts applying cash, cheques, transfers and withholding cert
 
 ## agency-rebates
 
-Calculate supplier overcommissions, volume rebates, incentives and finder fees under documented contracts with the five scale engines, monthly provision vs bill flags, retroactivity and client rebate shares. Use for rebate pendings and settlement proposals. Do not approximate tiers with a flat rate, post provisions or issue rebate documents.
+Calculates supplier overcommissions, volume rebates, incentives and finder fees with five scale engines, monthly provision vs bill and client shares. Use for rebate proposals.
 
 **Inputs:** Rebate contracts; qualifying orders; registered supplier invoices; prior pendings; fx rates; supplier settlements.
 
@@ -646,7 +646,7 @@ Calculate supplier overcommissions, volume rebates, incentives and finder fees u
 
 ## agency-expenses
 
-Prepare agency overhead spend: expense contracts and requests with the PO gate, employee expense sheets and settlements, cost sheets against approved estimate items, petty cash, deferral over N months and expense budget. Use when non-media spend needs control. Do not let a claimant approve their own spend or post settlements.
+Controls agency overhead: expense contracts and requests, employee expense sheets, cost sheets vs estimates, petty cash and expense budget. Use for non-media spend. No self-approval.
 
 **Inputs:** Requester or claimant pseudonym; concept, net amount, currency and allocation; configuration flags and approver matrix; contract schedule; sheet lines and receipts; estimate item; fund balance; budget balances.
 
@@ -666,7 +666,7 @@ Prepare agency overhead spend: expense contracts and requests with the PO gate, 
 
 ## agency-tax-compliance
 
-Prepare e-invoice authorization (MX CFDI via PAC, AR CAE), fiscal numbering checks, VAT books, withholding and perception regimes, certificates, VAT and gross-receipts positions and statutory exports from host-supplied country tables. Use for tax steps around invoices and month end. Do not invent rates, or stamp, file or post without approval.
+Prepares e-invoice authorization (Mexico CFDI, Argentina CAE), VAT books, withholdings, certificates and tax positions from your tax tables. Use for tax steps. Never stamps or files itself.
 
 **Inputs:** Approved document drafts; country tax tables; numbering series; ledger tax balances; sub journals; withholding records.
 
@@ -685,7 +685,7 @@ Prepare e-invoice authorization (MX CFDI via PAC, AR CAE), fiscal numbering chec
 
 ## agency-general-ledger
 
-Prepare and validate agency general-ledger structure and manual journal entries: chart of accounts, rubros, observation codes, voucher types, provisional entries, templates, recurring and opening balances. Use when an account or entry needs drafting or checking. Do not post, delete posted entries or run month-end close jobs.
+Drafts and validates chart of accounts, account tags, voucher types and manual journal entries, templates and opening balances. Use when an account or entry needs checking.
 
 **Inputs:** Fiscal year; period subledger states; locked periods; chart of accounts; voucher types; entry lines; supporting attachment; opening subledger detail.
 
@@ -705,7 +705,7 @@ Prepare and validate agency general-ledger structure and manual journal entries:
 
 ## agency-accruals-revaluation
 
-Prepare month-end agency close jobs: unbilled revenue and uninvoiced cost provision, WIP, expense and overcommission provisions, FX revaluation, work-order closing and intercompany reclass, each with day-1 reversal checks. Use after pre-close. Do not post entries, pre-close or close periods, or invent rates.
+Prepares month-end jobs: unbilled revenue and cost provisions, WIP, overcommission provision, FX revaluation and work-order closing with day-1 reversals. Use after pre-close.
 
 **Inputs:** Period subledger states; month end buy sell rates; open foreign currency items; pending billing and supplier items; expense requests without invoice; overcommission pendings; bridge balances by ot; intercompany flags.
 
@@ -725,7 +725,7 @@ Prepare month-end agency close jobs: unbilled revenue and uninvoiced cost provis
 
 ## agency-fixed-assets
 
-Prepare the agency fixed-asset register, depreciation run, disposal and annex: assets created from expense requests on B1 accounts, first-month criteria, sale or disuse disposal and inflation notes. Use when capitalising, depreciating or retiring assets. Do not post entries, edit depreciated assets or apply inflation indices.
+Prepares the fixed-asset register, monthly depreciation, disposals and annex from capital expense requests. Use when capitalising, depreciating or retiring assets.
 
 **Inputs:** Asset concepts; expense request and invoice; purchase value and dates; depreciation method and criterion; cost center mode; period state; disposal details.
 
@@ -744,7 +744,7 @@ Prepare the agency fixed-asset register, depreciation run, disposal and annex: a
 
 ## agency-period-close
 
-Sequence and verify the agency monthly and fiscal-year close: subledger pre-close, ordered close jobs, mandatory gates, post-close reconciliations, reopen cascade and year re-close. Use when a month or year must be closed or reopened. Do not post entries, lock periods or overwrite posted history in a closed period.
+Sequences the monthly and year-end close: subledger pre-close, ordered close jobs, mandatory gates, reconciliations and reopen rules. Use to close or reopen a period.
 
 **Inputs:** Period subledger states; month end rate; close job receipts; trial balance with integrators; unpaid invoices at cutoff; bank reconciliations; reopen or year close request.
 
@@ -763,7 +763,7 @@ Sequence and verify the agency monthly and fiscal-year close: subledger pre-clos
 
 ## agency-profitability
 
-Analyzes job, client and media profitability: gross income, valued hours, direct expenses, contribution margin and overhead allocated by contribution share, with managed media spend kept apart. Use for job P&L, client profitability or margin reviews. Do not treat campaign ROAS or pass-through spend as agency profit, and do not post entries.
+Analyzes job, client and media profitability: gross income, valued hours, expenses, contribution and overhead allocation, with media spend kept apart. Use for margin reviews.
 
 **Inputs:** Ledger results by job; approved hours and rates; direct expenses; structural expense pool; managed spend; pending items.
 
@@ -782,7 +782,7 @@ Analyzes job, client and media profitability: gross income, valued hours, direct
 
 ## agency-cash-forecast
 
-Projects agency cash by day, week or month from bank balances, AR/AP open items, cheques, the client-approved unbilled pipeline, payroll, capex and adjustments, with expected date = due or billing date + terms + chronic delay. Use for liquidity planning. Do not treat revenue or invoices as cash, and never post or pay; snapshots are planning only.
+Projects agency cash by day, week or month from balances, receivables, payables, approved unbilled work and payroll, with expected payment dates. Use for liquidity planning.
 
 **Inputs:** Opening liquidity; ar open items; ap open items; chronic delays; approved unbilled pipeline; payroll capex recurring; holiday calendar.
 
@@ -801,7 +801,7 @@ Projects agency cash by day, week or month from bank balances, AR/AP open items,
 
 ## agency-management-reporting
 
-Prepares the monthly management pack and parent-company reporting exports (HFM-style mapping per tab), validates mapping coverage, and computes KPIs: gross income, DSO, chargeability, WIP aging. Use after month close for management or headquarters reporting. Do not post entries, change mappings or submit files to headquarters on your own.
+Prepares the monthly management pack and HQ reporting exports, checks account mapping coverage and computes KPIs (gross income, DSO, chargeability, WIP aging). Use after month close.
 
 **Inputs:** Closed period state; trial balance; interface code table; account mapping; ar open items; approved hours; wip items.
 

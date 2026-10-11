@@ -1,6 +1,6 @@
 ---
 name: agency-cash-settlement
-description: "Prepare bank and cash records: deposits, inter-bank transfers, bank charges, manual bank reconciliation with balance proof, own and third-party cheque lifecycle and rejection, corporate card statements and availability. Use when treasury must record or reconcile cash movements. Do not move money, post entries or invent tax or withholding policy."
+description: "Prepares deposits, transfers, bank charges, bank reconciliation, cheque lifecycle and card statements. Use when treasury must record or reconcile cash. Never moves money."
 ---
 
 # Settle Bank, Cash and Cheques

@@ -46,3 +46,10 @@ test('bundle includes one portable skill and no gold evaluations',async()=>{
     assert.equal(inspect.status,0);const files=JSON.parse(inspect.stdout);assert(files.includes('agency-production/SKILL.md'));assert(files.includes('agency-production/references/file-mode.md'));assert(files.every(f=>!f.includes('evals')));
   }finally{await rm(dir,{recursive:true,force:true});}
 });
+test('gemini target installs into .gemini/skills',async()=>{
+  const dir=await mkdtemp(join(tmpdir(),'agency-gemini-'));
+  try{
+    const r=run(['install','--agent','gemini','--skill','agency-collections'],dir);assert.equal(r.status,0,r.stderr);
+    await access(join(dir,'.gemini/skills/agency-collections/SKILL.md'));
+  }finally{await rm(dir,{recursive:true,force:true});}
+});

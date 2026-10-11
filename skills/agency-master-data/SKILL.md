@@ -1,6 +1,6 @@
 ---
 name: agency-master-data
-description: "Maintains agency ERP masters: clients, products, billing-client links, suppliers, media masters (type, outlet, programme, dayparts, duration factors, publication types), observation-coded GL links, cost centers and divisions. Use when creating, validating, mapping or deactivating masters. Do not delete used records or merge on name alone."
+description: "Maintains agency masters: clients, suppliers, media outlets, programs, dayparts, GL account tags, cost centers. Use to create, map or deactivate records. Never deletes used records."
 ---
 
 # Maintain Agency Master Data

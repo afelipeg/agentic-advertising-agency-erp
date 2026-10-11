@@ -1,6 +1,6 @@
 ---
 name: agency-fixed-assets
-description: "Prepare the agency fixed-asset register, depreciation run, disposal and annex: assets created from expense requests on B1 accounts, first-month criteria, sale or disuse disposal and inflation notes. Use when capitalising, depreciating or retiring assets. Do not post entries, edit depreciated assets or apply inflation indices."
+description: "Prepares the fixed-asset register, monthly depreciation, disposals and annex from capital expense requests. Use when capitalising, depreciating or retiring assets."
 ---
 
 # Agency Fixed Assets

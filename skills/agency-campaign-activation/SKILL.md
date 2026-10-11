@@ -1,6 +1,6 @@
 ---
 name: agency-campaign-activation
-description: "Prepare and, after approval, execute digital campaign setup through verified write tools (Meta Ads, Google Ads, Zernio): taxonomy naming, paused staging, budget checks, readback and external IDs. Use when an ordered digital plan must go live. Do not use a query-only connector for creation or enable delivery without approval."
+description: "Prepares and, after approval, launches digital campaigns via verified tools (Meta Ads, Google Ads, Zernio) with paused staging and readback. Use when a digital plan must go live."
 ---
 
 # Digital Campaign Activation

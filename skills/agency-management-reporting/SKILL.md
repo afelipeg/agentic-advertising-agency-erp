@@ -1,6 +1,6 @@
 ---
 name: agency-management-reporting
-description: "Prepares the monthly management pack and parent-company reporting exports (HFM-style mapping per tab), validates mapping coverage, and computes KPIs: gross income, DSO, chargeability, WIP aging. Use after month close for management or headquarters reporting. Do not post entries, change mappings or submit files to headquarters on your own."
+description: "Prepares the monthly management pack and HQ reporting exports, checks account mapping coverage and computes KPIs (gross income, DSO, chargeability, WIP aging). Use after month close."
 ---
 
 # Management Reporting

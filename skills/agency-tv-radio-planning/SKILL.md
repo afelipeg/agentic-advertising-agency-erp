@@ -1,6 +1,6 @@
 ---
 name: agency-tv-radio-planning
-description: "Plan TV, radio and cable schedules by program or daypart from a ranking: duration-factor pricing, spot distribution within 99 spots per day, material distribution with royalty checks, traffic instructions and pre/post evaluation. Use for broadcast schedules. Do not book stations, invent ratings or edit controlled or billed spots."
+description: "Plans TV, radio and cable schedules by program or daypart: duration pricing, spot spread, materials, traffic instructions and pre/post evaluation. Use for broadcast schedules."
 ---
 
 # TV and Radio Planning

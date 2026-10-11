@@ -1,6 +1,6 @@
 ---
 name: agency-delivery-reconciliation
-description: "Control supplier documents against the pending-to-receive balance per spot, production item or expense request line and classify differences by origin. Use when matching media, production or expense invoices to closed orders. Do not post invoices, write off pendings without approval or edit supplier figures to force a match."
+description: "Matches supplier invoices to closed orders, production items or expense requests and classifies differences by origin. Use when an invoice must be checked. Never edits supplier figures."
 ---
 
 # Reconcile Pending-to-Receive and Differences

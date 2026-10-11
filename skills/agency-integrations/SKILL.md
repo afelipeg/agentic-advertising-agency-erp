@@ -1,6 +1,6 @@
 ---
 name: agency-integrations
-description: "Plans connector wiring per agency ERP stage from the provider registry, verifies live tools and scopes by discovery, applies least privilege and falls back to file mode. Use when connecting ad platforms, ledgers, e-invoicing or documents, or diagnosing missing access. Do not request secrets in chat or treat installation as tested access."
+description: "Plans which connectors each ERP stage needs (ad platforms, ledgers, e-invoicing, docs), verifies live access and falls back to files. Use when connecting tools. Never asks for secrets."
 ---
 
 # Wire Connectors per ERP Stage

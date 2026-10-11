@@ -1,6 +1,6 @@
 ---
 name: agency-ooh-planning
-description: "Plan agency-side OOH, DOOH and print lines: circuits times rate, faces and exposure days, press cm by columns with surcharges, package month splits and the evidence each supplier must deliver. Use for out-of-home and press plan items. Do not treat booked faces or photos as delivered exposure, or manage media-owner inventory."
+description: "Plans agency-side out-of-home, DOOH and print: circuits x rate, faces, press size, month splits and evidence to request. Use for OOH and press lines. Booked faces are not exposure."
 ---
 
 # OOH Planning

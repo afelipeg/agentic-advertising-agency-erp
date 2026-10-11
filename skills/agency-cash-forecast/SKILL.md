@@ -1,6 +1,6 @@
 ---
 name: agency-cash-forecast
-description: "Projects agency cash by day, week or month from bank balances, AR/AP open items, cheques, the client-approved unbilled pipeline, payroll, capex and adjustments, with expected date = due or billing date + terms + chronic delay. Use for liquidity planning. Do not treat revenue or invoices as cash, and never post or pay; snapshots are planning only."
+description: "Projects agency cash by day, week or month from balances, receivables, payables, approved unbilled work and payroll, with expected payment dates. Use for liquidity planning."
 ---
 
 # Cash Forecast

@@ -1,22 +1,143 @@
 # ERP agéntico para agencias de publicidad
 
-Skills abiertas para que tu asistente (Claude Code, Codex, Claude.ai o un GPT/Project) opere **todo el back office de una agencia**: JobNumbers, producción, planificación y compra de medios, control de avisos, facturas de proveedores, facturación a clientes, cobranzas, pagos, tesorería, impuestos, contabilidad, cierre mensual y rentabilidad.
+Skills abiertas para que tu asistente (las apps de Claude, ChatGPT o Gemini, o Claude Code, Codex y Gemini CLI) opere **todo el back office de una agencia**: JobNumbers, producción, planificación y compra de medios, control de avisos, facturas de proveedores, facturación a clientes, cobranzas, pagos, tesorería, impuestos, contabilidad, cierre mensual y rentabilidad.
 
 La versión 0.2 se basa en una **ingeniería en reversa funcional de un ERP de agencias maduro de Latinoamérica**: se analizaron ~1,330 páginas públicas de su ayuda y se reescribieron como una [referencia funcional del ERP](docs/erp-reference/README.md) con procesos, ciclos de vida de documentos, reglas numeradas, impactos contables, handoffs entre módulos y comportamiento por país. Cada skill cita esas reglas.
 
-**42 skills autocontenidas · 25 calculadoras deterministas de solo lectura (también como MCP local) · referencia funcional del ERP · registro de MCP oficiales · 118 casos de comportamiento sintéticos · instalador npm/npx y marketplace de plugins de Claude Code.** Licencia MIT. No incluye credenciales, llaves ni suscripciones; no es un ERP alojado ni ejecuta pagos por sí solo.
+**42 skills autocontenidas · 25 calculadoras deterministas de solo lectura (también como MCP local) · referencia funcional del ERP · registro de MCP oficiales · 118 casos de comportamiento sintéticos · descargas listas para las apps de Claude y Gemini, paquete para ChatGPT/Gem, instalador npm/npx, marketplace de plugins de Claude Code y extensión de Gemini CLI.** Licencia MIT. No incluye credenciales, llaves ni suscripciones; no es un ERP alojado ni ejecuta pagos por sí solo.
 
 > Proyecto independiente, sin afiliación con ningún proveedor de ERP. La referencia describe comportamiento funcional públicamente documentado con redacción propia; no redistribuye código, pantallas ni texto del manual.
 
-## El circuito
+## Empieza aquí (sin terminal)
+
+### ¿Qué es esto, en simple?
+
+Es un paquete gratuito que le enseña a **Claude, ChatGPT o Gemini** a operar la parte "invisible" de una agencia: todo lo que pasa desde que un cliente dice "sí" hasta que el dinero entra, se les paga a los medios y sabes cuánto ganaste. Presupuestos, planes de medios, órdenes a TV, radio y digital, revisar que los anuncios sí salieron, cruzar facturas, cobrar, pagar y cerrar el mes. Ahí es donde las agencias pierden margen sin darse cuenta.
+
+Trae **42 skills**, una por cada paso, basadas en cómo funciona un ERP real de agencias en Latinoamérica. La regla de oro: **la IA prepara, revisa y calcula; una persona aprueba.** Nunca paga, factura ni envía nada por su cuenta.
+
+### ¿Por qué skills y no prompts?
+
+Un **prompt** es explicarle algo de palabra a alguien nuevo cada vez: depende de cómo lo digas ese día y cada quien lo explica distinto. Una **skill** es darle a ese colaborador su **manual de procedimientos con calculadora y formatos**, guardado en su escritorio:
+
+- **Se activa sola cuando hace falta.** Pides "revisa esta factura del canal" y el asistente abre la skill correcta.
+- **Siempre igual**, sin importar quién del equipo pregunte.
+- **Los números no los inventa la IA:** cada skill trae calculadoras exactas para comisiones, descuentos, rebates y vencimientos.
+- **Trae el contexto que un prompt no aguanta** (reglas del negocio, formatos, qué hacer cuando algo no cuadra) y solo lo lee cuando lo necesita.
+
+### Instálalo en tu app
+
+**Claude (claude.ai o app de escritorio)**
+
+1. Descarga una o varias skills de la tabla de abajo. Para empezar: [agency-orchestrator](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-orchestrator.zip), [agency-client-billing](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-client-billing.zip) y [agency-cash-forecast](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-cash-forecast.zip). **No descomprimas el .zip.**
+2. Entra a [claude.ai/customize/skills](https://claude.ai/customize/skills) (menú **Customize → Skills**).
+3. Sube el .zip y activa la skill. Repite con cada una.
+4. Abre un chat nuevo y pide algo de los ejemplos. Claude usa la skill solo.
+
+> Requiere tener activada la ejecución de código. Disponible en los planes Free, Pro, Max, Team y Enterprise.
+
+**Gemini (gemini.google.com o app)**
+
+1. Descarga los mismos .zip de la tabla.
+2. En Gemini abre **Configuración → Skills → Subir**, elige el .zip, revisa y toca **Crear**.
+3. Úsala en cualquier chat.
+
+> Por ahora funciona con cuentas personales de Google (no de trabajo o escuela) y con la Actividad activada. Si tu cuenta no lo permite, usa la opción "Gem" de abajo.
+
+**ChatGPT (GPT o Proyecto)**
+
+1. Descarga [assistant-instructions.txt](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/assistant-instructions.txt), [agency-erp-knowledge.md](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-erp-knowledge.md) y [agency_tools.py](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency_tools.py).
+2. Crea un **GPT** (Explorar GPTs → Crear → Configurar) o un **Proyecto**.
+3. Pega el contenido de `assistant-instructions.txt` en **Instrucciones**.
+4. Sube `agency-erp-knowledge.md` y `agency_tools.py` en **Conocimiento** (o Archivos del proyecto).
+5. Activa **Intérprete de código y análisis de datos** para que use las calculadoras. Guarda como "Solo yo".
+
+**Gemini con Gem** (alternativa para cuentas de trabajo): crea un Gem, pega `assistant-instructions.txt` en las instrucciones y sube `agency-erp-knowledge.md` como conocimiento.
+
+> Crear GPTs, Proyectos o Gems depende de tu plan. En estas opciones el asistente sigue las mismas reglas desde el archivo de conocimiento; la experiencia más completa son las skills en Claude o Gemini.
+
+### Prueba con estos pedidos
+
+- *"Abre una campaña nueva para el cliente Acme, producto Bebidas, y dime qué falta para arrancar."*
+- *"Aquí está la factura del canal y el reporte de emisión. ¿Me están cobrando spots que no salieron?"*
+- *"Con estas facturas por cobrar y por pagar, ¿cómo se ve mi caja las próximas 8 semanas?"*
+- *"Calcula el rebate de este mes con la escala del contrato adjunto. Solo propónmelo."*
+
+Puedes trabajar con Excel, PDF o CSV sin conectar nada. Conectar tus apps es opcional y siempre lo autorizas tú.
+
+### Las 42 skills
+
+<details>
+<summary>Ver tabla con enlaces de descarga</summary>
+
+| Etapa | Skill | Para qué | Descargar |
+|---|---|---|---|
+| Arranque | `agency-orchestrator` | Dirige el trabajo completo y te dice qué sigue | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-orchestrator.zip) |
+|  | `agency-integrations` | Qué apps conectar en cada etapa | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-integrations.zip) |
+|  | `agency-access-governance` | Permisos, aprobaciones y segregación de funciones | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-access-governance.zip) |
+|  | `agency-master-data` | Clientes, proveedores, medios y cuentas | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-master-data.zip) |
+| Clientes y contratos | `agency-onboarding` | Alta de cliente, marcas y brief | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-onboarding.zip) |
+|  | `agency-job-lifecycle` | Abrir, mover y cerrar campañas (JobNumber) | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-job-lifecycle.zip) |
+|  | `agency-contract-po` | Contratos y órdenes de compra del cliente | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-contract-po.zip) |
+|  | `agency-budget-control` | Presupuesto disponible y límite de crédito | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-budget-control.zip) |
+|  | `agency-fee-contracts` | Contratos de fee fijo o por horas | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-fee-contracts.zip) |
+|  | `agency-billing-requirements` | Requisitos del cliente antes de facturar | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-billing-requirements.zip) |
+| Trabajo y producción | `agency-tasks-timesheets` | Tareas y horas del equipo | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-tasks-timesheets.zip) |
+|  | `agency-production-estimating` | Presupuestos de producción y cotizaciones | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-production-estimating.zip) |
+|  | `agency-production` | Entregables, derechos y talento | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-production.zip) |
+| Planificación de medios | `agency-media-ranking` | Ratings y ranking de programas | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-media-ranking.zip) |
+|  | `agency-media-planning` | Plan de medios y aprobación del cliente | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-media-planning.zip) |
+|  | `agency-tv-radio-planning` | Pautas de TV y radio | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-tv-radio-planning.zip) |
+|  | `agency-ooh-planning` | Exterior, DOOH e impresos | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-ooh-planning.zip) |
+|  | `agency-digital-planning` | Planes digitales, taxonomía y UTMs | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-digital-planning.zip) |
+|  | `agency-plan-changes` | Cambios a planes ya aprobados | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-plan-changes.zip) |
+| Compra de medios | `agency-rate-cards-contracts` | Tarifarios y contratos con medios | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-rate-cards-contracts.zip) |
+|  | `agency-media-buying` | Órdenes de publicidad | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-media-buying.zip) |
+|  | `agency-campaign-activation` | Lanzar campañas digitales (con aprobación) | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-campaign-activation.zip) |
+|  | `agency-campaign-optimization` | Optimizar campañas en curso | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-campaign-optimization.zip) |
+|  | `agency-transmission-control` | Verificar que los spots salieron al aire | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-transmission-control.zip) |
+|  | `agency-ooh-inventory` | Inventario de espectaculares (si eres el medio) | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-ooh-inventory.zip) |
+| Proveedores y pagos | `agency-delivery-reconciliation` | Factura del proveedor contra lo ordenado | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-delivery-reconciliation.zip) |
+|  | `agency-payables` | Recepción y registro de facturas de proveedor | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-payables.zip) |
+|  | `agency-payment-run` | Lista de pagos y órdenes de pago | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-payment-run.zip) |
+|  | `agency-cash-settlement` | Bancos, depósitos y conciliación | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-cash-settlement.zip) |
+|  | `agency-expenses` | Gastos, viáticos y caja chica | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-expenses.zip) |
+| Facturación y cobranza | `agency-client-billing` | Facturas y notas al cliente | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-client-billing.zip) |
+|  | `agency-collections` | Cobranza, anticipos y antigüedad de saldos | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-collections.zip) |
+|  | `agency-rebates` | Overcomisiones y rebates de medios | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-rebates.zip) |
+|  | `agency-tax-compliance` | CFDI, IVA y retenciones | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-tax-compliance.zip) |
+| Contabilidad y cierre | `agency-general-ledger` | Catálogo de cuentas y pólizas | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-general-ledger.zip) |
+|  | `agency-accruals-revaluation` | Provisiones y diferencia cambiaria | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-accruals-revaluation.zip) |
+|  | `agency-fixed-assets` | Activo fijo y depreciación | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-fixed-assets.zip) |
+|  | `agency-period-close` | Cierre mensual y anual | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-period-close.zip) |
+| Rentabilidad | `agency-profitability` | Rentabilidad por campaña y cliente | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-profitability.zip) |
+|  | `agency-revenue-budget` | Presupuesto de ingresos | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-revenue-budget.zip) |
+|  | `agency-cash-forecast` | Flujo de caja proyectado | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-cash-forecast.zip) |
+|  | `agency-management-reporting` | Reporte gerencial y KPIs | [Descargar](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-management-reporting.zip) |
+
+¿Las quieres todas de una vez? [agency-erp-all-skills.zip](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/agency-erp-all-skills.zip) trae los 42 .zip (este sí se descomprime; luego subes cada .zip por separado).
+
+</details>
+
+### Lo que conviene saber
+
+- Gratis y de código abierto (licencia MIT). No es un ERP en la nube ni guarda tus datos.
+- No sustituye a tu contador: tasas de impuestos, tipos de cambio y políticas las pones tú.
+- Empieza en modo borrador; cuando confíes en el resultado, conecta tus herramientas.
+
+---
+
+## Para perfiles técnicos
+
+### El circuito
 
 JobNumber y maestros → contratos de fee, PO y crédito → presupuesto de producción y pauta → aprobación del cliente → órdenes y OC → emisión y control de avisos → facturas de proveedor → aprobado para facturar → factura y CFDI/CAE → cobranza → lista de pagos y libranza → tesorería y conciliación → provisiones, revaluación y cierre → rentabilidad y reporting. Ver el [circuito E2E](docs/erp-reference/e2e-circuit.md) con compuertas, identificadores, códigos de observación de cuentas y la matriz módulo → skill.
 
-## Skills nuevas en 0.2
+### Skills nuevas en 0.2
 
 `agency-job-lifecycle` (JobNumber y cierre en dos pasos), `agency-tasks-timesheets`, `agency-revenue-budget`, `agency-rate-cards-contracts` (tarifarios y contratos de medios), `agency-digital-planning` (taxonomía y ajuste por factura de Google/Meta), `agency-ooh-inventory` (vía pública del lado del medio), `agency-payment-run` (lista de pagos, OP, retenciones, libranza), `agency-collections` (recibos, anticipos, aging, crédito), `agency-tax-compliance` (CFDI, CAE, libros de IVA, retenciones), `agency-general-ledger`, `agency-accruals-revaluation` (provisiones, WIP, diferencia de cambio, cierre de OT), `agency-fixed-assets`, `agency-management-reporting` y `agency-access-governance` (perfiles, poderes de aprobación, segregación de funciones). Las 28 skills anteriores se reescribieron sobre las reglas del ERP. Catálogo completo: [workflow](docs/workflow.md).
 
-## Instalar
+### Instalar desde la terminal
 
 Node 22+ para el instalador; Python 3 (solo biblioteca estándar) para calculadoras, MCP local, bundles y evaluaciones.
 
@@ -28,6 +149,10 @@ claude plugin install agency-erp@afelipeg-agency-erp
 # Instalación por proyecto
 node bin/agency-erp.mjs install --agent codex          # .agents/skills
 node bin/agency-erp.mjs install --agent claude-code    # .claude/skills
+node bin/agency-erp.mjs install --agent gemini         # .gemini/skills
+
+# Gemini CLI: todo el repo como extensión (skills + calculadoras)
+gemini extensions install https://github.com/afelipeg/agentic-advertising-agency-erp
 node bin/agency-erp.mjs connect-plan --profile agency
 node bin/agency-erp.mjs demo
 
@@ -38,13 +163,9 @@ npx skills add afelipeg/agentic-advertising-agency-erp --agent codex claude-code
 
 `--dry-run` revisa destinos, `--global` instala a nivel usuario y `--skill agency-payment-run` instala una sola. El instalador nunca sobrescribe carpetas existentes.
 
-## Calculadoras
+### Calculadoras
 
 El dinero nunca lo calcula el modelo: escalas de overcomisión (fija, por valor, por tramo, marginal y escalonada, validadas con los ejemplos del manual), cascada de descuentos y fee, GRP/CPR/CPM, totales de presupuesto con líneas directas, liquidación de fee por horas, vencimientos con días hábiles, retenciones, revaluación cambiaria, aging, prorrateo exacto, cuotas, depreciación, validación de asientos, flujo de caja, matching de spots, exposición de crédito y verificación de facturas. Tasas de impuestos, tipos de cambio y políticas de la agencia siempre son insumos.
-
-## Claude.ai y GPT
-
-Claude.ai admite skills personalizadas: `node bin/agency-erp.mjs bundle --skill agency-client-billing --out agency-client-billing.zip`, súbelo en la sección de skills y actívalo. En ChatGPT usa las apps disponibles; `export --host gpt --out agency-reference.md` genera una referencia (circuito, contrato de control, skills y registro) para adaptar en un Project/GPT. Subir ese texto no instala MCP ni concede acceso a cuentas. Consulta [la guía por entorno](docs/web-assistant.md).
 
 ## Conectar lo mínimo
 

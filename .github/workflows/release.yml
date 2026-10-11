@@ -1,0 +1,36 @@
+name: Release assets
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing tag to (re)build assets for
+        required: true
+permissions:
+  contents: write
+jobs:
+  assets:
+    runs-on: ubuntu-latest
+    env:
+      TAG: ${{ github.event.inputs.tag || github.ref_name }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TAG }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: npm run check
+      - run: npm test
+      - run: python3 scripts/build_release.py --out dist/release
+      - name: Create or update the GitHub release
+        run: |
+          if ! gh release view "$TAG" >/dev/null 2>&1; then
+            gh release create "$TAG" --title "Agency ERP $TAG" --notes-file .github/release-notes.md
+          fi
+          gh release upload "$TAG" dist/release/* --clobber

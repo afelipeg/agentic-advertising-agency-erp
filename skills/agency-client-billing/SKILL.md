@@ -1,6 +1,6 @@
 ---
 name: agency-client-billing
-description: "Prepare client invoices and credit/debit notes from approved-for-billing plans, estimates and fee instalments: selection controls, agency fee, VAT, partial and split billing. Use when turning pending-to-bill into sales documents. Do not issue, stamp, post or send documents, or bill work not approved for billing."
+description: "Prepares client invoices and credit/debit notes from plans, estimates and fees approved for billing: fee, VAT, partial and split billing. Use to turn pending-to-bill into invoices."
 ---
 
 # Client Billing

@@ -1,6 +1,6 @@
 ---
 name: agency-production-estimating
-description: "Builds and governs production estimates: line kinds, price lists, supplier quotes and award, client approval with credit check, approval for billing, purchase orders, advances and Post Buy variance. Use when quoting or revising non-media work on a JobNumber. Do not approve, order, invoice or pay on your own; prepare and verify only."
+description: "Builds production estimates: line types, price lists, supplier quotes and award, client approval with credit check, POs and Post Buy variance. Use to quote or revise non-media work."
 ---
 
 # Production Estimating

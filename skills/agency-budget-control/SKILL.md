@@ -1,6 +1,6 @@
 ---
 name: agency-budget-control
-description: "Check client PO, budget-reserve and credit-limit headroom before client approval and separate reservations from commitments and spend. Use when an estimate, media plan or order needs an availability or credit gate. Do not equate an arithmetic check with an atomic reservation or approve a credit override."
+description: "Checks client PO, budget reserve and credit-limit headroom before client approval, keeping reservations apart from spend. Use when an estimate, plan or order needs a budget gate."
 ---
 
 # Budget and Credit Control

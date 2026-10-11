@@ -10,7 +10,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const args = process.argv.slice(2);
 const names = (await readdir(join(root, 'skills'))).sort();
 const help = `agency-erp list
-agency-erp install --agent codex|claude-code [--skill NAME] [--global] [--cwd PATH] [--dry-run]
+agency-erp install --agent codex|claude-code|gemini [--skill NAME] [--global] [--cwd PATH] [--dry-run]
 agency-erp doctor
 agency-erp export --host claude-ai|gpt --out PATH
 agency-erp bundle --skill NAME --out PATH.zip
@@ -55,11 +55,11 @@ try {
   else if (command === 'list') console.log(names.join('\n'));
   else if (command === 'install') {
     const o=options(rest), agent=o['--agent'];
-    if (!['codex','claude-code'].includes(agent)) throw new Error('Select --agent codex or claude-code. See export for web assistants.');
+    if (!['codex','claude-code','gemini'].includes(agent)) throw new Error('Select --agent codex, claude-code or gemini. See export for web assistants.');
     const selected=o['--skill'] ? [o['--skill']] : names;
     if (selected.some(n=>!names.includes(n))) throw new Error('Unknown skill. Run list.');
     const base=o['--global'] ? homedir() : resolve(o['--cwd'] || process.cwd());
-    const dest=join(base, agent==='codex' ? '.agents' : '.claude', 'skills');
+    const dest=join(base, {codex:'.agents','claude-code':'.claude',gemini:'.gemini'}[agent], 'skills');
     await rejectSymlinks(dest);
     // Preflight all conflicts before creating anything. Never recursively remove user files.
     for (const name of selected) if (await exists(join(dest,name))) throw new Error(`Already exists: ${join(dest,name)}. Remove or archive it yourself before updating.`);

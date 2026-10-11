@@ -1,6 +1,6 @@
 ---
 name: agency-media-planning
-description: "Compose a media plan from an open JobNumber: header defaults, up to 12 monthly schedules, items and spots priced per media type, agency fee, objectives, client approval circuit, credit override and approve-for-billing release. Use for plan builds and approvals. Do not issue orders, self-approve, or bypass credit or approval gates."
+description: "Builds a media plan from a JobNumber: monthly schedules, spots priced per media type, agency fee, client approval and credit gates, billing release. Use for plans and approvals."
 ---
 
 # Media Planning

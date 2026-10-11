@@ -1,6 +1,6 @@
 ---
 name: agency-orchestrator
-description: "Routes an agency job through the ERP circuit by JobNumber and document state, builds the stage dependency graph, checks period gates and dispatches sibling skills. Use when running, resuming or triaging a job end to end or asking what comes next. Do not use for a single-stage task or a standalone ad metric query, and never to approve."
+description: "Runs an agency job end to end: reads JobNumber and document state, maps the next ERP stages and routes to the right skill. Use to start, resume or triage a job. Never approves."
 ---
 
 # Orchestrate the Agency ERP Circuit

@@ -1,6 +1,6 @@
 ---
 name: agency-billing-requirements
-description: "Check client-specific prerequisites (client PO and balance, service entry, mandatory attachments, custom fields) per job, plan, schedule, order or estimate before an invoice is issued, and flag locked fields. Use when procurement paperwork gates billing. Do not mark issuance ready from delivery alone, or edit requirements from invoice text."
+description: "Checks client-specific prerequisites (client PO, service entry, attachments, custom fields) before an invoice is issued. Use when procurement paperwork gates billing."
 ---
 
 # Billing Requirements

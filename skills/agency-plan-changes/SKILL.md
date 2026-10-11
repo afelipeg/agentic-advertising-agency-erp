@@ -1,6 +1,6 @@
 ---
 name: agency-plan-changes
-description: "Revise approved or ordered media plans as new revisions: diff against the baseline, honour locks on ordered, controlled and billed spots, reschedule dropped spots and prepare order versions that cancel and replace. Use for changes after approval or ordering. Do not overwrite history, delete spots or treat budget-neutral changes as authorized."
+description: "Revises approved or ordered media plans as new versions: diff vs baseline, locks on ordered or billed spots, rescheduling and order versions. Use for changes after approval."
 ---
 
 # Plan Changes

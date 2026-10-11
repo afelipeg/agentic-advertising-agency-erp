@@ -1,6 +1,6 @@
 ---
 name: agency-production
-description: "Runs creative delivery after estimate approval: asset QA, royalty and talent contracts (months or repetitions, expiry, extension), event staff request, assignment and evaluation, and a rights check that blocks release. Use when delivering or clearing production work. Do not publish assets or infer usage rights from possession of a file."
+description: "Runs creative delivery: asset QA, talent and royalty contracts, event staff and a rights check that blocks release. Use when delivering production work. Never publishes or assumes rights."
 ---
 
 # Creative Production and Rights

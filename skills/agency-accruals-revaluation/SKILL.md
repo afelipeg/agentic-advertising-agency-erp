@@ -1,6 +1,6 @@
 ---
 name: agency-accruals-revaluation
-description: "Prepare month-end agency close jobs: unbilled revenue and uninvoiced cost provision, WIP, expense and overcommission provisions, FX revaluation, work-order closing and intercompany reclass, each with day-1 reversal checks. Use after pre-close. Do not post entries, pre-close or close periods, or invent rates."
+description: "Prepares month-end jobs: unbilled revenue and cost provisions, WIP, overcommission provision, FX revaluation and work-order closing with day-1 reversals. Use after pre-close."
 ---
 
 # Agency Accruals and Revaluation

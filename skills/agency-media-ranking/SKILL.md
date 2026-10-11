@@ -1,6 +1,6 @@
 ---
 name: agency-media-ranking
-description: "Ingest a licensed rating book (one market, recent period), derive discontinuous-market books and build rankings with planning and negotiation targets, affinity, CPR and CPM. Use before TV, radio or digital planning. Do not fabricate or edit ratings, merge markets, or treat a ranking as a booking or budget approval."
+description: "Loads a licensed rating book and builds rankings with targets, affinity, CPR and CPM. Use before TV, radio or digital planning. Never invents ratings; a ranking is not a booking."
 ---
 
 # Media Ranking

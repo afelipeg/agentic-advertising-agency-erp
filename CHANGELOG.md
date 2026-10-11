@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.3.0 — 2026-10-11
+
+### Added
+- **App downloads without a terminal:** a GitHub release with one .zip per skill (valid for the Claude app and the Gemini app), an all-skills bundle, `assistant-instructions.txt` + `agency-erp-knowledge.md` + `agency_tools.py` for ChatGPT GPTs/Projects and Gemini Gems, and checksums. Built by `scripts/build_release.py` and published by `.github/workflows/release.yml` on every `v*` tag.
+- **Gemini:** Gemini CLI extension (`gemini-extension.json`, `GEMINI.md`, calculator MCP) and `agency-erp install --agent gemini`.
+- Beginner "Start here" sections in both READMEs: what the package is, why skills instead of prompts, step-by-step installation for Claude, Gemini, ChatGPT and Gems, example requests and a download table for all 42 skills.
+
+### Changed
+- Skill descriptions shortened to 200 characters or fewer so uploads pass the Claude app limit; the package check enforces it. All 42 bundles pass the official `skills-ref validate`.
+
 ## 0.2.0 — 2026-10-11
 
 ### Added

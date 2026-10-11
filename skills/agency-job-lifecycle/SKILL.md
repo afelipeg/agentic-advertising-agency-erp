@@ -1,6 +1,6 @@
 ---
 name: agency-job-lifecycle
-description: "Compose, open, move, substitute, re-bill and close agency JobNumbers under typology and billing-code rules, with the two-step accounts then finance close. Use when a campaign job must be created, changed or closed. Do not create estimates, plans or invoices, and do not close jobs that still carry pending documents."
+description: "Creates, moves, re-bills and closes campaign JobNumbers under typology and billing-code rules, with the two-step close. Use when a job is opened, changed or closed."
 ---
 
 # JobNumber Lifecycle

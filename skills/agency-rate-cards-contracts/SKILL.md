@@ -1,6 +1,6 @@
 ---
 name: agency-rate-cards-contracts
-description: "Maintain media rate cards (buy and sell price sets, printed vs client cards, base-card inheritance, validity) and media buy contracts (caps, installments, parent/child, share, adjustments, transfers, balance). Use when pricing references or vendor contract terms change. Do not issue insertion orders or bill clients here."
+description: "Maintains media rate cards (buy and sell prices, client cards, validity) and media buy contracts (caps, installments, adjustments, balance). Use when pricing or vendor terms change."
 ---
 
 # Rate Cards and Media Buy Contracts

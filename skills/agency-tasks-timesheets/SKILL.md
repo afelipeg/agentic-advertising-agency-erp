@@ -1,6 +1,6 @@
 ---
 name: agency-tasks-timesheets
-description: "Dispatch and track internal job tasks through their state machine and validate, approve and value timesheet hours at cost and sale with chargeability. Use when work requests, task follow-up or hour capture on JobNumbers need control. Do not approve your own hours or tasks, or book hours to closed jobs or closed timesheet periods."
+description: "Tracks job tasks through their states and validates, approves and values timesheet hours with chargeability. Use for work requests and hour control. No self-approval of hours."
 ---
 
 # Tasks and Timesheets
