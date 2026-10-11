@@ -1,0 +1,4 @@
+interface:
+  display_name: "Close and reopen accounting periods safely"
+  short_description: "Close and reopen accounting periods safely"
+  default_prompt: "Use $agency-period-close to review my agency inputs and prepare the next safe operational step."

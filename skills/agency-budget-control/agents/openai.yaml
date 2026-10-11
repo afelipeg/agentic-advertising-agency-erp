@@ -1,0 +1,4 @@
+interface:
+  display_name: "Check and reserve authorized budget"
+  short_description: "Check and reserve authorized budget"
+  default_prompt: "Use $agency-budget-control to review my agency inputs and prepare the next safe operational step."

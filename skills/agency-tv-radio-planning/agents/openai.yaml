@@ -1,0 +1,4 @@
+interface:
+  display_name: "Plan TV and radio insertions"
+  short_description: "Plan TV and radio insertions"
+  default_prompt: "Use $agency-tv-radio-planning to inspect my inputs and prepare a safe evidence-backed agency handoff."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Forecast collections and obligations"
+  short_description: "Forecast collections and obligations"
+  default_prompt: "Use $agency-cash-forecast to inspect my inputs and prepare a safe evidence-backed agency handoff."

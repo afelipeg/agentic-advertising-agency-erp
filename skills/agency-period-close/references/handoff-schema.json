@@ -1,0 +1,187 @@
+{
+  "type": "object",
+  "properties": {
+    "tenant_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+    },
+    "client_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+    },
+    "job_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+    },
+    "run_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+    },
+    "stage": {
+      "type": "string",
+      "enum": [
+        "agency-billing-requirements",
+        "agency-budget-control",
+        "agency-campaign-activation",
+        "agency-campaign-optimization",
+        "agency-cash-forecast",
+        "agency-cash-settlement",
+        "agency-client-billing",
+        "agency-contract-po",
+        "agency-delivery-reconciliation",
+        "agency-expenses",
+        "agency-fee-contracts",
+        "agency-integrations",
+        "agency-master-data",
+        "agency-media-buying",
+        "agency-media-planning",
+        "agency-media-ranking",
+        "agency-onboarding",
+        "agency-ooh-planning",
+        "agency-orchestrator",
+        "agency-payables",
+        "agency-period-close",
+        "agency-plan-changes",
+        "agency-production",
+        "agency-production-estimating",
+        "agency-profitability",
+        "agency-rebates",
+        "agency-transmission-control",
+        "agency-tv-radio-planning"
+      ]
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "validated",
+        "pending_approval",
+        "approved",
+        "executing",
+        "completed",
+        "blocked",
+        "failed",
+        "uncertain"
+      ]
+    },
+    "currency": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "period": {
+      "type": "string"
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+      }
+    },
+    "artifact_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "artifact_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+          },
+          "artifact_type": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        },
+        "required": [
+          "artifact_id",
+          "artifact_type",
+          "sha256"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "approval_requests": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+      }
+    },
+    "next_stages": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "agency-billing-requirements",
+          "agency-budget-control",
+          "agency-campaign-activation",
+          "agency-campaign-optimization",
+          "agency-cash-forecast",
+          "agency-cash-settlement",
+          "agency-client-billing",
+          "agency-contract-po",
+          "agency-delivery-reconciliation",
+          "agency-expenses",
+          "agency-fee-contracts",
+          "agency-integrations",
+          "agency-master-data",
+          "agency-media-buying",
+          "agency-media-planning",
+          "agency-media-ranking",
+          "agency-onboarding",
+          "agency-ooh-planning",
+          "agency-orchestrator",
+          "agency-payables",
+          "agency-period-close",
+          "agency-plan-changes",
+          "agency-production",
+          "agency-production-estimating",
+          "agency-profitability",
+          "agency-rebates",
+          "agency-transmission-control",
+          "agency-tv-radio-planning"
+        ]
+      }
+    }
+  },
+  "required": [
+    "tenant_id",
+    "client_id",
+    "job_id",
+    "run_id",
+    "stage",
+    "revision",
+    "status",
+    "currency",
+    "period",
+    "evidence_refs",
+    "artifact_refs",
+    "blockers",
+    "approval_requests",
+    "next_stages"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

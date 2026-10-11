@@ -1,0 +1,4 @@
+interface:
+  display_name: "Prepare collections and payments"
+  short_description: "Prepare collections and payments"
+  default_prompt: "Use $agency-cash-settlement to review my agency inputs and prepare the next safe operational step."

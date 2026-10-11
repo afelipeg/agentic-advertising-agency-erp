@@ -1,0 +1,4 @@
+interface:
+  display_name: "Revise daily media plans"
+  short_description: "Control daily plan revisions and retail changes"
+  default_prompt: "Use $agency-plan-changes to compare today’s requested plan revision against the approved baseline and prepare safe incremental actions."

@@ -1,0 +1,332 @@
+{
+  "reviewed_on": "2026-10-11",
+  "authentication_tested": false,
+  "notice": "Documentation review only. Discover actual tools and verify tenant/account access before use. No credentials are installed by this package.",
+  "providers": [
+    {
+      "id": "google-ads",
+      "kind": "first-party-mcp",
+      "roles": [
+        "reporting",
+        "reconciliation"
+      ],
+      "transport": "stdio or self-hosted HTTP",
+      "endpoint": null,
+      "auth": "Google ADC plus Google Ads developer token; account permissions",
+      "mutations": "Not provided by the documented query toolset",
+      "sources": [
+        "https://github.com/googleads/google-ads-mcp"
+      ],
+      "verification": "primary-docs"
+    },
+    {
+      "id": "google-analytics",
+      "kind": "first-party-mcp",
+      "roles": [
+        "analytics",
+        "attribution"
+      ],
+      "transport": "stdio",
+      "endpoint": null,
+      "auth": "Google ADC; analytics.readonly scope",
+      "mutations": "Read-only documented tools",
+      "sources": [
+        "https://github.com/googleanalytics/google-analytics-mcp",
+        "https://developers.google.com/analytics/devguides/MCP"
+      ],
+      "verification": "primary-docs"
+    },
+    {
+      "id": "amazon-ads",
+      "kind": "first-party-mcp",
+      "roles": [
+        "advertising"
+      ],
+      "transport": "remote HTTP",
+      "endpoint": "https://advertising-ai.amazon.com/mcp",
+      "auth": "Vendor onboarding and authorized advertiser access",
+      "mutations": "Discover supported actions and account eligibility; require host approval for writes",
+      "sources": [
+        "https://advertising.amazon.com/API/docs/en-us/mcp/get-started"
+      ],
+      "verification": "primary-docs-discovery-required"
+    },
+    {
+      "id": "synter",
+      "kind": "third-party-aggregator-mcp",
+      "roles": [
+        "reporting",
+        "activation",
+        "optimization"
+      ],
+      "transport": "remote HTTP",
+      "endpoint": "https://mcp.synterai.com",
+      "auth": "OAuth; provider subscription and linked account scopes",
+      "mutations": "Documented read/write; restrict by actual platform/tool permissions",
+      "sources": [
+        "https://github.com/Synter-Media-AI/mcp-server",
+        "https://docs.synterai.com/mcp/tools"
+      ],
+      "verification": "primary-docs"
+    },
+    {
+      "id": "ryze",
+      "kind": "third-party-aggregator-mcp",
+      "roles": [
+        "advertising",
+        "analytics"
+      ],
+      "transport": "confirm with provider",
+      "endpoint": null,
+      "auth": "Vendor OAuth; obtain current endpoint from authorized provider onboarding",
+      "mutations": "Primary README documents Google Ads/Meta/GA4 read/write tools. Endpoint and actual account capabilities remain unverified; discover before execution",
+      "sources": [
+        "https://www.get-ryze.ai/",
+        "https://github.com/Ryze-AI-Adgent/google-meta-ads-ga4-mcp"
+      ],
+      "verification": "primary-tool-docs-endpoint-provided-by-user"
+    },
+    {
+      "id": "supermetrics",
+      "kind": "third-party-aggregator-mcp",
+      "roles": [
+        "reporting",
+        "cross-platform-analytics",
+        "advertising"
+      ],
+      "transport": "remote HTTP",
+      "endpoint": "https://mcp.supermetrics.com/mcp",
+      "auth": "OAuth; valid subscription with Supermetrics API access",
+      "mutations": "Current docs include campaign creation/modification, initially paused. Treat each discovered write as approval-gated",
+      "sources": [
+        "https://docs.supermetrics.com/docs/supermetrics-mcp-server",
+        "https://mcp.supermetrics.com/",
+        "https://supermetrics.com/blog/lovable-supermetrics-mcp"
+      ],
+      "verification": "primary-docs"
+    },
+    {
+      "id": "composio",
+      "kind": "third-party-tools-and-mcp",
+      "roles": [
+        "business-inputs",
+        "crm",
+        "documents",
+        "workflow",
+        "advertising-if-toolkit-supported"
+      ],
+      "transport": "remote HTTP or scoped SDK session",
+      "endpoint": "https://connect.composio.dev/mcp",
+      "auth": "OAuth for upstream apps; application sessions use scoped project credentials stored by host",
+      "mutations": "Inner tool schema, account scope and action require validation/approval. Deny remote bash/workbench by default",
+      "sources": [
+        "https://docs.composio.dev/docs/composio-connect",
+        "https://docs.composio.dev/docs/sessions-via-mcp"
+      ],
+      "verification": "primary-docs"
+    },
+    {
+      "id": "canva",
+      "kind": "first-party-app-and-mcp",
+      "roles": [
+        "creative-production",
+        "asset-library",
+        "export"
+      ],
+      "transport": "native marketplace or provider-specific MCP/API",
+      "endpoint": null,
+      "setup_note": "Use the native Canva marketplace connector first. For custom clients endpoint depends on approved developer access",
+      "auth": "OAuth; user designs and approved organization access",
+      "mutations": "Creation/edit/export are documented; discover enabled tools, protect existing assets and gate publishing/deletion",
+      "sources": [
+        "https://www.canva.dev/docs/apps/mcp/",
+        "https://www.canva.dev/docs/apps/quickstart/"
+      ],
+      "verification": "primary-docs"
+    },
+    {
+      "id": "figma",
+      "kind": "first-party-plugin-and-mcp",
+      "roles": [
+        "creative-production",
+        "design-context"
+      ],
+      "transport": "native marketplace or provider-specific MCP/API",
+      "endpoint": "https://mcp.figma.com/mcp",
+      "setup_note": "https://mcp.figma.com/mcp",
+      "auth": "OAuth; supported client and file/seat permissions",
+      "mutations": "Current docs support writes; use official Figma plugin/skills and inspect actual tool access",
+      "sources": [
+        "https://developers.figma.com/docs/figma-mcp-server/",
+        "https://developers.figma.com/docs/figma-mcp-server/remote-server-installation/"
+      ],
+      "verification": "primary-docs"
+    },
+    {
+      "id": "stripe",
+      "kind": "first-party-app-and-mcp",
+      "roles": [
+        "client-invoicing",
+        "collections",
+        "subscriptions",
+        "refunds"
+      ],
+      "transport": "native marketplace or provider-specific MCP/API",
+      "endpoint": "https://mcp.stripe.com",
+      "setup_note": "https://mcp.stripe.com",
+      "auth": "OAuth preferred; otherwise current Stripe Agent API key policy, secret held by host",
+      "mutations": "Generic stripe_api_write covers many actions. Validate inner API operation; treasury money movement may be preview/eligibility-gated. Not a universal supplier-payment system",
+      "sources": [
+        "https://docs.stripe.com/mcp",
+        "https://docs.stripe.com/api/invoices"
+      ],
+      "verification": "primary-docs"
+    },
+    {
+      "id": "paypal",
+      "kind": "first-party-mcp",
+      "roles": [
+        "invoicing",
+        "collections",
+        "orders",
+        "refunds",
+        "payouts-if-eligible"
+      ],
+      "transport": "native marketplace or provider-specific MCP/API",
+      "endpoint": "https://mcp.paypal.com/http",
+      "setup_note": "https://mcp.paypal.com/http",
+      "auth": "OAuth remote login or backend token per current provider guide; start sandbox",
+      "mutations": "Discover tools and merchant permissions. Invoice creation, sending, capture, refunds and eligible payouts require distinct approval",
+      "sources": [
+        "https://developer.paypal.com/ai-tools/mcp-server",
+        "https://developer.paypal.com/ai-tools/get-started/"
+      ],
+      "verification": "primary-docs"
+    },
+    {
+      "id": "xero",
+      "kind": "first-party-mcp",
+      "roles": [
+        "ledger",
+        "accounts-payable",
+        "accounts-receivable",
+        "reports",
+        "timesheets"
+      ],
+      "transport": "native marketplace or provider-specific MCP/API",
+      "endpoint": null,
+      "setup_note": "Local stdio @xeroapi/xero-mcp-server; consult official docs for hosted access",
+      "auth": "OAuth/custom connection or bearer token held by host; organization and granular scope verification",
+      "mutations": "create-invoice and create-payment are documented. Recording an accounting payment is not proof of a bank transfer",
+      "sources": [
+        "https://github.com/XeroAPI/xero-mcp-server",
+        "https://developer.xero.com/ai"
+      ],
+      "verification": "primary-docs"
+    },
+    {
+      "id": "quickbooks",
+      "kind": "official-api-or-reviewed-aggregator",
+      "roles": [
+        "ledger",
+        "invoices",
+        "bills",
+        "payment-records"
+      ],
+      "transport": "native marketplace or provider-specific MCP/API",
+      "endpoint": null,
+      "setup_note": "No first-party MCP endpoint verified; use supported marketplace/Composio tools after discovery or official API adapter",
+      "auth": "Intuit OAuth company realm and accounting permissions",
+      "mutations": "Invoice/bill/payment APIs are documented; payment records do not prove bank execution",
+      "sources": [
+        "https://developer.intuit.com/app/developer/qbo/docs/develop/basic-implementations/basic-billing-implementation",
+        "https://developer.intuit.com/app/developer/qbo/docs/api/accounting/all-entities/invoice"
+      ],
+      "verification": "primary-docs"
+    },
+    {
+      "id": "broadsign",
+      "kind": "official-api-or-export",
+      "roles": [
+        "dooh-proof-of-play"
+      ],
+      "endpoint": null,
+      "transport": "Reviewed host API/export adapter, not a bundled MCP",
+      "auth": "Authorized operator account/API access per provider; verify actual platform/rights",
+      "mutations": "No MCP or authenticated operations tested; start with proof-of-play imports",
+      "sources": [
+        "https://docs.broadsign.com/broadsign-control/latest/en/real-time-pop-api.html"
+      ],
+      "verification": "primary-docs"
+    }
+  ],
+  "official_api_options": [
+    {
+      "platform": "Meta",
+      "url": "https://developers.facebook.com/docs/marketing-apis/",
+      "kind": "official-api-not-a-bundled-mcp"
+    },
+    {
+      "platform": "Google Ads writes",
+      "url": "https://developers.google.com/google-ads/api/docs/start",
+      "kind": "official-api-not-a-bundled-mcp"
+    },
+    {
+      "platform": "Microsoft Advertising",
+      "url": "https://learn.microsoft.com/en-us/advertising/",
+      "kind": "official-api-not-a-bundled-mcp"
+    },
+    {
+      "platform": "LinkedIn",
+      "url": "https://learn.microsoft.com/en-us/linkedin/marketing/",
+      "kind": "official-api-not-a-bundled-mcp"
+    },
+    {
+      "platform": "TikTok",
+      "url": "https://business-api.tiktok.com/portal/docs",
+      "kind": "official-api-not-a-bundled-mcp"
+    }
+  ],
+  "discovery_catalogue": "https://github.com/afelipeg/awesome-agentic-advertising",
+  "selection_order": [
+    "enabled marketplace app/plugin with sufficient reviewed tools",
+    "official MCP",
+    "reviewed third-party aggregator",
+    "reviewed official API adapter",
+    "imported files and human handoff"
+  ],
+  "marketplace_inputs": {
+    "instruction": "Discover in the actual host directory. Names below are candidates, not guaranteed listings in every region/plan or authenticated connections. Do not scrape/private-session-probe for availability. Reuse enabled tools first.",
+    "roles": {
+      "documents": [
+        "Google Drive/Docs",
+        "Dropbox",
+        "Notion",
+        "SharePoint"
+      ],
+      "work-management": [
+        "Asana",
+        "Monday.com",
+        "Linear"
+      ],
+      "crm": [
+        "HubSpot",
+        "Salesforce"
+      ],
+      "communications": [
+        "Gmail",
+        "Outlook",
+        "Slack"
+      ]
+    },
+    "sources": [
+      "https://help.openai.com/en/articles/11487775-apps-in-chatgpt",
+      "https://support.claude.com/en/articles/14328846-browse-skills-connectors-and-plugins-in-one-directory"
+    ]
+  },
+  "sandbox_endpoints": {
+    "paypal": "https://mcp.sandbox.paypal.com/http",
+    "stripe": "Select a sandbox account during OAuth; endpoint is unchanged",
+    "xero": "Use a Demo Company under separate organization access"
+  }
+}

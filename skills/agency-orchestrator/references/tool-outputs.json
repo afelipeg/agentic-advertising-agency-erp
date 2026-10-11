@@ -1,0 +1,288 @@
+{
+  "plan_diff": {
+    "type": "object",
+    "properties": {
+      "added": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+        }
+      },
+      "removed": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+        }
+      },
+      "changed": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+        }
+      },
+      "unchanged": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+        }
+      },
+      "currency_deltas": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "currency": {
+              "type": "string",
+              "pattern": "^[A-Z]{3}$"
+            },
+            "before_minor": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "after_minor": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "delta_minor": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "currency",
+            "before_minor",
+            "after_minor",
+            "delta_minor"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "blockers": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "line_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+            },
+            "reason": {
+              "type": "string",
+              "enum": [
+                "commitment_removed",
+                "below_commitment",
+                "commitment_rewritten",
+                "committed_dimensions_changed"
+              ]
+            }
+          },
+          "required": [
+            "line_id",
+            "reason"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "status": {
+        "type": "string",
+        "enum": [
+          "draft",
+          "blocked"
+        ]
+      },
+      "requires_host_approval": {
+        "type": "boolean"
+      }
+    },
+    "required": [
+      "added",
+      "removed",
+      "changed",
+      "unchanged",
+      "currency_deltas",
+      "blockers",
+      "status",
+      "requires_host_approval"
+    ],
+    "additionalProperties": false
+  },
+  "budget_check": {
+    "type": "object",
+    "properties": {
+      "currency": {
+        "type": "string",
+        "pattern": "^[A-Z]{3}$"
+      },
+      "available_minor": {
+        "type": "integer",
+        "minimum": -9007199254740991,
+        "maximum": 9007199254740991
+      },
+      "after_request_minor": {
+        "type": "integer",
+        "minimum": -9007199254740991,
+        "maximum": 9007199254740991
+      },
+      "within_budget": {
+        "type": "boolean"
+      },
+      "atomic_reservation_required": {
+        "type": "boolean"
+      }
+    },
+    "required": [
+      "currency",
+      "available_minor",
+      "after_request_minor",
+      "within_budget",
+      "atomic_reservation_required"
+    ],
+    "additionalProperties": false
+  },
+  "reconcile": {
+    "type": "object",
+    "properties": {
+      "currency": {
+        "type": "string",
+        "pattern": "^[A-Z]{3}$"
+      },
+      "discrepancy_minor": {
+        "type": "integer",
+        "minimum": -9007199254740991,
+        "maximum": 9007199254740991
+      },
+      "payable_candidate_minor": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "status": {
+        "type": "string",
+        "enum": [
+          "hold",
+          "matched"
+        ]
+      },
+      "reasons": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": [
+            "invoice_delivery_mismatch",
+            "delivery_exceeds_order",
+            "short_delivery",
+            "invoice_exceeds_order"
+          ]
+        }
+      }
+    },
+    "required": [
+      "currency",
+      "discrepancy_minor",
+      "payable_candidate_minor",
+      "status",
+      "reasons"
+    ],
+    "additionalProperties": false
+  },
+  "flat_rebate": {
+    "type": "object",
+    "properties": {
+      "currency": {
+        "type": "string",
+        "pattern": "^[A-Z]{3}$"
+      },
+      "rebate_minor": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "client_return_minor": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "agency_retained_minor": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      }
+    },
+    "required": [
+      "currency",
+      "rebate_minor",
+      "client_return_minor",
+      "agency_retained_minor"
+    ],
+    "additionalProperties": false
+  },
+  "margin": {
+    "type": "object",
+    "properties": {
+      "currency": {
+        "type": "string",
+        "pattern": "^[A-Z]{3}$"
+      },
+      "margin_minor": {
+        "type": "integer",
+        "minimum": -9007199254740991,
+        "maximum": 9007199254740991
+      },
+      "margin_bps": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "managed_spend_minor": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      }
+    },
+    "required": [
+      "currency",
+      "margin_minor",
+      "margin_bps",
+      "managed_spend_minor"
+    ],
+    "additionalProperties": false
+  },
+  "payload_digest": {
+    "type": "object",
+    "properties": {
+      "sha256": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      },
+      "canonicalization": {
+        "type": "string",
+        "enum": [
+          "python-json-sorted-v1"
+        ]
+      },
+      "authorizes_execution": {
+        "type": "boolean"
+      }
+    },
+    "required": [
+      "sha256",
+      "canonicalization",
+      "authorizes_execution"
+    ],
+    "additionalProperties": false
+  }
+}

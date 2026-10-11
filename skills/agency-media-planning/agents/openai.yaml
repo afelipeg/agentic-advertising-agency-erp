@@ -1,0 +1,4 @@
+interface:
+  display_name: "Plan media within commercial limits"
+  short_description: "Plan media within commercial limits"
+  default_prompt: "Use $agency-media-planning to review my agency inputs and prepare the next safe operational step."

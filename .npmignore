@@ -1,0 +1,8 @@
+**/__pycache__/
+**/*.pyc
+*.tgz
+.env
+.env.*
+evals/host-traces/
+evals/results/
+.agency-erp/

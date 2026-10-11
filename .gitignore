@@ -1,0 +1,9 @@
+node_modules/
+__pycache__/
+*.pyc
+*.tgz
+.env
+.env.*
+!.env.example
+.agency-erp/
+evals/results/

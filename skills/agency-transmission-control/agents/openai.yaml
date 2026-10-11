@@ -1,0 +1,4 @@
+interface:
+  display_name: "Verify emissions and makegoods"
+  short_description: "Verify emissions and makegoods"
+  default_prompt: "Use $agency-transmission-control to inspect my inputs and prepare a safe evidence-backed agency handoff."

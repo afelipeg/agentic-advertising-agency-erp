@@ -1,0 +1,11 @@
+{
+  "mode":"draft-read-only",
+  "note":"Example policy for a custom host to implement, not an active enforcement engine",
+  "limits":{"aggregate_tokens":20000,"wall_time_seconds":120,"max_cost_usd":1,"max_read_attempts":3},
+  "routing":{"simple":"host-configured-evaluated-small-model","complex":"host-configured-reasoning-model","fallback":"host-configured-evaluated-backup","fallback_resets_budget":false},
+  "retry":{"initial_delay_ms":250,"multiplier":2,"jitter":true,"honor_retry_after":true,"unknown_write_outcome":"query-before-retry"},
+  "approval_required_for":["money","commitment","budget-or-bid-change","financial-posting","email-or-message","deletion"],
+  "cache":{"reads_only":true,"ttl_seconds":300,"scope":["tenant","client","account","permissions","tool-version","arguments","period","timezone","currency","data-revision","policy-version"]},
+  "sandbox":{"required":true,"deny_ambient_credentials":true,"deny_unreviewed_egress":true},
+  "checkpoints":{"durable":true,"compare_and_swap_revision":true,"reuse_completed_actions":true}
+}

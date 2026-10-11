@@ -1,0 +1,4 @@
+interface:
+  display_name: "Prepare client billing and receivables"
+  short_description: "Prepare client billing and receivables"
+  default_prompt: "Use $agency-client-billing to review my agency inputs and prepare the next safe operational step."

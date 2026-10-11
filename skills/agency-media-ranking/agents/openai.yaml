@@ -1,0 +1,4 @@
+interface:
+  display_name: "Build a media shortlist and ranking"
+  short_description: "Build a media shortlist and ranking"
+  default_prompt: "Use $agency-media-ranking to inspect my inputs and prepare a safe evidence-backed agency handoff."

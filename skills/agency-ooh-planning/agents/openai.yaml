@@ -1,0 +1,4 @@
+interface:
+  display_name: "Plan OOH, DOOH and offline placements"
+  short_description: "Plan OOH, DOOH and offline placements"
+  default_prompt: "Use $agency-ooh-planning to inspect my inputs and prepare a safe evidence-backed agency handoff."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Manage creative production and rights"
+  short_description: "Manage creative production and rights"
+  default_prompt: "Use $agency-production to review my agency inputs and prepare the next safe operational step."

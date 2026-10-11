@@ -1,0 +1,4 @@
+interface:
+  display_name: "Validate supplier payables"
+  short_description: "Validate supplier payables"
+  default_prompt: "Use $agency-payables to review my agency inputs and prepare the next safe operational step."

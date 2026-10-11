@@ -1,0 +1,19 @@
+# Web assistant compatibility
+
+This reference is not an executable installation. Use the host's actual skill/plugin/app capabilities and current official setup flow. Do not promise a shared native installer across every product.
+
+| Environment | Skills | Tools/accounts | Practical route |
+|---|---|---|---|
+| Claude Code | Portable SKILL.md folders | Enabled plugins and local/remote MCP | Package installer to .claude/skills; then existing marketplace connector |
+| Codex | Portable skills in .agents/skills | Enabled plugins and local/remote MCP | Package installer; reuse enabled apps/plugins; configure missing providers separately |
+| Claude web/desktop | Custom skill upload where enabled | Native connectors or supported custom remote MCP | Bundle **one skill folder** per upload; enable skill and connector separately |
+| ChatGPT web/GPT/Project | Actual host plugin/skill support varies; a knowledge document is not a native skill | Available apps/plugins; custom MCP only where workspace supports it | Prefer native apps; adapt exported instructions in the appropriate host builder. No automatic GPT tool access from an upload |
+| Custom agent/API | Agent Skills loader or explicit instruction/resource loader | Framework tools and MCP clients | Implement the runtime control contract and evaluations; host your own service if a live demo is required |
+
+For Claude, `agency-erp bundle --skill agency-production --out agency-production.zip` packages the skill and its local references/scripts. Upload through Customize > Skills using the current host flow; repeat for required stages. Do not assume uploads propagate across products/accounts. Code execution and supported plans affect whether local scripts run. If scripts cannot run, connect reviewed calculator tools or return pending calculations; never invent a tool result.
+
+For GPT/Project, `agency-erp export --host gpt --out agency-reference.md` creates a complete instruction reference. It embeds the control contract and registry, but relative resource links/scripts are **not executable** in that document. Use it to adapt a Project/GPT or a supported plugin/skill builder, with that host's actual enabled tools. Do not assume adding knowledge installs a plugin, publishes to a marketplace, or enables native skill discovery. For serious orchestration prefer a host that can load the full skill folders and enforce runtime policy.
+
+No remote gateway or public demo is deployed by this package. Its local stdio MCP is an optional calculator and cannot serve a remote URL without an independently secured host deployment. Prefer provider apps already listed in the host marketplace; eligibility, administrator controls, action availability and authentication vary. Never silently create a custom connector when an existing app is sufficient.
+
+Sources: [Claude custom skills](https://support.claude.com/en/articles/12512180-use-skills-in-claude), [Claude directory](https://support.claude.com/en/articles/14328846-browse-skills-connectors-and-plugins-in-one-directory), [ChatGPT apps](https://help.openai.com/en/articles/11487775-apps-in-chatgpt), [ChatGPT plugins](https://help.openai.com/en/articles/20001256-plugins-in-chatgpt), [custom MCP](https://help.openai.com/en/articles/12584461-developer-mode-and-full-mcp-connectors-in-chatgpt).

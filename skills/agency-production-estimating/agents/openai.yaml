@@ -1,0 +1,4 @@
+interface:
+  display_name: "Estimate and revise production costs"
+  short_description: "Estimate and revise production costs"
+  default_prompt: "Use $agency-production-estimating to inspect my inputs and prepare a safe evidence-backed agency handoff."

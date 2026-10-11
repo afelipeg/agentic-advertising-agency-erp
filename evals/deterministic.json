@@ -1,0 +1,9 @@
+[
+  {"id":"po-reservation-overflow","tool":"budget_check","input":{"currency":"MXN","authorized_minor":1000000,"spent_minor":0,"open_commitments_minor":0,"reservations_minor":600000,"requested_minor":600000},"expected":{"within_budget":false,"after_request_minor":-200000}},
+  {"id":"invoice-over-delivery","tool":"reconcile","input":{"currency":"MXN","ordered_minor":1000000,"delivered_minor":970000,"invoiced_minor":995000,"tolerance_minor":0},"expected":{"status":"hold","discrepancy_minor":25000,"payable_candidate_minor":970000}},
+  {"id":"matched-short-delivery-is-held","tool":"reconcile","input":{"currency":"USD","ordered_minor":100,"delivered_minor":90,"invoiced_minor":90,"tolerance_minor":0},"expected":{"status":"hold","reasons":["short_delivery"]}},
+  {"id":"flat-client-return","tool":"flat_rebate","input":{"currency":"MXN","eligible_minor":10000000,"rate_bps":500,"client_share_bps":4000},"expected":{"rebate_minor":500000,"client_return_minor":200000,"agency_retained_minor":300000}},
+  {"id":"managed-spend-is-not-margin","tool":"margin","input":{"currency":"USD","agency_revenue_minor":100,"agency_cost_minor":200,"managed_spend_minor":1000000},"expected":{"margin_minor":-100,"margin_bps":-10000}},
+  {"id":"zero-revenue-margin","tool":"margin","input":{"currency":"USD","agency_revenue_minor":0,"agency_cost_minor":200,"managed_spend_minor":1000000},"expected":{"margin_minor":-200,"margin_bps":null}},
+  {"id":"empty-plan-no-mutation","tool":"plan_diff","input":{"before":[],"after":[]},"expected":{"added":[],"removed":[],"changed":[],"status":"draft","requires_host_approval":false}}
+]

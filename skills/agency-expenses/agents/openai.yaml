@@ -1,0 +1,4 @@
+interface:
+  display_name: "Control job expenses and timesheets"
+  short_description: "Control job expenses and timesheets"
+  default_prompt: "Use $agency-expenses to review my agency inputs and prepare the next safe operational step."

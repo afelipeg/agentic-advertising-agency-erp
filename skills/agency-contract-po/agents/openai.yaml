@@ -1,0 +1,4 @@
+interface:
+  display_name: "Validate contracts and client POs"
+  short_description: "Validate contracts and client POs"
+  default_prompt: "Use $agency-contract-po to review my agency inputs and prepare the next safe operational step."

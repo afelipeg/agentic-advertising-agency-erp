@@ -1,0 +1,4 @@
+interface:
+  display_name: "Prepare and confirm supplier orders"
+  short_description: "Prepare and confirm supplier orders"
+  default_prompt: "Use $agency-media-buying to review my agency inputs and prepare the next safe operational step."

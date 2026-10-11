@@ -1,0 +1,4 @@
+interface:
+  display_name: "Coordinate the agency workflow"
+  short_description: "Coordinate the agency workflow"
+  default_prompt: "Use $agency-orchestrator to review my agency inputs and prepare the next safe operational step."
