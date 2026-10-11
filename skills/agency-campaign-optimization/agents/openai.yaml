@@ -1,4 +1,4 @@
 interface:
-  display_name: "Optimize campaigns within approved limits"
-  short_description: "Optimize campaigns within approved limits"
-  default_prompt: "Use $agency-campaign-optimization to review my agency inputs and prepare the next safe operational step."
+  display_name: "Campaign Optimization"
+  short_description: "Diagnose pacing and propose changes within commitments"
+  default_prompt: "Use $agency-campaign-optimization to compare planned vs actual TRP and spend for this month's schedule and propose changes that keep ordered spots intact."

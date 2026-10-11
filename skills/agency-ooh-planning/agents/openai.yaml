@@ -1,4 +1,4 @@
 interface:
-  display_name: "Plan OOH, DOOH and offline placements"
-  short_description: "Plan OOH, DOOH and offline placements"
-  default_prompt: "Use $agency-ooh-planning to inspect my inputs and prepare a safe evidence-backed agency handoff."
+  display_name: "OOH Planning"
+  short_description: "OOH, DOOH and press lines, month splits and evidence"
+  default_prompt: "Use $agency-ooh-planning to price 12 circuits for Nov-Jan and split the package by purchased days."

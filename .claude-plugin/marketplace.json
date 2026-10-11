@@ -1,0 +1,14 @@
+{
+  "name": "afelipeg-agency-erp",
+  "owner": { "name": "Andrés Felipe G." },
+  "description": "Open agentic advertising-agency ERP skills and local calculators.",
+  "plugins": [
+    {
+      "name": "agency-erp",
+      "source": ".",
+      "description": "Agency ERP circuit skills (42) plus a read-only local MCP calculator server.",
+      "category": "productivity",
+      "tags": ["agency", "advertising", "erp", "finance", "media"]
+    }
+  ]
+}

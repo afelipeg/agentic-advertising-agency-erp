@@ -1,0 +1,4 @@
+interface:
+  display_name: "Revenue Budget"
+  short_description: "Version agency revenue budgets and compare to actuals"
+  default_prompt: "Use $agency-revenue-budget to copy the 2027 budget to a new version with closed months."

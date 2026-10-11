@@ -1,4 +1,4 @@
 interface:
-  display_name: "Close and reopen accounting periods safely"
-  short_description: "Close and reopen accounting periods safely"
-  default_prompt: "Use $agency-period-close to review my agency inputs and prepare the next safe operational step."
+  display_name: "Agency Period Close"
+  short_description: "Sequence month and year close with gates and reconciliations"
+  default_prompt: "Use $agency-period-close to check whether October can be definitively closed and list the blocking gates."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Govern Access and Configuration"
+  short_description: "Roles, levels, cost visibility, SoD, config control, offboarding"
+  default_prompt: "Use $agency-access-governance to run an SoD review of users who can finalize payment lists."

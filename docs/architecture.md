@@ -4,7 +4,7 @@ The included layer is operational skills + deterministic read-only tools + input
 
 ## Dependency and state model
 
-The orchestrator reads current artifacts and selects stages; specialist skills work only on dependency-ready inputs. A specialist can be one invocation in the same assistant; users need not pay for 28 concurrent LLMs. A custom host can run independent read/preparation work concurrently, while serializing writes against shared PO/account/order/period state.
+The orchestrator reads current artifacts and selects stages; specialist skills work only on dependency-ready inputs. A specialist can be one invocation in the same assistant; users need not pay for 42 concurrent LLMs. A custom host can run independent read/preparation work concurrently, while serializing writes against shared PO/account/order/period state.
 
 ```mermaid
 flowchart TD

@@ -1,0 +1,1589 @@
+{
+  "plan_diff": {
+    "type": "object",
+    "properties": {
+      "added": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+        }
+      },
+      "removed": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+        }
+      },
+      "changed": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+        }
+      },
+      "unchanged": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+        }
+      },
+      "currency_deltas": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "currency": {
+              "type": "string",
+              "pattern": "^[A-Z]{3}$"
+            },
+            "before_minor": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "after_minor": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "delta_minor": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "currency",
+            "before_minor",
+            "after_minor",
+            "delta_minor"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "blockers": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "line_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+            },
+            "reason": {
+              "type": "string",
+              "enum": [
+                "commitment_removed",
+                "below_commitment",
+                "commitment_rewritten",
+                "committed_dimensions_changed"
+              ]
+            }
+          },
+          "required": [
+            "line_id",
+            "reason"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "status": {
+        "type": "string",
+        "enum": [
+          "draft",
+          "blocked"
+        ]
+      },
+      "requires_host_approval": {
+        "type": "boolean"
+      }
+    },
+    "required": [
+      "added",
+      "removed",
+      "changed",
+      "unchanged",
+      "currency_deltas",
+      "blockers",
+      "status",
+      "requires_host_approval"
+    ],
+    "additionalProperties": false
+  },
+  "budget_check": {
+    "type": "object",
+    "properties": {
+      "currency": {
+        "type": "string",
+        "pattern": "^[A-Z]{3}$"
+      },
+      "available_minor": {
+        "type": "integer",
+        "minimum": -9007199254740991,
+        "maximum": 9007199254740991
+      },
+      "after_request_minor": {
+        "type": "integer",
+        "minimum": -9007199254740991,
+        "maximum": 9007199254740991
+      },
+      "within_budget": {
+        "type": "boolean"
+      },
+      "atomic_reservation_required": {
+        "type": "boolean"
+      }
+    },
+    "required": [
+      "currency",
+      "available_minor",
+      "after_request_minor",
+      "within_budget",
+      "atomic_reservation_required"
+    ],
+    "additionalProperties": false
+  },
+  "reconcile": {
+    "type": "object",
+    "properties": {
+      "currency": {
+        "type": "string",
+        "pattern": "^[A-Z]{3}$"
+      },
+      "discrepancy_minor": {
+        "type": "integer",
+        "minimum": -9007199254740991,
+        "maximum": 9007199254740991
+      },
+      "payable_candidate_minor": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "status": {
+        "type": "string",
+        "enum": [
+          "hold",
+          "matched"
+        ]
+      },
+      "reasons": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": [
+            "invoice_delivery_mismatch",
+            "delivery_exceeds_order",
+            "short_delivery",
+            "invoice_exceeds_order"
+          ]
+        }
+      }
+    },
+    "required": [
+      "currency",
+      "discrepancy_minor",
+      "payable_candidate_minor",
+      "status",
+      "reasons"
+    ],
+    "additionalProperties": false
+  },
+  "flat_rebate": {
+    "type": "object",
+    "properties": {
+      "currency": {
+        "type": "string",
+        "pattern": "^[A-Z]{3}$"
+      },
+      "rebate_minor": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "client_return_minor": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "agency_retained_minor": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      }
+    },
+    "required": [
+      "currency",
+      "rebate_minor",
+      "client_return_minor",
+      "agency_retained_minor"
+    ],
+    "additionalProperties": false
+  },
+  "margin": {
+    "type": "object",
+    "properties": {
+      "currency": {
+        "type": "string",
+        "pattern": "^[A-Z]{3}$"
+      },
+      "margin_minor": {
+        "type": "integer",
+        "minimum": -9007199254740991,
+        "maximum": 9007199254740991
+      },
+      "margin_bps": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "managed_spend_minor": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      }
+    },
+    "required": [
+      "currency",
+      "margin_minor",
+      "margin_bps",
+      "managed_spend_minor"
+    ],
+    "additionalProperties": false
+  },
+  "payload_digest": {
+    "type": "object",
+    "properties": {
+      "sha256": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      },
+      "canonicalization": {
+        "type": "string",
+        "enum": [
+          "python-json-sorted-v1"
+        ]
+      },
+      "authorizes_execution": {
+        "type": "boolean"
+      }
+    },
+    "required": [
+      "sha256",
+      "canonicalization",
+      "authorizes_execution"
+    ],
+    "additionalProperties": false
+  },
+  "job_number": {
+    "type": "object",
+    "properties": {
+      "code": {
+        "type": "string",
+        "pattern": "^[A-Z0-9]{5}[0-9][A-Z][F0?*][0-9]{4}$"
+      },
+      "sales_allowed": {
+        "type": "boolean"
+      },
+      "media_allowed": {
+        "type": "boolean"
+      },
+      "client_approval_allowed": {
+        "type": "boolean"
+      },
+      "warnings": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": [
+            "typology_forbids_sales",
+            "billing_client_pending",
+            "split_billing_needs_percentages",
+            "non_billable_job"
+          ]
+        },
+        "maxItems": 10
+      }
+    },
+    "required": [
+      "code",
+      "sales_allowed",
+      "media_allowed",
+      "client_approval_allowed",
+      "warnings"
+    ],
+    "additionalProperties": false
+  },
+  "media_line_cost": {
+    "type": "object",
+    "properties": {
+      "currency": {
+        "type": "string",
+        "pattern": "^[A-Z]{3}$"
+      },
+      "gross_minor": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "formula": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "currency",
+      "gross_minor",
+      "formula"
+    ],
+    "additionalProperties": false
+  },
+  "discount_cascade": {
+    "type": "object",
+    "properties": {
+      "currency": {
+        "type": "string",
+        "pattern": "^[A-Z]{3}$"
+      },
+      "surcharged_gross_minor": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "steps": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "discount_bps": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000
+            },
+            "amount_minor": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "running_minor": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "discount_bps",
+            "amount_minor",
+            "running_minor"
+          ],
+          "additionalProperties": false
+        },
+        "maxItems": 8
+      },
+      "net_minor": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "fee_minor": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "client_total_minor": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "rounding": {
+        "type": "string",
+        "enum": [
+          "half_up_each_step"
+        ]
+      }
+    },
+    "required": [
+      "currency",
+      "surcharged_gross_minor",
+      "steps",
+      "net_minor",
+      "fee_minor",
+      "client_total_minor",
+      "rounding"
+    ],
+    "additionalProperties": false
+  },
+  "audience_metrics": {
+    "type": "object",
+    "properties": {
+      "currency": {
+        "type": "string",
+        "pattern": "^[A-Z]{3}$"
+      },
+      "trp_hundredths": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "impressions": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "average_rating_hundredths": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "cpr_minor": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "cpm_minor": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "frequency_hundredths": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "currency",
+      "trp_hundredths",
+      "impressions",
+      "average_rating_hundredths",
+      "cpr_minor",
+      "cpm_minor",
+      "frequency_hundredths"
+    ],
+    "additionalProperties": false
+  },
+  "tiered_commission": {
+    "type": "object",
+    "properties": {
+      "currency": {
+        "type": "string",
+        "pattern": "^[A-Z]{3}$"
+      },
+      "adjusted_base_minor": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "commission_minor": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "cap_applied": {
+        "type": "boolean"
+      },
+      "prior_commission_minor": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "period_commission_minor": {
+        "type": "integer",
+        "minimum": -9007199254740991,
+        "maximum": 9007199254740991
+      },
+      "client_rebate_minor": {
+        "type": "integer",
+        "minimum": -9007199254740991,
+        "maximum": 9007199254740991
+      },
+      "agency_retained_minor": {
+        "type": "integer",
+        "minimum": -9007199254740991,
+        "maximum": 9007199254740991
+      },
+      "bracket_index": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 19
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "currency",
+      "adjusted_base_minor",
+      "commission_minor",
+      "cap_applied",
+      "prior_commission_minor",
+      "period_commission_minor",
+      "client_rebate_minor",
+      "agency_retained_minor",
+      "bracket_index"
+    ],
+    "additionalProperties": false
+  },
+  "estimate_totals": {
+    "type": "object",
+    "properties": {
+      "lines": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "line_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+            },
+            "currency": {
+              "type": "string",
+              "pattern": "^[A-Z]{3}$"
+            },
+            "sale_minor": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "cost_minor": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "service_minor": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "supplier_commission_minor": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "margin_minor": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "line_id",
+            "currency",
+            "sale_minor",
+            "cost_minor",
+            "service_minor",
+            "supplier_commission_minor",
+            "margin_minor"
+          ],
+          "additionalProperties": false
+        },
+        "maxItems": 500
+      },
+      "currency_totals": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "currency": {
+              "type": "string",
+              "pattern": "^[A-Z]{3}$"
+            },
+            "sale_minor": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "cost_minor": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "service_minor": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "supplier_commission_minor": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "gross_income_minor": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "currency",
+            "sale_minor",
+            "cost_minor",
+            "service_minor",
+            "supplier_commission_minor",
+            "gross_income_minor"
+          ],
+          "additionalProperties": false
+        },
+        "maxItems": 50
+      },
+      "invoice_groups": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 50
+      },
+      "blockers": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "line_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+            },
+            "reason": {
+              "type": "string",
+              "enum": [
+                "direct_sale_differs_from_cost",
+                "commission_on_internal_line",
+                "duplicate_line_id"
+              ]
+            }
+          },
+          "required": [
+            "line_id",
+            "reason"
+          ],
+          "additionalProperties": false
+        },
+        "maxItems": 500
+      }
+    },
+    "required": [
+      "lines",
+      "currency_totals",
+      "invoice_groups",
+      "blockers"
+    ],
+    "additionalProperties": false
+  },
+  "hourly_fee_settlement": {
+    "type": "object",
+    "properties": {
+      "currency": {
+        "type": "string",
+        "pattern": "^[A-Z]{3}$"
+      },
+      "implied_rate_minor": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "total_hours_hundredths": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "overage_hours_hundredths": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "unused_hours_hundredths": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "overage_minor": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "total_billable_minor": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "per_person": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "person_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+            },
+            "overage_hours_hundredths": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "overage_minor": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "person_id",
+            "overage_hours_hundredths",
+            "overage_minor"
+          ],
+          "additionalProperties": false
+        },
+        "maxItems": 500
+      }
+    },
+    "required": [
+      "currency",
+      "implied_rate_minor",
+      "total_hours_hundredths",
+      "overage_hours_hundredths",
+      "unused_hours_hundredths",
+      "overage_minor",
+      "total_billable_minor",
+      "per_person"
+    ],
+    "additionalProperties": false
+  },
+  "payment_terms": {
+    "type": "object",
+    "properties": {
+      "due_date": {
+        "type": "string",
+        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+      },
+      "expected_date": {
+        "type": "string",
+        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+      },
+      "due_rolled_days": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 31
+      },
+      "expected_rolled_days": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 31
+      }
+    },
+    "required": [
+      "due_date",
+      "expected_date",
+      "due_rolled_days",
+      "expected_rolled_days"
+    ],
+    "additionalProperties": false
+  },
+  "withholding": {
+    "type": "object",
+    "properties": {
+      "currency": {
+        "type": "string",
+        "pattern": "^[A-Z]{3}$"
+      },
+      "taxable_base_minor": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "withholding_minor": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "below_minimum": {
+        "type": "boolean"
+      }
+    },
+    "required": [
+      "currency",
+      "taxable_base_minor",
+      "withholding_minor",
+      "below_minimum"
+    ],
+    "additionalProperties": false
+  },
+  "fx_revaluation": {
+    "type": "object",
+    "properties": {
+      "local_currency": {
+        "type": "string",
+        "pattern": "^[A-Z]{3}$"
+      },
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "doc_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+            },
+            "book_local_minor": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "closing_local_minor": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "gain_loss_minor": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "doc_id",
+            "book_local_minor",
+            "closing_local_minor",
+            "gain_loss_minor"
+          ],
+          "additionalProperties": false
+        },
+        "maxItems": 5000
+      },
+      "gain_minor": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "loss_minor": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "net_minor": {
+        "type": "integer",
+        "minimum": -9007199254740991,
+        "maximum": 9007199254740991
+      }
+    },
+    "required": [
+      "local_currency",
+      "items",
+      "gain_minor",
+      "loss_minor",
+      "net_minor"
+    ],
+    "additionalProperties": false
+  },
+  "aging": {
+    "type": "object",
+    "properties": {
+      "as_of": {
+        "type": "string",
+        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+      },
+      "currencies": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "currency": {
+              "type": "string",
+              "pattern": "^[A-Z]{3}$"
+            },
+            "not_due_minor": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "total_minor": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "buckets": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "from_days": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 3651
+                  },
+                  "to_days": {
+                    "anyOf": [
+                      {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 3650
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "amount_minor": {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  }
+                },
+                "required": [
+                  "from_days",
+                  "to_days",
+                  "amount_minor"
+                ],
+                "additionalProperties": false
+              },
+              "maxItems": 11
+            },
+            "weighted_days_overdue": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "currency",
+            "not_due_minor",
+            "total_minor",
+            "buckets",
+            "weighted_days_overdue"
+          ],
+          "additionalProperties": false
+        },
+        "maxItems": 100
+      }
+    },
+    "required": [
+      "as_of",
+      "currencies"
+    ],
+    "additionalProperties": false
+  },
+  "allocate": {
+    "type": "object",
+    "properties": {
+      "currency": {
+        "type": "string",
+        "pattern": "^[A-Z]{3}$"
+      },
+      "allocations": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "target_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+            },
+            "amount_minor": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "target_id",
+            "amount_minor"
+          ],
+          "additionalProperties": false
+        },
+        "maxItems": 1000
+      },
+      "total_minor": {
+        "type": "integer",
+        "minimum": -9007199254740991,
+        "maximum": 9007199254740991
+      }
+    },
+    "required": [
+      "currency",
+      "allocations",
+      "total_minor"
+    ],
+    "additionalProperties": false
+  },
+  "installment_schedule": {
+    "type": "object",
+    "properties": {
+      "currency": {
+        "type": "string",
+        "pattern": "^[A-Z]{3}$"
+      },
+      "advance_minor": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "installments": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "number": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 120
+            },
+            "month": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])$"
+            },
+            "amount_minor": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "number",
+            "month",
+            "amount_minor"
+          ],
+          "additionalProperties": false
+        },
+        "maxItems": 120
+      },
+      "total_minor": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      }
+    },
+    "required": [
+      "currency",
+      "advance_minor",
+      "installments",
+      "total_minor"
+    ],
+    "additionalProperties": false
+  },
+  "depreciation_schedule": {
+    "type": "object",
+    "properties": {
+      "currency": {
+        "type": "string",
+        "pattern": "^[A-Z]{3}$"
+      },
+      "depreciable_minor": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "first_month": {
+        "type": "string",
+        "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])$"
+      },
+      "last_month": {
+        "type": "string",
+        "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])$"
+      },
+      "months": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "month": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])$"
+            },
+            "charge_minor": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "accumulated_minor": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "net_book_minor": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "month",
+            "charge_minor",
+            "accumulated_minor",
+            "net_book_minor"
+          ],
+          "additionalProperties": false
+        },
+        "maxItems": 600
+      }
+    },
+    "required": [
+      "currency",
+      "depreciable_minor",
+      "first_month",
+      "last_month",
+      "months"
+    ],
+    "additionalProperties": false
+  },
+  "journal_check": {
+    "type": "object",
+    "properties": {
+      "entry_id": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+      },
+      "status": {
+        "type": "string",
+        "enum": [
+          "valid",
+          "invalid"
+        ]
+      },
+      "currencies": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "currency": {
+              "type": "string",
+              "pattern": "^[A-Z]{3}$"
+            },
+            "debit_minor": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "credit_minor": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "difference_minor": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "currency",
+            "debit_minor",
+            "credit_minor",
+            "difference_minor"
+          ],
+          "additionalProperties": false
+        },
+        "maxItems": 50
+      },
+      "errors": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "line_id": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "reason": {
+              "type": "string",
+              "enum": [
+                "both_sides",
+                "zero_line",
+                "missing_dimension",
+                "unbalanced_currency",
+                "locked_period",
+                "duplicate_line_id",
+                "no_lines"
+              ]
+            }
+          },
+          "required": [
+            "line_id",
+            "reason"
+          ],
+          "additionalProperties": false
+        },
+        "maxItems": 2600
+      }
+    },
+    "required": [
+      "entry_id",
+      "status",
+      "currencies",
+      "errors"
+    ],
+    "additionalProperties": false
+  },
+  "cash_projection": {
+    "type": "object",
+    "properties": {
+      "as_of": {
+        "type": "string",
+        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+      },
+      "granularity": {
+        "type": "string",
+        "enum": [
+          "week",
+          "month"
+        ]
+      },
+      "currencies": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "currency": {
+              "type": "string",
+              "pattern": "^[A-Z]{3}$"
+            },
+            "opening_minor": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "overdue_in_minor": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "overdue_out_minor": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "beyond_horizon_in_minor": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "beyond_horizon_out_minor": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "periods": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "period_start": {
+                    "type": "string",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+                  },
+                  "in_confirmed_minor": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "in_expected_minor": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "out_confirmed_minor": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "out_expected_minor": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "closing_minor": {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  }
+                },
+                "required": [
+                  "period_start",
+                  "in_confirmed_minor",
+                  "in_expected_minor",
+                  "out_confirmed_minor",
+                  "out_expected_minor",
+                  "closing_minor"
+                ],
+                "additionalProperties": false
+              },
+              "maxItems": 26
+            },
+            "minimum_closing_minor": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "minimum_period_start": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            }
+          },
+          "required": [
+            "currency",
+            "opening_minor",
+            "overdue_in_minor",
+            "overdue_out_minor",
+            "beyond_horizon_in_minor",
+            "beyond_horizon_out_minor",
+            "periods",
+            "minimum_closing_minor",
+            "minimum_period_start"
+          ],
+          "additionalProperties": false
+        },
+        "maxItems": 50
+      }
+    },
+    "required": [
+      "as_of",
+      "granularity",
+      "currencies"
+    ],
+    "additionalProperties": false
+  },
+  "spot_match": {
+    "type": "object",
+    "properties": {
+      "matches": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "spot_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+            },
+            "event_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+            },
+            "kind": {
+              "type": "string",
+              "enum": [
+                "exact",
+                "tolerance"
+              ]
+            }
+          },
+          "required": [
+            "spot_id",
+            "event_id",
+            "kind"
+          ],
+          "additionalProperties": false
+        },
+        "maxItems": 5000
+      },
+      "ambiguous": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "spot_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+            },
+            "candidate_event_ids": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+              },
+              "maxItems": 20000
+            }
+          },
+          "required": [
+            "spot_id",
+            "candidate_event_ids"
+          ],
+          "additionalProperties": false
+        },
+        "maxItems": 5000
+      },
+      "ordered_not_aired": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+        },
+        "maxItems": 5000
+      },
+      "aired_not_ordered": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+        },
+        "maxItems": 20000
+      }
+    },
+    "required": [
+      "matches",
+      "ambiguous",
+      "ordered_not_aired",
+      "aired_not_ordered"
+    ],
+    "additionalProperties": false
+  },
+  "credit_exposure": {
+    "type": "object",
+    "properties": {
+      "currency": {
+        "type": "string",
+        "pattern": "^[A-Z]{3}$"
+      },
+      "exposure_after_minor": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "headroom_minor": {
+        "type": "integer",
+        "minimum": -9007199254740991,
+        "maximum": 9007199254740991
+      },
+      "within_limit": {
+        "type": "boolean"
+      },
+      "requires_override_approval": {
+        "type": "boolean"
+      }
+    },
+    "required": [
+      "currency",
+      "exposure_after_minor",
+      "headroom_minor",
+      "within_limit",
+      "requires_override_approval"
+    ],
+    "additionalProperties": false
+  },
+  "invoice_check": {
+    "type": "object",
+    "properties": {
+      "currency": {
+        "type": "string",
+        "pattern": "^[A-Z]{3}$"
+      },
+      "net_minor": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "vat_minor": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "computed_total_minor": {
+        "type": "integer",
+        "minimum": -9007199254740991,
+        "maximum": 9007199254740991
+      },
+      "difference_minor": {
+        "type": "integer",
+        "minimum": -9007199254740991,
+        "maximum": 9007199254740991
+      },
+      "status": {
+        "type": "string",
+        "enum": [
+          "matched",
+          "rounding_adjustment",
+          "mismatch"
+        ]
+      },
+      "vat_by_rate": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "vat_bps": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000
+            },
+            "net_minor": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "vat_minor": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "vat_bps",
+            "net_minor",
+            "vat_minor"
+          ],
+          "additionalProperties": false
+        },
+        "maxItems": 50
+      }
+    },
+    "required": [
+      "currency",
+      "net_minor",
+      "vat_minor",
+      "computed_total_minor",
+      "difference_minor",
+      "status",
+      "vat_by_rate"
+    ],
+    "additionalProperties": false
+  }
+}

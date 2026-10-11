@@ -4,7 +4,7 @@ This reference is not an executable installation. Use the host's actual skill/pl
 
 | Environment | Skills | Tools/accounts | Practical route |
 |---|---|---|---|
-| Claude Code | Portable SKILL.md folders | Enabled plugins and local/remote MCP | Package installer to .claude/skills; then existing marketplace connector |
+| Claude Code | Portable SKILL.md folders or this repo as a plugin marketplace | Enabled plugins and local/remote MCP; `.mcp.json` registers the calculator server | `claude plugin marketplace add afelipeg/agentic-advertising-agency-erp` then `claude plugin install agency-erp@afelipeg-agency-erp`, or the package installer to .claude/skills |
 | Codex | Portable skills in .agents/skills | Enabled plugins and local/remote MCP | Package installer; reuse enabled apps/plugins; configure missing providers separately |
 | Claude web/desktop | Custom skill upload where enabled | Native connectors or supported custom remote MCP | Bundle **one skill folder** per upload; enable skill and connector separately |
 | ChatGPT web/GPT/Project | Actual host plugin/skill support varies; a knowledge document is not a native skill | Available apps/plugins; custom MCP only where workspace supports it | Prefer native apps; adapt exported instructions in the appropriate host builder. No automatic GPT tool access from an upload |

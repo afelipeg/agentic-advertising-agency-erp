@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agency Accruals and Revaluation"
+  short_description: "Prepare month-end provisions, FX revaluation and OT closing"
+  default_prompt: "Use $agency-accruals-revaluation to prepare the October FX revaluation and Gross Income provision after pre-close."

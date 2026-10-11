@@ -1,4 +1,4 @@
 interface:
-  display_name: "Prepare client billing and receivables"
-  short_description: "Prepare client billing and receivables"
-  default_prompt: "Use $agency-client-billing to review my agency inputs and prepare the next safe operational step."
+  display_name: "Client Billing"
+  short_description: "Draft invoices and notes from approved pending-to-bill"
+  default_prompt: "Use $agency-client-billing to draft invoices from this month's approved-for-billing media schedules for one billing client."

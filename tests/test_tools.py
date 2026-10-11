@@ -78,7 +78,7 @@ class ToolTests(unittest.TestCase):
         requests=[{'jsonrpc':'2.0','id':1,'method':'initialize','params':{'protocolVersion':'2025-06-18','capabilities':{},'clientInfo':{'name':'test','version':'1'}}},{'jsonrpc':'2.0','method':'notifications/initialized'},{'jsonrpc':'2.0','id':2,'method':'tools/list'},{'jsonrpc':'2.0','id':3,'method':'tools/call','params':{'name':'send_money','arguments':{}}}]
         p=subprocess.run([sys.executable,str(ROOT/'tools/mcp_server.py')],input='\n'.join(json.dumps(x) for x in requests)+'\n',text=True,capture_output=True,check=True)
         results=[json.loads(x) for x in p.stdout.splitlines()]
-        self.assertEqual(len(results),3);self.assertEqual(len(results[1]['result']['tools']),6);self.assertTrue(results[2]['result']['isError'])
+        self.assertEqual(len(results),3);self.assertEqual(len(results[1]['result']['tools']),len(SCHEMAS));self.assertTrue(results[2]['result']['isError'])
         for tool in results[1]['result']['tools']:self.assertTrue(tool['annotations']['readOnlyHint']);self.assertIn('outputSchema',tool)
 
     def test_output_schema_rejects_extra_fields(self):

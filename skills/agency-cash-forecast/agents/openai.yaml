@@ -1,4 +1,4 @@
 interface:
-  display_name: "Forecast collections and obligations"
-  short_description: "Forecast collections and obligations"
-  default_prompt: "Use $agency-cash-forecast to inspect my inputs and prepare a safe evidence-backed agency handoff."
+  display_name: "Cash Forecast"
+  short_description: "Weekly or monthly cash projection with pipeline and delays"
+  default_prompt: "Use $agency-cash-forecast to project the next six weeks of cash and flag the lowest balance week."

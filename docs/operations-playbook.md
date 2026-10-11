@@ -1,6 +1,6 @@
 # Complete agency operating circuit
 
-These are original functional procedures for agency operations, not a claim of source-code equivalence to any ERP. Publicly documented operational patterns establish the circuit; transactional implementation, each agency's accounting policy, country rules and private provider behavior need validation with their owners. Do not infer undocumented internal logic. Read the execution contract and stage skill before acting.
+These are original functional procedures for agency operations. Since v0.2 the detailed module rules come from the [ERP functional reference](erp-reference/README.md), a paraphrased reverse engineering of a reference agency ERP's public help; this playbook keeps the cross-cutting controls. Neither is a claim of source-code equivalence to any ERP. Each agency's accounting policy, country rules and private provider behaviour need validation with their owners. Do not infer undocumented internal logic. Read the execution contract and stage skill before acting.
 
 ## A. Establish the job and reusable configuration
 

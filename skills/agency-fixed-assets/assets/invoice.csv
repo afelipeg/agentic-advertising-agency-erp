@@ -1,0 +1,1 @@
+tenant_id,client_id,job_id,document_id,supplier_id,order_id,document_type,currency,currency_exponent,net_minor,tax_minor,gross_minor,issue_date,due_date,source_ref

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Collections"
+  short_description: "Draft receipts, withholdings, aging and chase worklists"
+  default_prompt: "Use $agency-collections to draft a receipt applying a client transfer and withholding certificates to open invoices."

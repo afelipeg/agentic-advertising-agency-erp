@@ -1,4 +1,4 @@
 interface:
-  display_name: "Validate supplier payables"
-  short_description: "Validate supplier payables"
-  default_prompt: "Use $agency-payables to review my agency inputs and prepare the next safe operational step."
+  display_name: "Register Supplier Invoices"
+  short_description: "Log, deduplicate and prepare supplier invoice registration"
+  default_prompt: "Use $agency-payables to log a supplier invoice, check duplicates and totals, and prepare its registration."

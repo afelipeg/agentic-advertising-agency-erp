@@ -34,7 +34,7 @@ test('web export warns about instruction adaptation and is exclusive',async()=>{
   const dir=await mkdtemp(join(tmpdir(),'agency-export-'));
   try{
     const out=join(dir,'reference.md');let r=run(['export','--host','gpt','--out',out],dir);assert.equal(r.status,0,r.stderr);
-    const text=await readFile(out,'utf8');assert.match(text,/not an executable installation/);assert.match(text,/Revise daily plans/);assert.match(text,/supermetrics/);
+    const text=await readFile(out,'utf8');assert.match(text,/not an executable installation/);assert.match(text,/Agency ERP end-to-end circuit/);assert.match(text,/Plan Changes/);assert.match(text,/mx-cfdi-pac/);assert.match(text,/supermetrics/);
     r=run(['export','--host','gpt','--out',out],dir);assert.equal(r.status,1);
   }finally{await rm(dir,{recursive:true,force:true});}
 });

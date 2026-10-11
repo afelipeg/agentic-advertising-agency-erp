@@ -1,0 +1,4 @@
+interface:
+  display_name: "Prepare the Supplier Payment Run"
+  short_description: "Propose payment lists, orders, withholdings and releases"
+  default_prompt: "Use $agency-payment-run to propose this Friday's payment list for invoices due this week with client-collected evidence."

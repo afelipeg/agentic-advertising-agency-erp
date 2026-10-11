@@ -1,0 +1,4 @@
+interface:
+  display_name: "Management Reporting"
+  short_description: "Monthly pack, HFM-style mapping exports and agency KPIs"
+  default_prompt: "Use $agency-management-reporting to check HFM mapping coverage for September and draft the monthly KPI pack."

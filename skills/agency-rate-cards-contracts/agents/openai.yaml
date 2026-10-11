@@ -1,0 +1,4 @@
+interface:
+  display_name: "Rate Cards and Media Buy Contracts"
+  short_description: "Maintain rate cards and media buy contracts"
+  default_prompt: "Use $agency-rate-cards-contracts to draft a client rate card derived from the printed card with a coefficient and check validity overlaps."

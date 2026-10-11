@@ -1,4 +1,4 @@
 interface:
-  display_name: "Validate contracts and client POs"
-  short_description: "Validate contracts and client POs"
-  default_prompt: "Use $agency-contract-po to review my agency inputs and prepare the next safe operational step."
+  display_name: "Client Agreements and POs"
+  short_description: "Control client POs, transfers and budget reserves"
+  default_prompt: "Use $agency-contract-po to check whether this media plan can be linked to client PO 4501."

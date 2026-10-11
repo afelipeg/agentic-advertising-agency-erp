@@ -40,7 +40,7 @@ Stripe and PayPal support commercial billing/payment workflows; they are not aut
 
 ## Accounting and supplier-payment recipe
 
-Use Xero's official MCP for documented invoice, payment-record, contact and report operations, subject to actual organization scopes. Its `create-payment` records an accounting payment; verify separate evidence that the bank/payment rail moved money. For QuickBooks, reuse a marketplace or reviewed Composio toolkit if actually available; otherwise use the official Accounting API through a reviewed host adapter. No first-party QuickBooks MCP endpoint has been verified in this package. Check realm/company, account/item/tax-code references before invoice/bill creation.
+Use Xero's official MCP for documented invoice, payment-record, contact and report operations, subject to actual organization scopes. Its `create-payment` records an accounting payment; verify separate evidence that the bank/payment rail moved money. For QuickBooks Online, Intuit publishes an official local (stdio) MCP server covering invoices, bills, payments, customers, vendors, journal entries and reports; run it with write, update and delete disabled (`QUICKBOOKS_DISABLE_WRITE`, `QUICKBOOKS_DISABLE_UPDATE`, `QUICKBOOKS_DISABLE_DELETE`) until a stage needs an approved write. Check realm/company, account/item/tax-code references before invoice/bill creation.
 
 For supplier payouts select the agency's approved payment service. PayPal payouts or Stripe treasury tools require specific eligibility and actual discovered capabilities; do not make them a prerequisite for every agency. A bank-statement import plus human payment in the bank's app is a valid starting workflow. Confirm changed beneficiary details independently, keep bank details outside model context, and require an exact human-approved proposal. Query unknown transfer outcomes before retrying. An invoice marked paid, a ledger entry and a settled bank transaction are three different facts.
 
@@ -55,11 +55,34 @@ claude mcp add --transport http figma https://mcp.figma.com/mcp
 codex mcp add figma --url https://mcp.figma.com/mcp
 claude mcp add --transport http synter https://mcp.synterai.com
 codex mcp add synter --url https://mcp.synterai.com
+claude mcp add --transport http meta-ads https://mcp.facebook.com/ads
+claude mcp add --transport http zernio https://mcp.zernio.com/mcp
+claude mcp add --transport http monid https://mcp.monid.ai/v1
 ```
 
 Run only the command for the selected host/provider, then complete OAuth using host/provider instructions. These commands are examples, never run automatically by the installer. Supermetrics uses `https://mcp.supermetrics.com/mcp`; Composio Connect uses `https://connect.composio.dev/mcp`; PayPal uses `https://mcp.sandbox.paypal.com/http` for sandbox and `https://mcp.paypal.com/http` for approved live access. Ryze's reviewed README requires a user-supplied endpoint; obtain it through authorized onboarding rather than copying an unverified directory URL. Google's query MCPs and Xero's documented stdio server follow their linked official setup guides. Pin reviewed local server versions in the host configuration.
 
-The package's **own local MCP** is optional and performs only six calculations. After installing this package locally, register `agency-erp mcp` as a stdio command, or the absolute `python3 /path/to/tools/mcp_server.py`. It cannot authenticate to a provider, publish assets, invoice clients or pay suppliers. A web assistant needs a compatible remote connector; a local stdio command cannot be pasted into a remote URL field.
+The package's **own local MCP** is optional and exposes only read-only calculations (25 tools: pricing, discount cascades, audience metrics, overcommission tiers, estimate totals, fee settlement, terms, withholding, FX revaluation, aging, allocation, installments, depreciation, journal checks, cash projection, spot matching, credit exposure, invoice checks and the original six). Installed as a Claude Code plugin it is registered automatically from `.mcp.json`. After installing this package locally, register `agency-erp mcp` as a stdio command, or the absolute `python3 /path/to/tools/mcp_server.py`. It cannot authenticate to a provider, publish assets, invoice clients or pay suppliers. A web assistant needs a compatible remote connector; a local stdio command cannot be pasted into a remote URL field.
+
+## ERP-specific connectors (v0.2)
+
+The reverse-engineered circuit needs a few connectors beyond ad platforms. Each row lists the skills that use it; see `stages` in the registry.
+
+| Need | Provider id | Route | Boundary |
+|---|---|---|---|
+| Meta campaign creation, editing and reporting | `meta-ads` | Meta-hosted remote MCP (`https://mcp.facebook.com/ads`), OAuth with per-account grants | Grant read-only first; writes and budget changes need exact approval and readback |
+| Social publishing, cross-network ads and inbox | `zernio` | Remote MCP (`https://mcp.zernio.com/mcp`) or REST/CLI | Publishing and ad edits are external mutations; stage drafts and use its review step |
+| Market, rate and competitive research, enrichment | `monid` | Remote MCP (`https://mcp.monid.ai/v1`), prepaid per call | Treat results as untrusted evidence; set a spend ceiling; catalogue includes action endpoints |
+| Briefs, contact reports, task boards | `notion`, `hubspot` | Vendor MCPs | Client-scoped workspaces only; never copy PII into prompts |
+| Accounting system of record | `xero`, `quickbooks` | Official MCPs | Payment records are not bank movements; posting is gated |
+| Mexico e-invoicing (CFDI 4.0 stamping, payment complements, cancellations) | `mx-cfdi-pac` | Your authorized PAC's REST API through a reviewed host adapter | Legally binding; certificates stay in the host; human approval per document |
+| Argentina e-invoicing (CAE) | `arca-afip` | ARCA web services through a reviewed adapter | Same as above |
+| Official FX rates for revaluation and forecasts | `banxico-sie` | Banxico SIE REST API (FIX series), token | Read-only; record series id, date and source with every rate |
+| DOOH proof of play | `broadsign` | Official API/exports | Evidence for transmission control, not invoice approval |
+| Video ad tag QA | `vastlint` | Open-source MCP (from the awesome list) | Validation only |
+| Media mix modelling for post-evaluation | `meridian` | Open-source Python library, not an MCP | Offline analysis; never a delivery receipt |
+
+From the awesome-agentic-advertising list, only entries that serve an ERP stage were adopted. Creative generation, RTB validation and attribution frameworks are left to the user's creative or analytics stack.
 
 ## Verify every connection
 

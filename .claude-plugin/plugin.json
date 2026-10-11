@@ -1,0 +1,10 @@
+{
+  "name": "agency-erp",
+  "version": "0.2.0",
+  "description": "42 agent skills that run an advertising agency's ERP circuit end to end (jobs, production, media planning and buying, spot control, supplier invoices, billing, collections, payments, treasury, tax, ledger, close, profitability) with read-only deterministic calculators.",
+  "author": { "name": "Andrés Felipe G.", "url": "https://afelipeg.com" },
+  "homepage": "https://github.com/afelipeg/agentic-advertising-agency-erp#readme",
+  "repository": "https://github.com/afelipeg/agentic-advertising-agency-erp",
+  "license": "MIT",
+  "keywords": ["agency", "advertising", "erp", "media-buying", "media-planning", "accounts-payable", "accounts-receivable", "mcp", "agent-skills"]
+}

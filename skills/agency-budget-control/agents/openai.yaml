@@ -1,4 +1,4 @@
 interface:
-  display_name: "Check and reserve authorized budget"
-  short_description: "Check and reserve authorized budget"
-  default_prompt: "Use $agency-budget-control to review my agency inputs and prepare the next safe operational step."
+  display_name: "Budget and Credit Control"
+  short_description: "Check PO, reserve and credit headroom before approval"
+  default_prompt: "Use $agency-budget-control to check PO and credit headroom before client approval of plan 2207."

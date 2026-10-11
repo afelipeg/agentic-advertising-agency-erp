@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tax Compliance"
+  short_description: "Prepare CAE/CFDI requests, VAT books and tax positions"
+  default_prompt: "Use $agency-tax-compliance to prepare the CAE request batch for pending invoices on one electronic point of sale."

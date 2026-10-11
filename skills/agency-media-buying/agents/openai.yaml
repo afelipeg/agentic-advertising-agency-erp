@@ -1,4 +1,4 @@
 interface:
-  display_name: "Prepare and confirm supplier orders"
-  short_description: "Prepare and confirm supplier orders"
-  default_prompt: "Use $agency-media-buying to review my agency inputs and prepare the next safe operational step."
+  display_name: "Media Buying: Insertion Orders"
+  short_description: "Prepare, version, send and close insertion orders"
+  default_prompt: "Use $agency-media-buying to generate insertion orders for an approved monthly schedule split by vendor and material."

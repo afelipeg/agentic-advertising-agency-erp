@@ -1,4 +1,4 @@
 interface:
-  display_name: "Calculate and allocate rebates"
-  short_description: "Calculate and allocate rebates"
-  default_prompt: "Use $agency-rebates to review my agency inputs and prepare the next safe operational step."
+  display_name: "Rebates"
+  short_description: "Compute overcommission, volume and incentive pendings"
+  default_prompt: "Use $agency-rebates to generate this month's overcommission pendings for one supplier contract with provision or bill flags."
