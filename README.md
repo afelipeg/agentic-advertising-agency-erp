@@ -189,3 +189,11 @@ Deterministic checks verify tools, packaging and synthetic fixtures; they are no
 Discovery sources: [awesome-agentic-advertising](https://github.com/afelipeg/awesome-agentic-advertising), independently checked against provider documentation. Skill formats: [Agent Skills](https://agentskills.io/specification), [Codex skills](https://learn.chatgpt.com/docs/build-skills), [Claude skills](https://code.claude.com/docs/en/skills).
 
 See [release validation](docs/release-validation.md) for checks actually run and the remaining host/publication boundaries.
+
+## Contributors
+
+- **Andrés Felipe G. (Axiom Nexar)** — owner and maintainer.
+- **Codex (OpenAI)** — built version 0.1: the portable skill format, installer, control contract, local calculators, stdio MCP, file importer and evaluation harness.
+- **Claude (Anthropic)** — built version 0.2: the ERP reverse engineering and functional reference, 14 new skills, the rewrite of the existing 28, 19 new calculators, the connector registry update and Claude Code plugin packaging.
+
+Contributions are welcome; see [CONTRIBUTING.md](CONTRIBUTING.md).

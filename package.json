@@ -3,6 +3,21 @@
   "version": "0.2.0",
   "description": "Portable agency ERP agent skills (42) with deterministic calculators, MCP wiring, an ERP functional reference and evaluation contracts.",
   "license": "MIT",
+  "author": {
+    "name": "Andrés Felipe G. (Axiom Nexar)",
+    "email": "afelipeg@gmail.com",
+    "url": "https://afelipeg.com"
+  },
+  "contributors": [
+    {
+      "name": "Claude (Anthropic)",
+      "url": "https://claude.ai"
+    },
+    {
+      "name": "Codex (OpenAI)",
+      "url": "https://openai.com/codex"
+    }
+  ],
   "type": "module",
   "bin": {
     "agency-erp": "bin/agency-erp.mjs"

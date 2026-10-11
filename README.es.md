@@ -75,3 +75,11 @@ Después puedes pedir una etapa concreta: verificar derechos creativos, concilia
 Las instrucciones exigen controles, pero el host debe ejecutarlos: sandbox, aislamiento entre clientes, eliminación de PII antes del modelo, presupuesto compartido, trazas, checkpoints y aprobaciones verificadas. Si tu entorno no los implementa, usa el paquete para preparación y análisis con datos redactados. Las pruebas locales no demuestran que un modelo opere cuentas reales de forma segura.
 
 Consulta [la validación del lanzamiento](docs/release-validation.md) para las pruebas ejecutadas y los límites de implementación y publicación.
+
+## Colaboradores
+
+- **Andrés Felipe G. (Axiom Nexar)**: dueño y mantenedor.
+- **Codex (OpenAI)**: construyó la versión 0.1, con el formato portable de skills, el instalador, el contrato de control, las calculadoras locales, el MCP stdio, el importador de archivos y el arnés de evaluación.
+- **Claude (Anthropic)**: construyó la versión 0.2, con la ingeniería en reversa y la referencia funcional del ERP, 14 skills nuevas, la reescritura de las 28 existentes, 19 calculadoras nuevas, la actualización del registro de conectores y el empaquetado como plugin de Claude Code.
+
+Las contribuciones son bienvenidas; ver [CONTRIBUTING.md](CONTRIBUTING.md).
