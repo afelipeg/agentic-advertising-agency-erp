@@ -14,7 +14,7 @@ agency-erp install --agent codex|claude-code [--skill NAME] [--global] [--cwd PA
 agency-erp doctor
 agency-erp export --host claude-ai|gpt --out PATH
 agency-erp bundle --skill NAME --out PATH.zip
-agency-erp connect-plan --profile solo|studio|performance
+agency-erp connect-plan --profile solo|studio|performance|agency
 agency-erp import --kind KIND --file PATH --out PATH.json --tenant ID --client ID --job ID [--sheet NAME]
 agency-erp tool NAME < input.json
 agency-erp mcp
@@ -77,7 +77,7 @@ try {
     const out=resolve(o['--out']);
     await rejectSymlinks(out);
     const {open}=await import('node:fs/promises');
-    const sections=[await readFile(join(root,'docs','web-assistant.md'),'utf8'),await readFile(join(root,'docs','control-contract.md'),'utf8')];
+    const sections=[await readFile(join(root,'docs','web-assistant.md'),'utf8'),await readFile(join(root,'docs','control-contract.md'),'utf8'),await readFile(join(root,'docs','erp-reference','e2e-circuit.md'),'utf8')];
     for (const name of names) sections.push((await readFile(join(root,'skills',name,'SKILL.md'),'utf8')).replace(/^---\n[\s\S]*?\n---\n/,''));
     sections.push('# Provider registry\n```json\n'+await readFile(join(root,'integrations','registry.json'),'utf8')+'\n```');
     const file=await open(out,'wx'); try { await file.writeFile(sections.join('\n\n---\n\n')); } finally { await file.close(); }
@@ -91,7 +91,7 @@ try {
     process.exitCode=result.status??1;
   } else if(command==='connect-plan') {
     const o=options(rest), profiles=JSON.parse(await readFile(join(root,'integrations','profiles.json'),'utf8'));
-    if(!Object.hasOwn(profiles,o['--profile'])) throw new Error('Select --profile solo|studio|performance');
+    if(!Object.hasOwn(profiles,o['--profile'])) throw new Error('Select --profile solo|studio|performance|agency');
     console.log(JSON.stringify(profiles[o['--profile']],null,2));
   } else if(command==='import') {
     const result=spawnSync('python3',[join(root,'scripts','normalize_files.py'),...rest],{stdio:'inherit',shell:false});

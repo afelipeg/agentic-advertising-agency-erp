@@ -1,4 +1,4 @@
 interface:
-  display_name: "Prepare collections and payments"
-  short_description: "Prepare collections and payments"
-  default_prompt: "Use $agency-cash-settlement to review my agency inputs and prepare the next safe operational step."
+  display_name: "Settle Bank, Cash and Cheques"
+  short_description: "Deposits, bank charges, reconciliation, cheques and cards"
+  default_prompt: "Use $agency-cash-settlement to reconcile the operating bank account against this month's statement with a balance proof."

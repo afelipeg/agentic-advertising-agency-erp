@@ -1,0 +1,4 @@
+interface:
+  display_name: "Digital Planning"
+  short_description: "Digital plans, taxonomy/UTM, actuals and invoice repricing"
+  default_prompt: "Use $agency-digital-planning to match this Meta invoice to our ordered items by taxonomy and propose repricing."

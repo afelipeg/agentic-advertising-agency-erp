@@ -1,4 +1,4 @@
 interface:
-  display_name: "Check client billing requirements"
-  short_description: "Check client billing requirements"
-  default_prompt: "Use $agency-billing-requirements to inspect my inputs and prepare a safe evidence-backed agency handoff."
+  display_name: "Billing Requirements"
+  short_description: "Check client PO, attachments and fields before invoicing"
+  default_prompt: "Use $agency-billing-requirements to check PO, attachment and field prerequisites for an estimate before it is invoiced."

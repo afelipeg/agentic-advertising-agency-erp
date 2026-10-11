@@ -1,47 +1,94 @@
 ---
 name: agency-profitability
-description: "Prepare a project margin, client profitability or working-capital analysis. Do not substitute campaign ROAS for agency financial profit."
+description: "Analyzes job, client and media profitability: gross income, valued hours, direct expenses, contribution margin and overhead allocated by contribution share, with managed media spend kept apart. Use for job P&L, client profitability or margin reviews. Do not treat campaign ROAS or pass-through spend as agency profit, and do not post entries."
 ---
 
-# Analyze agency job profitability
+# Agency Profitability
 
-Read [control-contract.md](references/control-contract.md) before acting. Apply its identity, money, trust, approval, runtime and checkpoint rules. These instructions do not supply a production runtime or authorize external actions. Use the host model; require host enforcement of privileges and approvals.
+This stage reads the circuit after billing, supplier invoicing, timesheets and month-end provisions, and feeds management reporting and period close. It owns the job P&L (posted plus pending), the client profitability statement and the media profitability view. It never posts journal entries, changes rates or hours, or reallocates costs in the ledger; it prepares analysis and corrective proposals.
 
-Read [operations-playbook.md](references/operations-playbook.md) for the complete document circuit, commercial rules and exceptions.
+Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [accounts-jobs.md](references/erp/accounts-jobs.md) (rules 74–80 profitability formulas, §6 job P&L and WIP, §9 ROT and client profitability reports, J16, gaps 6 and 11) and [accounting.md](references/erp/accounting.md) (BR-54 and BR-55 staff cost and overhead, P08–P09 provisions, BR-52 control 3, §3.2 dimensions, §9 work-order profitability).
+
+## Use when
+- "Is this job profitable?", "rentabilidad por cliente", "job P&L", "ROT" (`Inversión y Gross Income por Cliente`), media profitability (`Rentabilidad de Medios`).
+- Valuing hours at internal cost and at client rate for a job, contract or client.
+- Allocating structural overhead from the agency's non-chargeable JobNumber to clients.
+- Building a planned-vs-actual margin bridge or explaining a negative contribution.
+- Separating managed media spend and pass-through from agency revenue for a client review.
+
+## Do not use when
+- Building the monthly pack, parent-company mapping or KPI set → agency-management-reporting.
+- Posting provisions, WIP or work-order closes → agency-accruals-revaluation; closing the month → agency-period-close.
+- Approving or correcting timesheets → agency-tasks-timesheets; hourly-fee overage billing → agency-fee-contracts.
+- Campaign performance, pacing or ROAS → agency-campaign-optimization.
+- Cash timing of collections and payments → agency-cash-forecast.
+- Rebate and overcommission calculations → agency-rebates.
 
 ## Required inputs
-
-Contracted/recognized agency revenue; supplier and production costs; labor and expenses; rebate recognition; receivables/payables; managed media spend; accounting basis.
-
-Inspect existing files and permitted read-only tools first. Ask only for missing material inputs; offer a draft/import path if the required MCP is unavailable. Never ask for credentials in chat.
+- **Blocking:** tenant, period, basis (posted only, or posted plus pending billing and pending supplier invoices), currency and exponent, scope (job, client, product, division, sub-company).
+- **Blocking:** revenue and cost by JobNumber and work order (OT) from the ledger or billing/supplier subledgers, mapped to income types: sale/investment, agency service (obs 20), fees (obs 22), bonuses (obs 23), supplier commissions.
+- **Blocking for client profitability:** approved hours by collaborator and job; internal hourly cost and client rate per collaborator and month; direct expenses by job; structural expenses booked to the agency generic job; collaborator-to-client allocation table if used.
+- Managed media spend and pass-through amounts by client, with the configured principal/agent treatment.
+- Pending items: approved-unbilled estimate and plan lines, uninvoiced supplier costs, WIP balance.
+- Driver choice for overhead (contribution share by default; valued hours, hour count or 50/50 are reference options).
+- Ask only for missing material inputs. Never ask for credentials in chat.
 
 ## Procedure
+1. Fix scope: period, date criterion (work-order month, client-invoice date or accounting date), basis, currency, and whether pending and in-process items are included. Keep each currency separate unless an approved dated FX policy exists.
+2. Pull posted results per JobNumber and OT. Every result line must carry JobNumber, OT and cost center (accounting BR-02); flag lines without dimensions as completeness gaps.
+3. Compute gross income per job and client: revenue − direct costs + agency commission + fees (accounts-jobs rule 76). Exclude managed spend and pass-through that the agency does not recognize as revenue; carry it in a separate `managed_spend` line.
+4. Add pending lines for the projected job result: pending billing and pending supplier invoices, as in the work-order profitability report. Label them projected, never posted.
+5. Value hours: internal cost = approved hours × internal hourly cost; client value = hours × client rate (rule 80). Use only approved hours when approval is on. Internal rate = annual cost ÷ annual working hours adjusted for vacation (BR-54); take it from the host, do not derive it from payroll in chat.
+6. Compute contribution margin per client: income (billing − supplier costs) − direct costs (valued hours + unplanned direct expenses) (rule 78). Run `margin` per client with agency revenue = income, agency cost = direct costs, managed spend separate.
+7. Collect structural expenses booked to the agency generic job in expense accounts. Allocate them with `allocate` using each client's contribution margin as weight (rule 78), so the allocated total equals the pool exactly.
+8. If any client has zero or negative contribution, do not feed negative weights (the tool rejects them and the reference leaves this undefined, gap 11). Allocate over positive contributors only and disclose it, or use the agency's documented alternative driver (valued hours is the reference recommendation, rule 79; the accounting module distributes by hours, BR-55) (confirm locally).
+9. Net result per client = contribution margin − allocated structural expenses. Client result (ROT view) = gross income − other expenses (non-billable, new business, own advertising) + miscellaneous income − miscellaneous expenses (rule 77).
+10. Media profitability, if requested: report both formulas, (sale + commission − cost) / sale and (sale + commission − cost) / (sale + commission); the reference labels appear swapped (rule 75, gap 6), so name each by its formula.
+11. Reconcile: total posted gross income must equal the P&L Gross Income heading (accounting BR-52 item 3). Any difference is a blocker for a `completed` status.
+12. Build the margin bridge (planned estimate/plan margin → actual) and list corrective proposals (rate changes, scope revisions, write-offs) as drafts for their own workflows.
 
-1. Define period and accrual/cash basis; reconcile revenue/cost mappings to ledger evidence. Include production, labor, expenses, fees, credits and recognized rebates.
+## Rules and locks
+- Managed media spend, pass-through and direct-billed media are never agency revenue by default; principal/agent treatment is agency policy (configurable).
+- Typologies N, S and W and billing code `0` jobs carry no sale value; their costs reduce the client result as other expenses (accounts-jobs rules 15, 18).
+- Only approved hours count when timesheet approval is on; hours on now-inactive clients can be hidden by filters, so check for them.
+- Provisions (GI, WIP) are last-day snapshots reversed on day 1 (accounting BR-28); never count a provision and the later actual twice in one view.
+- Overhead allocation must conserve the pool exactly; show the driver and weights.
+- Negative-contribution allocation behaviour is undefined in the reference (confirm locally).
+- Collaborator-to-client allocation tables redirect agency hours to specific clients and must total 100% per period (accounting §3.4).
+- A profitability figure is analysis, not a posting; corrections go through reversals in an open period by the accounting owner.
 
-2. Separate managed spend, pass-through amounts and agency revenue under configured principal/agent policy. Direct-billed media is not automatically revenue.
+## Calculations
+- `margin`: per job or client, `agency_revenue_minor` = income or gross income, `agency_cost_minor` = direct costs (valued hours + direct expenses, plus allocated overhead for net result), `managed_spend_minor` reported separately; `margin_bps` is null when revenue is zero.
+- `allocate`: structural overhead pool across clients with integer weights (contribution margin in minor units, or hours in hundredths) and exact largest-remainder conservation.
 
-3. Use scripts/agency_tools.py margin for normalized same-currency agency revenue and cost. Report missing cost items separately instead of presenting an incomplete margin as final.
+```sh
+python3 scripts/agency_tools.py allocate < input.json
+```
+```json
+{"currency": "MXN", "amount_minor": 4000000, "weights": [
+ {"target_id": "CLI-A", "weight": 6000000}, {"target_id": "CLI-B", "weight": 3000000}, {"target_id": "CLI-C", "weight": 1000000}]}
+```
+- Not calculated by tools: internal hourly cost (host collaborator master), client rates, FX conversion, principal/agent classification, tax, rebate recognition.
 
-4. Build a bridge from planned to actual margin and identify unpaid receivables, disputed payables, concentration and cash exposure. Strong ROAS can coexist with agency losses.
+## Approvals and segregation of duties
+- The finance controller prepares and signs off the analysis; account directors review their clients. Analysis needs no approval to draft.
+- Anything that changes money or records (price changes, write-offs of media differences, reallocation entries, scope revisions) needs its owning workflow and an authenticated human approval bound to the payload digest; the preparer does not approve.
+- Cost and margin fields are visible only to roles with cost/profitability visibility (levels A/B); strip them for others before model access.
 
-5. Return financial findings with provenance and uncertainty. Proposed collections, price changes or cuts need their own approved workflows.
+## Exceptions to escalate
+- Negative contribution margin for a client or job → account director and controller.
+- Jobs with costs but no revenue, or sale value on N/S/W jobs → agency-job-lifecycle.
+- Posted gross income not tying to the P&L Gross Income heading → agency-general-ledger.
+- Result lines missing JobNumber, OT or cost center → agency-general-ledger.
+- Unapproved or missing hours for the period → agency-tasks-timesheets.
+- Supplier invoices booked but client not billed (WIP) ageing → agency-accruals-revaluation and agency-client-billing.
+- Managed spend classification disputed → controller and tax adviser.
+- Missing internal rate or client rate for a collaborator category → controller.
 
 ## Return and handoff
+Return `job_pnl`, `client_profitability`, `overhead_allocation`, `margin_bridge`, `managed_spend`, `completeness_gaps`. Include tenant, client and job IDs, JobNumbers and OTs, period, basis, currency, driver, status (`draft`/`blocked`/`pending_approval`/`completed` only when verified), evidence references, blockers, approvals required and next stage.
+**Owner:** Finance controller. **Next:** agency-management-reporting, agency-period-close.
 
-Return these named artifacts: `job_pnl`, `margin_bridge`, `managed_spend`, `cash_exposure`, `completeness_gaps`, `corrective_proposals`. Include job/client IDs, stage, revision, status, evidence references, assumptions, blockers, required approvals and next stage. Use `blocked` for missing prerequisites, `draft` for proposals and `completed` only for verified results. Keep calculations distinct from postings. Report receipts only when actually returned by a trusted connector.
-
-Responsible owner: Controller and account director. Next stage: period-close or scope revision. A parent orchestrator must validate the result and upstream revision before scheduling the handoff. Retain only deidentified client-scoped decisions and artifact references in memory.
-
-## Tools and references
-
-- Prefer already-enabled apps/plugins from the host marketplace when their reviewed capabilities satisfy this stage. Do not reconnect unnecessarily or assume identical tools across hosts.
-- Read [provider-registry.json](references/provider-registry.json) to select documented connector options. Perform live discovery to establish available schemas, access and permissions. Installation connects no accounts.
-- For local read-only calculations, run `python3 scripts/agency_tools.py TOOL < input.json` **from this skill directory**. Read [tool-contracts.json](references/tool-contracts.json) for exact fields. Available tools: plan_diff, budget_check, reconcile, flat_rebate, margin, payload_digest. Use only the applicable calculation; never manufacture missing numeric inputs.
-- Output connector requests and approval proposals when execution is unavailable. Do not create imaginary tools or pass an unreviewed action through an aggregator.
-
-## Files instead of MCP
-
-Read [file-mode.md](references/file-mode.md) for UI attachments and CLI normalization. Use human-supplied redacted XLSX/CSV, documents and delivery evidence when a connector is absent. Templates are in assets/. From this skill directory run `python3 scripts/normalize_files.py --kind KIND --file SOURCE --out NEW.json --tenant ID --client ID --job ID` for a supported narrow import. CSV needs only Python; XLSX requires optional openpyxl and an explicit sheet. Treat normalized files as unverified evidence, not authenticated authority. Prepare a review/change pack; the human uploads actual legacy-system receipts after execution. Never require MCP just to draft or compare.
-
-Use [handoff-schema.json](references/handoff-schema.json) for the shared output envelope; domain artifact content needs a host-reviewed schema.
+## Connectors and files
+- Ledger and P&L by tracking category: `xero`, `quickbooks`. Media spend evidence: `google-ads`, `meta-ads`, `amazon-ads`, `supermetrics` (use read tools only). Host marketplace warehouse for timesheet and ledger extracts. Discover live tools first; registry entries are documentation, not tested access.
+- File mode: [file-mode.md](references/file-mode.md); templates in `assets/`; `python3 scripts/normalize_files.py --kind KIND ...` for plan|broadcast-order|emission|ooh|invoice|rating. Ledger, hours and rate extracts arrive as values-only CSV and stay unverified evidence.

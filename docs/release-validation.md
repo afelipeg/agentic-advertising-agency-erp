@@ -1,34 +1,47 @@
-# 0.1.0 release candidate validation
+# 0.2.0 release candidate validation
 
-Validation date: 2026-10-11. This is a portable skill package and local read-only tooling release candidate. It does not certify a production ERP or autonomous execution.
+Validation date: 2026-10-11. Portable skill package, ERP functional reference and local read-only tooling. It does not certify a production ERP or autonomous execution.
 
 ## Verified locally
 
 | Check | Result |
 | --- | --- |
-| Skill creator frontmatter/resource validation | 28 of 28 passed. |
-| Package consistency and self-contained references | Passed; 28 skills and 34 synthetic behavior scenarios. |
-| Python tool/import/trajectory tests | 21 passed. |
+| Package consistency (`npm run check`) | Passed: 42 skills, 25 local tools, 118 synthetic behaviour scenarios (at least two per skill), catalogue = frontmatter descriptions, per-skill ERP references, no resource/asset/generated-doc drift, portable links. Injected drift in `docs/workflow.md` was detected. |
+| Python tests (`npm test`) | 57 passed: calculators (including regression tests from an independent review), importer, trajectory checker and stdio MCP (tool inventory, structured output, error isolation for out-of-range inputs). |
 | Node installer/export/bundle tests | 4 passed. |
-| Deterministic business evaluation fixtures | 7 of 7 passed; zero instrumented model runs in this suite. |
-| Actual npm package | Built without bytecode/cache files; includes tests and contributor instructions. |
-| Offline npx install from local npm tarball | Installed all 28 Codex skills into a fresh project. |
-| Installed CLI TV CSV import | Passed; source remains unverified. |
-| Calculator run from installed skill | Passed; delivery shortfall returned a hold. |
-| Local MCP | stdio initialization, tool inventory, schema output and refusal of an unknown write tested. |
+| Deterministic business fixtures (`npm run eval`) | 18 of 18 passed, including the five overcommission engines reproduced from the reference's worked examples. Zero model runs. |
+| SKILL.md example tool inputs | All 37 runnable examples executed against the canonical calculator without error. |
+| npm package | 979 files, no bytecode/cache; includes `.claude-plugin/`, `.mcp.json` and `docs/erp-reference/`. |
+| Install from packed tarball | All 42 skills installed for Codex (`.agents/skills`) and Claude Code (`.claude/skills`) in a fresh project; calculator executed from an installed skill folder. |
+| Claude.ai bundle | `bundle --skill agency-tax-compliance` produced a self-contained zip (23 files). |
+| Claude Code plugin | `claude plugin validate .` passed with one expected warning (root `CLAUDE.md` is maintainer guidance, not plugin context). |
+| Verbatim-overlap scan | 10-word overlaps with the source manual are limited to guide/menu titles and state names used as citations; no copied prose. |
 
-The separate skill-creator forward test reviewed the instructions with synthetic raw cases, without evaluation gold or external accounts: a daily retail revision removing committed TV inventory; missing ratings in XLSX; an authenticated solopreneur reviewing an AI-prepared payment; overlapping PO requests; partial delivery; payment recording versus real settlement; read-only ad tooling; and direct supplier billing. Findings led to clearer shortfall holds, owner approval policy, handoff schema, provenance and cancellation sequencing. This was a qualitative independent review, not a measured production-model benchmark.
+An independent reviewer, working without the authoring context, audited the calculators, the sync and check scripts, six skills against their cited rules, the packaging and the registry. It found these issues:
+
+- date overflow crashing the MCP
+- direct production lines without agency service
+- order-dependent spot matching
+- fortnight payment terms
+- the first bracket of marginal tiers
+- additive rounding
+- the depreciation remainder
+- credit balances in aging
+- the error-list cap
+- stale wording about Supermetrics and Meta
+- a wrong rule citation
+- missing drift checks
+
+All were fixed and covered by tests.
 
 ## Coverage and boundaries
 
-The operations playbook describes onboarding → masters → commercial terms/PO → budget → media ranking/planning → production estimates/selection → orders/materials/activation → daily changes → transmission/delivery reconciliation → AP/client billing → cash/rebates/expenses → margin/close. Offline guidance covers TV/radio books, programs, timebands, rate units, material acceptance, emission matching and compensation; OOH separates site/flight, fabrication/installation and digital play evidence. Instructions are an original functional reconstruction using public behavior and documented agency controls, not access to another product's source or undisclosed internals.
+The ERP reference was built from ~1,330 public help pages of a reference agency ERP and paraphrased into 11 domain chapters plus a circuit map. Training pages that contain only video titles, stub screens and items the source leaves ambiguous are listed as gaps; skills label them *confirm locally*. Country depth is highest for Argentina and Colombia; Mexico appears mainly through CFDI stamping and counter-receipts. Tax tables, e-invoicing providers, FX sources and statutory layouts must come from the host.
 
-Every stage accepts redacted human-supplied evidence. The bundled importer supports only its six exact CSV/XLSX exchange templates; it is not a universal legacy import, PDF OCR or a PII detector. UI file handling depends on the assistant's actual capabilities. A normalized workbook is not approval, a supplier booking, a bank transfer or a posted ledger document.
+Connector documentation was reviewed (Meta Ads MCP, Intuit QuickBooks MCP, Notion, HubSpot, Zernio, Monid, Banxico SIE and others) but no provider authentication, advertising write, fiscal emission, email, bank transfer or settlement was tested. Runtime controls (authenticated approvals, atomic reservations, redaction, sandboxing, durable checkpoints, telemetry) remain host responsibilities described in `control-contract.md` and `architecture.md`.
 
-Connector documentation was reviewed, but no provider authentication, advertising write, fiscal emission, email, bank transfer or real-account settlement was tested. Availability depends on host, permissions, provider plan, country and actual discovered tools. Dynamic model routing, shared budgets, caching, authenticated HITL, transactional reservation, redaction, sandboxing, durable checkpoints and telemetry require a host implementation. Their configuration examples are not active enforcement.
-
-There are no instrumented host trajectories or model baseline in this release. CI verifies package/tests/deterministic fixtures and supplied reviewed traces; it cannot yet block a production model regression against a nonexistent baseline. `--require-traces` prevents an empty trajectory directory from passing when a maintainer configures a production release gate. Fine-tuning, traffic A/B and provider failover are deployment procedures, not delivered services. No live hosted demo or speedup SLA is claimed.
+There are no instrumented host trajectories or model baseline in this release; the behaviour scenarios are synthetic acceptance cases for forward-testing in your host.
 
 ## Publication status
 
-The public repository `afelipeg/agentic-advertising-agency-erp` was verified with write access after its initial creation. Source publication preserves the owner's original MIT license. GitHub-based npx installation is available after this source commit reaches main; the README also documents local installation. The npm registry package has not been published, and no hosted production service is claimed. Inspect the repository's Actions tab for remote CI results rather than treating local tests as a completed GitHub workflow run.
+Source changes are proposed on branch `feat/erp-reverse-engineering`. The npm registry package is not published and no hosted service is claimed. Check the repository's Actions tab for remote CI results.

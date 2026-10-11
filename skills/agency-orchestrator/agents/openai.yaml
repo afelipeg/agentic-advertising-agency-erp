@@ -1,4 +1,4 @@
 interface:
-  display_name: "Coordinate the agency workflow"
-  short_description: "Coordinate the agency workflow"
-  default_prompt: "Use $agency-orchestrator to review my agency inputs and prepare the next safe operational step."
+  display_name: "Orchestrate the Agency ERP Circuit"
+  short_description: "Route a job through the ERP circuit by JobNumber state"
+  default_prompt: "Use $agency-orchestrator to map JobNumber ACMBR6AF0012 to its stage, blockers and next skill."

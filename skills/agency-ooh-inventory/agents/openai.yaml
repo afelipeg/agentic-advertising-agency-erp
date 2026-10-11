@@ -1,0 +1,4 @@
+interface:
+  display_name: "OOH Inventory (Media-Owner Vertical)"
+  short_description: "Sell and post owned billboard faces"
+  default_prompt: "Use $agency-ooh-inventory to check face availability for a two-month backlit order in one zone and draft the reservation."

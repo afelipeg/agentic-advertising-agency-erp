@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agency General Ledger"
+  short_description: "Draft and validate GL structure and manual journal entries"
+  default_prompt: "Use $agency-general-ledger to validate a payroll journal entry for October against open periods and required dimensions."

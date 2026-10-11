@@ -1,0 +1,4 @@
+interface:
+  display_name: "JobNumber Lifecycle"
+  short_description: "Open, move, re-bill and close agency JobNumbers"
+  default_prompt: "Use $agency-job-lifecycle to check close readiness for job ACMBL6AF0012."

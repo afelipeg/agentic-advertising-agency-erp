@@ -1,40 +1,176 @@
 {
   "solo": {
-    "goal":"Start with briefs, service delivery, invoices and client reporting without a technical team",
-    "required_inputs":["client brief","service agreement/PO","billing country and entity","currency/exponent","authorized budget","approved creative assets"],
-    "connection_priority":"Enabled marketplace apps, then official MCP, then reviewed aggregator, then local files",
-    "choose_one_per_role":{
-      "documents":["Host marketplace Google Drive/Docs","Host marketplace Notion","local files"],
-      "creative":["Host marketplace Canva","Host marketplace Figma","approved local assets"],
-      "client_billing_and_collection":["Stripe official app/MCP","PayPal official MCP","existing invoicing system + bank export"],
-      "reporting":["Supermetrics MCP","Google Ads and GA4 official query MCP","dated CSV exports"]
+    "goal": "Start with briefs, service delivery, invoices and client reporting without a technical team",
+    "required_inputs": [
+      "client brief",
+      "service agreement/PO",
+      "billing country and entity",
+      "currency/exponent",
+      "authorized budget",
+      "approved creative assets"
+    ],
+    "connection_priority": "Enabled marketplace apps, then official MCP, then reviewed aggregator, then local files",
+    "choose_one_per_role": {
+      "documents": [
+        "Host marketplace Google Drive/Docs",
+        "Host marketplace Notion",
+        "local files"
+      ],
+      "creative": [
+        "Host marketplace Canva",
+        "Host marketplace Figma",
+        "approved local assets"
+      ],
+      "client_billing_and_collection": [
+        "Stripe official app/MCP",
+        "PayPal official MCP",
+        "existing invoicing system + bank export"
+      ],
+      "reporting": [
+        "Supermetrics MCP",
+        "Google Ads and GA4 official query MCP",
+        "dated CSV exports"
+      ]
     },
-    "optional":["Xero official MCP or existing accountant/ledger exports","Composio for a missing reviewed business connector"],
-    "approval":"The human business owner approves agent-prepared actions. Never equate the AI maker with the human approver. Follow documented independent review rules for owner expenses/beneficiary changes.",
-    "default_mode":"Drafts and read-only reports until connectors and host controls are verified"
+    "optional": [
+      "Xero official MCP or existing accountant/ledger exports",
+      "Composio for a missing reviewed business connector"
+    ],
+    "approval": "The human business owner approves agent-prepared actions. Never equate the AI maker with the human approver. Follow documented independent review rules for owner expenses/beneficiary changes.",
+    "default_mode": "Drafts and read-only reports until connectors and host controls are verified"
   },
   "studio": {
-    "goal":"Manage creative production and project margin",
-    "choose_one_per_role":{
-      "documents":["Marketplace Google Drive/Docs","Notion","local files"],
-      "creative":["Marketplace Canva","Marketplace Figma","approved assets"],
-      "project_work":["Marketplace Asana","Marketplace Monday.com","job sheet + timesheet CSV"],
-      "accounting":["Xero official MCP","QuickBooks via reviewed Composio tools or official API adapter","accountant exports"],
-      "collections":["Stripe","PayPal","bank statements"]
+    "goal": "Manage creative production and project margin",
+    "choose_one_per_role": {
+      "documents": [
+        "Marketplace Google Drive/Docs",
+        "Notion",
+        "local files"
+      ],
+      "creative": [
+        "Marketplace Canva",
+        "Marketplace Figma",
+        "approved assets"
+      ],
+      "project_work": [
+        "Marketplace Asana",
+        "Marketplace Monday.com",
+        "job sheet + timesheet CSV"
+      ],
+      "accounting": [
+        "Xero official MCP",
+        "QuickBooks via reviewed Composio tools or official API adapter",
+        "accountant exports"
+      ],
+      "collections": [
+        "Stripe",
+        "PayPal",
+        "bank statements"
+      ]
     },
-    "required_inputs":["scope and acceptance criteria","asset rights","production estimates","labor cost rates","milestone approvals","tax policy"],
-    "default_mode":"No publishing, invoice issuance or payment without exact action approval"
+    "required_inputs": [
+      "scope and acceptance criteria",
+      "asset rights",
+      "production estimates",
+      "labor cost rates",
+      "milestone approvals",
+      "tax policy"
+    ],
+    "default_mode": "No publishing, invoice issuance or payment without exact action approval"
   },
   "performance": {
-    "goal":"Run measurable advertising with controlled budgets and financial reconciliation",
-    "choose_one_per_role":{
-      "ad_execution":["Synter MCP","Ryze MCP after endpoint/account verification","Supermetrics discovered write tools","official API adapter with reviewed MCP boundary"],
-      "analytics":["Supermetrics","GA4 official MCP","account reports"],
-      "creative":["Marketplace Canva","Marketplace Figma","approved assets"],
-      "accounting":["Xero","existing finance system + exports"],
-      "collections":["Stripe","PayPal","bank statements"]
+    "goal": "Run measurable advertising with controlled budgets and financial reconciliation",
+    "choose_one_per_role": {
+      "ad_execution": [
+        "Synter MCP",
+        "Ryze MCP after endpoint/account verification",
+        "Supermetrics discovered write tools",
+        "official API adapter with reviewed MCP boundary"
+      ],
+      "analytics": [
+        "Supermetrics",
+        "GA4 official MCP",
+        "account reports"
+      ],
+      "creative": [
+        "Marketplace Canva",
+        "Marketplace Figma",
+        "approved assets"
+      ],
+      "accounting": [
+        "Xero",
+        "existing finance system + exports"
+      ],
+      "collections": [
+        "Stripe",
+        "PayPal",
+        "bank statements"
+      ]
     },
-    "required_inputs":["ad-account authority","client PO","conversion/tracking policy","billing route","caps and cancellation terms","finance approvals"],
-    "default_mode":"Read-only discovery first; bounded approved writes after runtime enforcement"
+    "required_inputs": [
+      "ad-account authority",
+      "client PO",
+      "conversion/tracking policy",
+      "billing route",
+      "caps and cancellation terms",
+      "finance approvals"
+    ],
+    "default_mode": "Read-only discovery first; bounded approved writes after runtime enforcement"
+  },
+  "agency": {
+    "goal": "Run a full-service agency back office: jobs, production, offline and digital media, supplier invoices, billing, collections, payments, tax and close",
+    "choose_one_per_role": {
+      "documents_and_briefs": [
+        "Notion",
+        "host marketplace Google Drive/Docs or Microsoft 365",
+        "local files"
+      ],
+      "crm": [
+        "HubSpot",
+        "existing CRM export"
+      ],
+      "ad_execution": [
+        "Meta Ads MCP",
+        "Google Ads API adapter (query MCP for reporting)",
+        "Synter",
+        "Zernio"
+      ],
+      "reporting": [
+        "Supermetrics",
+        "Google Ads and GA4 official query MCP",
+        "dated CSV exports"
+      ],
+      "traditional_media_evidence": [
+        "monitoring files via normalize_files (emission)",
+        "Broadsign for DOOH"
+      ],
+      "accounting": [
+        "Xero official MCP",
+        "QuickBooks official MCP (writes disabled by default)",
+        "accountant exports"
+      ],
+      "e_invoicing": [
+        "Mexico: authorized PAC API (mx-cfdi-pac)",
+        "Argentina: ARCA web services (arca-afip)",
+        "local provider handoff"
+      ],
+      "fx_rates": [
+        "Banxico SIE (MXN)",
+        "central bank or treasury source with recorded series"
+      ],
+      "research": [
+        "Monid with a spend ceiling",
+        "host web search"
+      ]
+    },
+    "required_inputs": [
+      "chart of accounts with role tags",
+      "media and production type account mappings",
+      "approval powers per user",
+      "client credit limits",
+      "tax tables per country",
+      "period calendar"
+    ],
+    "default_mode": "Draft and verify every stage; postings, payments, sends and e-invoice stamping only with authenticated approval bound to the payload digest"
   }
 }

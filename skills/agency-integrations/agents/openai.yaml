@@ -1,4 +1,4 @@
 interface:
-  display_name: "Connect required accounts and inputs"
-  short_description: "Connect required accounts and inputs"
-  default_prompt: "Use $agency-integrations to review my agency inputs and prepare the next safe operational step."
+  display_name: "Wire Connectors per ERP Stage"
+  short_description: "Connector inventory, least privilege and file-mode plan"
+  default_prompt: "Use $agency-integrations to plan connectors for media buying, supplier invoices and e-invoicing in Mexico."

@@ -1,22 +1,86 @@
 {
   "name": "agentic-advertising-agency-erp",
-  "version": "0.1.0",
-  "description": "Portable, open agency operations skills with deterministic tools, MCP wiring and evaluation contracts.",
+  "version": "0.2.0",
+  "description": "Portable agency ERP agent skills (42) with deterministic calculators, MCP wiring, an ERP functional reference and evaluation contracts.",
   "license": "MIT",
+  "author": {
+    "name": "Andrés Felipe G. (Axiom Nexar)",
+    "email": "afelipeg@gmail.com",
+    "url": "https://afelipeg.com"
+  },
+  "contributors": [
+    {
+      "name": "Claude (Anthropic)",
+      "url": "https://claude.ai"
+    },
+    {
+      "name": "Codex (OpenAI)",
+      "url": "https://openai.com/codex"
+    }
+  ],
   "type": "module",
-  "bin": {"agency-erp": "bin/agency-erp.mjs"},
-  "engines": {"node": ">=22"},
-  "files": ["bin/*.mjs", "skills/**/*.md", "skills/**/*.py", "skills/**/*.json", "skills/**/*.yaml", "skills/**/*.csv", "tools/*.py", "contracts/*.json", "integrations/*.json", "integrations/templates/*.csv", "docs/*.md", "evals/*.json", "evals/*.md", "scripts/*.py", "tests/*.py", "tests/*.mjs", "LICENSE", "README.md", "README.es.md", "CONTRIBUTING.md"],
+  "bin": {
+    "agency-erp": "bin/agency-erp.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "files": [
+    "bin/*.mjs",
+    "skills/**/*.md",
+    "skills/**/*.py",
+    "skills/**/*.json",
+    "skills/**/*.yaml",
+    "skills/**/*.csv",
+    "tools/*.py",
+    "contracts/*.json",
+    "integrations/*.json",
+    "integrations/templates/*.csv",
+    "docs/*.md",
+    "docs/erp-reference/*.md",
+    "evals/*.json",
+    "evals/*.md",
+    "scripts/*.py",
+    "tests/*.py",
+    "tests/*.mjs",
+    ".claude-plugin/*.json",
+    ".mcp.json",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "README.md",
+    "README.es.md",
+    "CONTRIBUTING.md"
+  ],
   "scripts": {
     "test": "python3 -m unittest discover -s tests -v && node --test tests/installer.test.mjs",
     "eval": "python3 scripts/evaluate.py",
     "check": "python3 scripts/check_package.py",
-    "prepare-release": "npm run check && npm test && npm run eval",
+    "prepare-release": "npm run sync && npm run check && npm test && npm run eval",
     "demo": "node bin/agency-erp.mjs demo",
-    "mcp": "python3 tools/mcp_server.py"
+    "mcp": "python3 tools/mcp_server.py",
+    "sync": "python3 scripts/sync_resources.py"
   },
-  "repository": {"type": "git", "url": "https://github.com/afelipeg/agentic-advertising-agency-erp.git"},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/afelipeg/agentic-advertising-agency-erp.git"
+  },
   "homepage": "https://github.com/afelipeg/agentic-advertising-agency-erp#readme",
-  "keywords": ["agent-skills", "agency", "advertising", "erp", "mcp", "claude-code", "codex"],
-  "publishConfig": {"access": "public"}
+  "keywords": [
+    "accounts-payable",
+    "accounts-receivable",
+    "advertising",
+    "agency",
+    "agent-skills",
+    "claude-code",
+    "claude-plugin",
+    "codex",
+    "erp",
+    "mcp",
+    "media-buying"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }

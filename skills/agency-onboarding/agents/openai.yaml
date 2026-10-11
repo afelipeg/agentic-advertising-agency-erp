@@ -1,4 +1,4 @@
 interface:
-  display_name: "Onboard a client and campaign"
-  short_description: "Onboard a client and campaign"
-  default_prompt: "Use $agency-onboarding to review my agency inputs and prepare the next safe operational step."
+  display_name: "Onboard a Client and Brand"
+  short_description: "Owner client, billing clients, products and brief intake"
+  default_prompt: "Use $agency-onboarding to draft a new owner client, its products and the provisional approval request."

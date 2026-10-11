@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tasks and Timesheets"
+  short_description: "Track job tasks and validate, approve and value hours"
+  default_prompt: "Use $agency-tasks-timesheets to validate this week's timesheet for collaborator C-01."

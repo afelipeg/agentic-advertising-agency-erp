@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agency Fixed Assets"
+  short_description: "Prepare asset register, depreciation runs and disposals"
+  default_prompt: "Use $agency-fixed-assets to prepare the October depreciation run for laptops capitalised from expense requests."

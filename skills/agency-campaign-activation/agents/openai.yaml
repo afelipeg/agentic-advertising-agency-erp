@@ -1,4 +1,4 @@
 interface:
-  display_name: "Activate approved campaigns safely"
-  short_description: "Activate approved campaigns safely"
-  default_prompt: "Use $agency-campaign-activation to review my agency inputs and prepare the next safe operational step."
+  display_name: "Digital Campaign Activation"
+  short_description: "Stage, verify and enable approved digital campaigns"
+  default_prompt: "Use $agency-campaign-activation to stage paused Meta and Google campaigns for the ordered digital items with client taxonomy names."

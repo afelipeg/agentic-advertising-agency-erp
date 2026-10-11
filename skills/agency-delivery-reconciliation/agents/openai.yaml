@@ -1,4 +1,4 @@
 interface:
-  display_name: "Reconcile ordered, delivered and invoiced media"
-  short_description: "Reconcile ordered, delivered and invoiced media"
-  default_prompt: "Use $agency-delivery-reconciliation to review my agency inputs and prepare the next safe operational step."
+  display_name: "Reconcile Pending-to-Receive and Differences"
+  short_description: "Match supplier documents to closed orders and differences"
+  default_prompt: "Use $agency-delivery-reconciliation to control a media invoice against the closed order's spots and list differences by origin."

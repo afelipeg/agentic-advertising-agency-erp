@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Copy canonical shared resources into independently installable skill folders."""
+"""Copy canonical shared resources into independently installable skill folders.
+
+Shared files go to every skill. ERP domain references go only to the skills whose
+contracts/workflows.json entry lists them, so each skill stays self-contained but small.
+"""
 import json
 from pathlib import Path
 import shutil
@@ -15,6 +19,7 @@ MIRRORS={
     'docs/offline-media.md':'references/offline-media.md',
     'docs/file-mode.md':'references/file-mode.md',
     'docs/integrations.md':'references/wiring-guide.md',
+    'docs/erp-reference/e2e-circuit.md':'references/erp/e2e-circuit.md',
     'integrations/registry.json':'references/provider-registry.json',
     'contracts/tool-inputs.json':'references/tool-contracts.json',
     'contracts/tool-outputs.json':'references/tool-outputs.json',
@@ -22,20 +27,75 @@ MIRRORS={
     'tools/agency_tools.py':'scripts/agency_tools.py',
     'scripts/normalize_files.py':'scripts/normalize_files.py',
 }
-if __name__=='__main__':
-    (ROOT/'contracts/tool-inputs.json').write_text(json.dumps(SCHEMAS,indent=2)+'\n')
-    (ROOT/'contracts/tool-outputs.json').write_text(json.dumps(OUTPUT_SCHEMAS,indent=2)+'\n')
+ERP_DIR=ROOT/'docs/erp-reference'
+
+def mirrored_bytes(source,target):
+    data=(ROOT/source).read_bytes()
+    if target=='references/wiring-guide.md':
+        data=data.replace(b'../integrations/registry.json',b'provider-registry.json')
+    if target=='references/file-mode.md':
+        data=data.replace(b'integrations/templates/',b'assets/')
+    if target=='references/operations-playbook.md':
+        data=data.replace(b'](erp-reference/README.md)',b'](erp/e2e-circuit.md)')
+    return data
+
+def erp_references():
+    """Map skill name -> list of ERP reference stems from the workflow catalogue."""
+    catalogue=json.loads((ROOT/'contracts/workflows.json').read_text())
+    result={}
+    for entry in catalogue:
+        refs=entry.get('references',[])
+        for ref in refs:
+            if not (ERP_DIR/f'{ref}.md').is_file():
+                raise SystemExit(f"{entry['name']}: unknown ERP reference {ref}")
+        result[entry['name']]=refs
+    return result
+
+def render_workflow_doc():
+    """Render docs/workflow.md from the catalogue so routing docs never drift."""
+    catalogue=json.loads((ROOT/'contracts/workflows.json').read_text())
+    out=['# Workflow catalogue','',
+         'Generated from `contracts/workflows.json` by `scripts/sync_resources.py`; edit the catalogue, not this file.','',
+         'Start with agency-orchestrator and agency-integrations; run only relevant stages. The circuit map is [erp-reference/e2e-circuit.md](erp-reference/e2e-circuit.md); detailed rules live in [operations-playbook.md](operations-playbook.md) and the [ERP functional reference](erp-reference/README.md). Skills accept connected tools or supplied files ([file-mode.md](file-mode.md), [integrations.md](integrations.md)). This catalogue is a routing index, not authorization.','']
+    for w in catalogue:
+        refs=', '.join(f'[{r}](erp-reference/{r}.md)' for r in w['references']) or 'circuit map only'
+        tools=', '.join(f'`{t}`' for t in w['tools']) or 'none'
+        out+=[f"## {w['name']}",'',w['description'],'',f"**Inputs:** {w['inputs']}",'',
+              '**Outputs:** '+', '.join(f'`{o}`' for o in w['outputs']),'',
+              f"**ERP reference:** {refs}. **Tools:** {tools}.",'',
+              f"**Owner:** {w['owner']}. **Next:** {w['next_stage']}.",'']
+        out+=[f'{i}. {step}' for i,step in enumerate(w['procedure'],1)]+['']
+    return '\n'.join(out)
+
+def tool_contracts():
+    return {'contracts/tool-inputs.json':json.dumps(SCHEMAS,indent=2)+'\n','contracts/tool-outputs.json':json.dumps(OUTPUT_SCHEMAS,indent=2)+'\n'}
+
+def sync():
+    for path,text in tool_contracts().items():
+        (ROOT/path).write_text(text)
+    refs=erp_references()
+    (ROOT/'docs/workflow.md').write_text(render_workflow_doc())
     for skill in sorted((ROOT/'skills').iterdir()):
+        if not skill.is_dir():
+            continue
         for source,target in MIRRORS.items():
             (skill/target).parent.mkdir(parents=True,exist_ok=True)
-            shutil.copyfile(ROOT/source,skill/target)
-            if target == 'references/wiring-guide.md':
-                p=skill/target
-                p.write_text(p.read_text().replace('../integrations/registry.json','provider-registry.json'))
-            if target == 'references/file-mode.md':
-                p=skill/target
-                p.write_text(p.read_text().replace('integrations/templates/','assets/'))
-        for template in (ROOT/'integrations/templates').glob('*.csv'):
-            dest=skill/'assets'/template.name;dest.parent.mkdir(exist_ok=True)
-            shutil.copyfile(template,dest)
-    print('Synced shared resources into all self-contained skills.')
+            (skill/target).write_bytes(mirrored_bytes(source,target))
+        erp=skill/'references'/'erp'
+        wanted={f'{r}.md' for r in refs.get(skill.name,[])}|{'e2e-circuit.md'}
+        for stale in erp.glob('*.md'):
+            if stale.name not in wanted:
+                stale.unlink()
+        for name in sorted(wanted-{'e2e-circuit.md'}):
+            shutil.copyfile(ERP_DIR/name,erp/name)
+        templates={t.name:t for t in (ROOT/'integrations/templates').glob('*.csv')}
+        (skill/'assets').mkdir(exist_ok=True)
+        for stale in (skill/'assets').glob('*.csv'):
+            if stale.name not in templates:
+                stale.unlink()
+        for name,template in templates.items():
+            shutil.copyfile(template,skill/'assets'/name)
+    print('Synced shared resources and per-skill ERP references into all self-contained skills.')
+
+if __name__=='__main__':
+    sync()

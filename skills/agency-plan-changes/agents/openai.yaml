@@ -1,4 +1,4 @@
 interface:
-  display_name: "Revise daily media plans"
-  short_description: "Control daily plan revisions and retail changes"
-  default_prompt: "Use $agency-plan-changes to compare today’s requested plan revision against the approved baseline and prepare safe incremental actions."
+  display_name: "Plan Changes"
+  short_description: "Revisions with spot locks, rescheduling and order versions"
+  default_prompt: "Use $agency-plan-changes to diff today's requested revision against the approved baseline and flag locked spots."

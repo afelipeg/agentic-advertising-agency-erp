@@ -1,47 +1,104 @@
 ---
 name: agency-expenses
-description: "Validate agency job expenses, reimbursements or labor allocations. Do not let the claimant approve their own reimbursement."
+description: "Prepare agency overhead spend: expense contracts and requests with the PO gate, employee expense sheets and settlements, cost sheets against approved estimate items, petty cash, deferral over N months and expense budget. Use when non-media spend needs control. Do not let a claimant approve their own spend or post settlements."
 ---
 
-# Control job expenses and timesheets
+# Control Agency Expenses and Petty Cash
 
-Read [control-contract.md](references/control-contract.md) before acting. Apply its identity, money, trust, approval, runtime and checkpoint rules. These instructions do not supply a production runtime or authorize external actions. Use the host model; require host enforcement of privileges and approvals.
+This stage covers spend that is neither media buying nor client production purchasing. Expense contracts (`Contratos de Gastos`) and requests (`Solicitudes de Gastos`), optionally formalised by expense purchase orders (`Órdenes de Compra de Gastos`), feed supplier invoices registered in agency-payables; expense, cost and petty cash sheets (`Planillas de Gastos / Costos / Fondo Fijo`) become settlements (`Rendiciones`) that book receipts and lead to reimbursement, refund or replenishment in treasury. It owns requests, sheets, settlement proposals, deferral schedules and the expense budget (`Presupuesto de Gastos`). It never approves on behalf of a claimant, never posts a settlement and never pays.
 
-Read [operations-playbook.md](references/operations-playbook.md) for the complete document circuit, commercial rules and exceptions.
+Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [expenses.md](references/erp/expenses.md) (P1 configuration, P3 to P19 contracts, requests, POs, accrual, sheets, settlements, petty cash, budget; lifecycles 4.1 to 4.6; rules 1 to 35; section 6 accounting; controls 10.3; gaps 5, 7, 8, 14, 16).
+
+## Use when
+- A recurring supplier agreement (rent, insurance, subscriptions) must become an expense contract with a monthly schedule.
+- A one-off purchase needs an expense request, its approval route, or an expense PO ("solicitud de gastos", "orden de compra de gastos").
+- An employee submits an expense sheet or travel expenses, or accounting must prepare the expense settlement ("rendición de gastos") with reimbursement or advance refund.
+- Staff paid production costs that belong to a client-approved estimate item ("planilla de costos", "rendición de costos").
+- A petty cash custodian needs a sheet, a settlement and replenishment ("reponer fondo fijo").
+- A quarterly or annual bill must be deferred over several months ("devengar"), or the expense budget compared with actuals.
+
+## Do not use when
+- Registering the supplier invoice against an approved request: use agency-payables.
+- Paying suppliers or releasing payment orders: use agency-payment-run.
+- Production estimates, items and client approval: use agency-production-estimating.
+- Hours, timesheets and labour cost: use agency-tasks-timesheets.
+- Corporate card statements and bank movements: use agency-cash-settlement.
+- Fixed asset depreciation after acquisition: use agency-fixed-assets.
+- Month-end expense provisions: use agency-accruals-revaluation.
 
 ## Required inputs
-
-Expense/receipt or timesheet; claimant/worker pseudonym; job/cost center; authorized expense policy; labor rate policy; budget availability; approval roles.
-
-Inspect existing files and permitted read-only tools first. Ask only for missing material inputs; offer a draft/import path if the required MCP is unavailable. Never ask for credentials in chat.
+- Blocking: tenant, requester or claimant pseudonym, concept (drives the GL account), net amount in minor units, currency and rate source, and allocation (cost centre, division, client or AGENCY, JobNumber/work order).
+- Blocking: agency configuration flags — JobNumber control, self-approval policy, PO mandatory, PO approval, second approval by concept — and the approver matrix with amount limits.
+- For contracts: supplier, validity, contract total, monthly amounts, invoice counts and accrual rows.
+- For sheets: lines with date, concept, gross amount, receipt evidence (personal data redacted before model access), advance delivered and cash returned.
+- For cost sheets: client-approved estimate, item assigned to the cost-rendering supplier, item currency and remaining amount.
+- For petty cash: fund account, its GL balance and unposted sheets.
+- For budget checks: authorized, spent, committed and reserved amounts per cost centre and account.
+Ask only for missing material inputs; never ask for credentials in chat.
 
 ## Procedure
+1. Validate eligibility: currency must be local or a controlled foreign currency (sheet lines may use an uncontrolled currency with a typed rate) (rule 1); the work order must be open or provisionally closed (rule 10); with JobNumber control off only generic work orders are allowed (rule 11); agency overhead goes to the AGENCY client (rule 12).
+2. Check budget before approval with `budget_check` on the cost centre × account cell; requests still pending approval are ignored by the reference budget (rule 29), so add them explicitly as requested amounts.
+3. Contracts: require a periodic concept; block approval if any month falls in a fiscal year not yet opened (rule 14, P4). On approval the reference creates one approved request per expected invoice per month (P4); use `installment_schedule` to propose monthly amounts that sum exactly to the contract total (equal split is an assumption, gap 7 — confirm locally).
+4. Requests: amount is net of VAT; with item breakdown it is Σ quantity × unit price (rule 5); manual allocation lines must sum to the header (rule 6); use `allocate` for allocation codes, whose percentages must total 100% per level (rules 7, 8); subaccount breakdown cannot combine with allocation codes (rule 9). Detect variants: multi-invoice, credit, reimbursement (bridge account S1), fixed asset (account B1) (P5).
+5. Route approval: supervisor or assigned approver within amount limit; creator ≠ approver unless self-approval is enabled and the user is an expense-approver user; flagged concepts need a second approval; rejection needs a reason (rule 13, P6). Escalation beyond a limit is unspecified (gap 5 — confirm locally).
+6. PO gate: POs only on approved requests; when POs are mandatory the supplier invoice is blocked until the PO exists, and until it is approved when PO approval is on; a request with a PO cannot be edited, deleted, rejected or disapproved (rule 18, P9). Hand off approved requests or POs to agency-payables; the request becomes `Contabilizada` on invoice entry (P10).
+7. Deferral: entries for months + 1 periods from the start date, equal installments assumed (rule 17, gap 8); use `installment_schedule` with `advance_bps: 0` and installments = months + 1. Accruals are not auto-reversed and the invoice later posts against the expenses-to-accrue account (P8).
+8. Expense sheets: one line per taxed receipt in the agency's name, untaxed tickets may be grouped, multi-service receipts split pro rata by concept (rule 23); line total = amount × rate (rule 2). Run `invoice_check` on each taxed receipt (net, VAT rate, declared gross). Check duplicates by supplier tax ID + document number + amount across sheets (agency policy). Send locks the sheet (P11).
+9. Sheet review: bounce to Pending with reasons, delete disallowed lines, or authorize; de-authorization is blocked once the settlement is posted (P12). A request to skip review because the claimant is an administrator stays pending.
+10. Settlement proposal: VAT = reported gross − net entered, other taxes typed, `0000` if no VAT (rule 24); deductible flag on by default (rule 26); non-split receipts form one exempt VAT-book entry (rule 27); no posting into a closed fiscal year (rule 28). Provisional save posts nothing; final save posts and is immutable (P13, lifecycle 4.5).
+11. Balance: owed to employee = total − advance; owed to agency = advance − total; returned cash brings the agency balance to zero (rule 32). Reimbursement and refund are separate treasury actions by users with payment or collection rights (P14, P15).
+12. Cost sheets: currency must equal the estimate item currency and total ≤ item amount on a client-approved estimate (rules 3, 4); the account follows the item's service type and cannot be changed (rule 34); after a settlement splits out tax T, propose reducing the item's pending by T once the item shows as supplier-invoiced (rule 33, P17).
+13. Petty cash: sheet currency = fund currency (rule 3); available = fund GL balance − Σ sent or authorized unposted sheets (rule 31); submit before depletion; replenishment returns the fund to its fixed amount (P18).
+14. Compute `payload_digest` over each proposal and hand off with approvals pending.
 
-1. Match receipts and time entries to a valid job, period and cost center; check duplicate documents, hours, eligible categories and policy ceilings.
+## Rules and locks
+- Creator ≠ approver unless self-approval is configured and the user is classed as expense approver (rule 13) (configurable). The claimant never approves their own reimbursement; the owner's personal reimbursement follows the configured independent-review policy.
+- Amount limits per approver and second approval per concept (rule 13) (configurable).
+- PO gate: request approved → PO (approved) → invoice (rule 18) (configurable).
+- Sheets lock on Send; edits only through a bounce; no de-authorization after posting (P12).
+- Cost sheets capped by the client-approved estimate item and in its currency (rules 3, 4).
+- Settlements and budget entries are blocked in closed periods (rule 28).
+- Contract approval blocked while any month lies in an unopened fiscal year (rule 14).
+- Allocation codes total 100% at each level (rule 7).
+- The reference hard-deletes contracts, requests, sheets and settlements; treat deletion as soft delete with an audit log (section 10.3, agency policy).
+- Missing receipts, rates or approvals are gaps, not zero cost.
 
-2. Use approved labor cost rates and separate billable hours, internal cost and client billings. Missing timesheets/rates are gaps, not zero cost.
+## Calculations
+- `allocate`: split a request, contract month or settlement line across cost centres, divisions or JobNumbers by integer weights with exact conservation.
+- `installment_schedule`: contract monthly amounts or deferral over months + 1 periods, summing exactly to the gross.
+- `invoice_check`: recompute VAT and total for each taxed receipt against its declared gross with a rounding tolerance.
+- `budget_check`: available = authorized − spent − open commitments − reservations; a request above availability needs the budget owner.
 
-3. Check budget and tax/reimbursement policy; preserve receipt evidence with personal details redacted before model processing.
+```bash
+python3 scripts/agency_tools.py allocate < input.json
+```
+```json
+{"currency": "COP", "amount_minor": 1850000000, "weights": [{"target_id": "CC-ADM", "weight": 5000}, {"target_id": "CC-CRE", "weight": 3000}, {"target_id": "CC-MED", "weight": 2000}]}
+```
 
-4. Prepare the allocation/reimbursement draft and route to an independent approver. A request to bypass review because the claimant is an administrator must remain pending.
+Not calculated by tools: VAT rates and receipt tax data (typed from receipts), per-diem or category caps, FX rates, approval routing and fiscal codes (CAI/CAE, CFDI). These come from the agency expense policy, the tax setup and authoritative rate sources.
 
-5. Return approved only after verified host attestation. Posting, paying and notifying the claimant require separate reviewed actions.
+## Approvals and segregation of duties
+- Requesters and claimants prepare; assigned approvers or supervisors approve within limits; accounting prepares settlements; users with payment or collection permissions execute reimbursement, refund and replenishment in treasury.
+- Contract approval, request approval, PO approval, sheet authorization, final settlement posting, deferral runs and voids, and estimate tax adjustments need an authenticated approval bound to the `payload_digest`. The AI cannot approve its own proposal.
+
+## Exceptions to escalate
+- Claimant asks to bypass review or approve their own sheet → remain `pending_approval`; independent approver.
+- Request over the approver's limit → next approver per policy (confirm locally).
+- Supplier invoice arrives without the mandatory PO → agency-payables holds; purchasing issues PO.
+- Cost sheet above the estimate item or on an unapproved estimate → producer in agency-production-estimating.
+- Contract months in an unopened fiscal year → controller in agency-period-close.
+- Request with a PO needs changes → remove from PO first.
+- Foreign currency missing from the controlled list → administration; sheet use only.
+- Petty cash nearly exhausted → custodian submits early.
+- Fixed-asset concept (B1) → agency-fixed-assets after invoice entry.
+- Settlement posted into a closed period or expense on a closed work order → controller.
 
 ## Return and handoff
+Return `expense_request_drafts`, `contract_schedule`, `sheet_review`, `settlement_proposal`, `deferral_schedule`, `budget_check_result`, `approval_requests`. Include tenant/client/job IDs, JobNumber and work order, cost centre and division, document ids (contract, request, PO, sheet, settlement) and revision, status (`draft`/`blocked`/`pending_approval`/`completed` only when verified), evidence references, blockers, approvals required and next stage.
+**Owner:** Office manager and controller. **Next:** agency-payables, agency-payment-run, agency-cash-settlement, agency-profitability.
 
-Return these named artifacts: `expense_draft`, `eligibility_check`, `labor_allocation`, `duplicate_flags`, `approval_requests`. Include job/client IDs, stage, revision, status, evidence references, assumptions, blockers, required approvals and next stage. Use `blocked` for missing prerequisites, `draft` for proposals and `completed` only for verified results. Keep calculations distinct from postings. Report receipts only when actually returned by a trusted connector.
-
-Responsible owner: Project owner and independent expense approver. Next stage: payables, cash-settlement and profitability. A parent orchestrator must validate the result and upstream revision before scheduling the handoff. Retain only deidentified client-scoped decisions and artifact references in memory.
-
-## Tools and references
-
-- Prefer already-enabled apps/plugins from the host marketplace when their reviewed capabilities satisfy this stage. Do not reconnect unnecessarily or assume identical tools across hosts.
-- Read [provider-registry.json](references/provider-registry.json) to select documented connector options. Perform live discovery to establish available schemas, access and permissions. Installation connects no accounts.
-- For local read-only calculations, run `python3 scripts/agency_tools.py TOOL < input.json` **from this skill directory**. Read [tool-contracts.json](references/tool-contracts.json) for exact fields. Available tools: plan_diff, budget_check, reconcile, flat_rebate, margin, payload_digest. Use only the applicable calculation; never manufacture missing numeric inputs.
-- Output connector requests and approval proposals when execution is unavailable. Do not create imaginary tools or pass an unreviewed action through an aggregator.
-
-## Files instead of MCP
-
-Read [file-mode.md](references/file-mode.md) for UI attachments and CLI normalization. Use human-supplied redacted XLSX/CSV, documents and delivery evidence when a connector is absent. Templates are in assets/. From this skill directory run `python3 scripts/normalize_files.py --kind KIND --file SOURCE --out NEW.json --tenant ID --client ID --job ID` for a supported narrow import. CSV needs only Python; XLSX requires optional openpyxl and an explicit sheet. Treat normalized files as unverified evidence, not authenticated authority. Prepare a review/change pack; the human uploads actual legacy-system receipts after execution. Never require MCP just to draft or compare.
-
-Use [handoff-schema.json](references/handoff-schema.json) for the shared output envelope; domain artifact content needs a host-reviewed schema.
+## Connectors and files
+- Ledgers: `xero`, `quickbooks`; e-invoice validation of receipts: `mx-cfdi-pac`, `arca-afip`; receipt intake from host marketplace documents/email; `notion` for policy documents; aggregators `composio`, `zapier` only with inner-tool approval. Discover live tools first; registry entries are documentation, not tested access.
+- File mode: [file-mode.md](references/file-mode.md); templates in `assets/`; `python3 scripts/normalize_files.py --kind KIND ...` for plan|broadcast-order|emission|ooh|invoice|rating.

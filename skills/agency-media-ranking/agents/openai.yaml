@@ -1,4 +1,4 @@
 interface:
-  display_name: "Build a media shortlist and ranking"
-  short_description: "Build a media shortlist and ranking"
-  default_prompt: "Use $agency-media-ranking to inspect my inputs and prepare a safe evidence-backed agency handoff."
+  display_name: "Media Ranking"
+  short_description: "Rating books and rankings with affinity, CPR and CPM"
+  default_prompt: "Use $agency-media-ranking to build a TV ranking from this one-market rating book for our open JobNumber."

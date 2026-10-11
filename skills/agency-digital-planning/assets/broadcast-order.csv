@@ -1,0 +1,1 @@
+tenant_id,client_id,job_id,spot_id,order_id,station_id,program_id,material_id,air_date,air_time,timezone,duration_seconds,currency,currency_exponent,amount_minor

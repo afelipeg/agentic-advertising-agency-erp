@@ -1,4 +1,4 @@
 interface:
-  display_name: "Calculate fee and retainer schedules"
-  short_description: "Calculate fee and retainer schedules"
-  default_prompt: "Use $agency-fee-contracts to inspect my inputs and prepare a safe evidence-backed agency handoff."
+  display_name: "Fee Contracts"
+  short_description: "Draft fixed and hourly fee contracts and settlements"
+  default_prompt: "Use $agency-fee-contracts to settle the March instalment of hourly fee contract ACM-07."

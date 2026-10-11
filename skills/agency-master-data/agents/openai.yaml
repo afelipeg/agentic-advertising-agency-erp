@@ -1,4 +1,4 @@
 interface:
-  display_name: "Normalize agency master data"
-  short_description: "Normalize agency master data"
-  default_prompt: "Use $agency-master-data to review my agency inputs and prepare the next safe operational step."
+  display_name: "Maintain Agency Master Data"
+  short_description: "Clients, suppliers, media masters, GL links, cost centers"
+  default_prompt: "Use $agency-master-data to validate a new TV outlet, its default supplier and its media-type accounts."

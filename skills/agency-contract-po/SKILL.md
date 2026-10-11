@@ -1,47 +1,95 @@
 ---
 name: agency-contract-po
-description: "Translate an approved client agreement or purchase order into enforceable scope, billing and budget rules. Do not treat an unsigned quote as spending authority."
+description: "Turn signed client agreements and client purchase orders into enforceable PO limits, document links, PO transfers and budget-reserve rules. Use when a client PO or reserve must govern estimates and media plans. Do not treat an unsigned quote as spending authority or link documents created before the PO."
 ---
 
-# Validate contracts and client POs
+# Client Agreements and POs
 
-Read [control-contract.md](references/control-contract.md) before acting. Apply its identity, money, trust, approval, runtime and checkpoint rules. These instructions do not supply a production runtime or authorize external actions. Use the host model; require host enforcement of privileges and approvals.
+This stage sits between the JobNumber and the documents that consume client money: signed agreement and client PO (`PO Clientes`) or budget reserve (`Reserva Presupuestal`) → **PO/reserve rules** → production estimates and media plans checked at client approval → orders consume the PO → billing. It owns the normalized commercial terms, the PO record and its consumption and transfer ledger, and the reserve record. It never signs, sends or amends binding documents, and it never moves PO balance without a recorded source document.
 
-Read [operations-playbook.md](references/operations-playbook.md) for the complete document circuit, commercial rules and exceptions.
+Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [accounts-jobs.md](references/erp/accounts-jobs.md) (P-17 client POs and transfers, P-18 budget reserve, entities 3.8–3.9, rules 59–62, jobs J8–J9) and [receivables.md](references/erp/receivables.md) (rule 13 rounding to a client's round PO, rule 26 split codes, final PO number on the sales document, section 10.3 approved-for-billing precondition).
+
+## Use when
+- A client sends a purchase order or signed agreement: "cargar PO del cliente", "orden de compra del cliente", "contrato firmado", "`Nº Pedido cliente`".
+- Linking an estimate or media plan (`pauta`) to a client PO, or checking whether a document may be linked.
+- Transferring balance between two POs (`Traspaso entre PO`) or reviewing PO consumption (`Consumo PO Clientes`).
+- Setting up or applying a budget reserve with pool areas (`áreas de bolsa`).
+- Extracting fees, cancellation windows, rebate ownership and billing route from an agreement.
+
+## Do not use when
+- Checking available balance or credit limit before client approval → `agency-budget-control`.
+- Building fixed or hourly fee contracts and their instalments → `agency-fee-contracts`.
+- Opening or re-billing the JobNumber the PO will cover → `agency-job-lifecycle`.
+- Creating billing clients, split codes or rate-card modes → `agency-master-data`; supplier rate contracts → `agency-rate-cards-contracts`.
+- Invoicing against the PO → `agency-client-billing`; supplier rebate contracts → `agency-rebates`.
 
 ## Required inputs
-
-Contract and amendments; client PO; authorized signer evidence; supplier agreement; billing entity; currency, validity dates, tax/fee terms and cancellation rules.
-
-Inspect existing files and permitted read-only tools first. Ask only for missing material inputs; offer a draft/import path if the required MCP is unavailable. Never ask for credentials in chat.
+- Blocking: `tenant_id`, titular client, billing client (`Cliente de Facturación`), signed PO or agreement with signer evidence, amount excluding tax, currency, validity dates.
+- Blocking for linking: the document type (production estimate or pauta), number, creation date and amount; the PO creation date.
+- Blocking for transfers: origin document number, origin PO, destination PO, amount and reason.
+- Optional: contract number, product and media-type breakdown, online/offline scope, balance-control flag, amendments.
+- For reserves: reserve number and year, control type (percentage, amount, none), validity, amount per pool area, designated pool-area approvers.
+- Confirm the client is flagged for PO control and that the agency configuration manages client POs (P-17 prerequisite).
 
 ## Procedure
+1. Verify authority: match signer, revision and legal entity against trusted records. Block unsigned quotes, contradictory amendments, expired POs and increases without a signed amendment.
+2. Extract terms with citations: PO amount net of tax, currency, validity, deliverables, billing route, fees, markups, payment milestones, tax basis, cancellation windows, minimums, makegoods and rebate/discount ownership. Do not assume all spend is cancellable or that rebates belong to the agency.
+3. Check that the billing client belongs to a titular client with PO control enabled; record the PO amount excluding tax (rule 59).
+4. Propose the PO record: billing client, description, amount ex-tax, currency, validity, optional contract number, balance control on (recommended), optional product/media-type breakdown, online/offline scope (P-17). Breakdown enforcement is (confirm locally).
+5. When a payment schedule is agreed, use `installment_schedule` to split the gross into an advance plus monthly amounts that sum exactly; treat it as the expected billing calendar, not an invoice.
+6. For each document to link, compare its creation date with the PO creation date: only documents created after the PO may be linked (rule 59). Once linked, the header PO assignment is locked against manual edit (rule 60).
+7. Check consumption with `budget_check` using disjoint balances: authorized = PO amount, spent = invoiced, open commitments = issued orders, reservations = client-approved documents not yet ordered. The reference validates at client approval and records consumption when purchase or insertion orders are issued (rule 60).
+8. For a transfer, require both POs to belong to the same billing client, name the source document and show the origin balance; never let the origin go negative (rule 61, P-17a). Prepare it as an adjustment proposal with its `payload_digest`.
+9. For a budget reserve, record control type (percentage capped at 100%, amount, or none), validity and pool-area amounts; the job responsible assigns it on the JobNumber and estimates and plans inherit it (P-18).
+10. At invoicing, the expense rendering shows reserve consumption and the user picks the reserve to decrement; the balance falls as consumption invoices are issued (rule 62). Report which reserve a proposed invoice will decrement.
+11. Separate client authorization from supplier commitments and platform budgets; define caps by job, channel and period only where the agreement requires them.
+12. Return normalized terms, PO and reserve proposals, link decisions and exceptions; stop at `pending_approval` for any record creation, link or transfer.
 
-1. Extract PO amount, currency, covered dates, deliverables, billing route, fees, markups, payment milestones, tax basis and acceptance requirements with citations.
+## Rules and locks
+- PO amounts are net of tax; compare document amounts on the same basis and currency (rule 59).
+- POs apply prospectively only; a document dated before the PO cannot be linked (rule 59).
+- The PO assignment in a document header is locked once set (rule 60).
+- Transfers only between POs of the same billing client, always naming the source document (rule 61).
+- Reserve percentage control is capped at 100%; first-level approval of a reserve-funded estimate or pauta is given by the pool-area approver (rule 62).
+- The budget reserve was built for a specific client; its use elsewhere is (configurable).
+- An unsigned quote, email intent or verbal commitment is never spending authority.
+- Rounding to match a client's round PO is limited by the supervisor-set maximum and not allowed where the tax authority recalculates VAT (receivables rule 13).
+- A split code needs percentages summing to 100 and at least two billing clients of the same titular client (receivables rule 26).
+- Expired or exhausted POs block new links; extensions need a signed amendment (agency policy).
 
-2. Check signatures, revision and entity against trusted approval records. Block contradictory amendments, expired POs or unapproved increases.
+## Calculations
+- `budget_check`: PO or reserve availability from disjoint balances (`authorized_minor`, `spent_minor`, `open_commitments_minor`, `reservations_minor`, `requested_minor`); read `available_minor`, `after_request_minor`, `within_budget` and `atomic_reservation_required`.
+- `installment_schedule`: split an agreed contract amount into `advance_bps` plus `installments` monthly amounts from `start_month` that sum exactly to `gross_minor`.
 
-3. Separate client authorization from supplier commitments and platform budgets. Define caps by job, channel and period where the agreement requires them.
+```bash
+python3 scripts/agency_tools.py budget_check < input.json
+```
+```json
+{"currency": "MXN", "authorized_minor": 50000000, "spent_minor": 12000000, "open_commitments_minor": 18000000, "reservations_minor": 5000000, "requested_minor": 9000000}
+```
+Expected: `available_minor` 15000000, `after_request_minor` 6000000, `within_budget` true, `atomic_reservation_required` true.
 
-4. Flag cancellation windows, guaranteed inventory, minimums, makegoods and rebates/discount ownership. Do not assume all spend is cancellable or all rebates belong to the agency.
+- Not calculated by tools: tax to strip from a gross PO, FX between PO and document currency, signer validity, and the reserve percentage base. These come from the signed document, the tax adviser and the host FX source.
 
-5. Return normalized terms and exceptions. Require human/legal/finance resolution for ambiguity; do not create or send binding documents.
+## Approvals and segregation of duties
+- The account director prepares PO records, links and transfers; finance verifies the signed evidence and approves PO creation, increases and transfers. Each approval is bound to the `payload_digest`, revision, currency and amount.
+- The pool-area approver gives first-level approval of reserve-funded documents; the preparer of the document cannot approve it.
+- Legal or finance resolves ambiguous terms; the agent never signs or sends a PO acknowledgement.
+
+## Exceptions to escalate
+- Document predates the PO → account director: request a new PO or amendment.
+- Insufficient PO balance → `agency-budget-control` and the client for an increase or a transfer.
+- Transfer between POs of different billing clients or without a source document → refuse.
+- Expired PO with pending documents → account director and client.
+- Contradictory amendments or unsigned increase → legal and finance.
+- Reserve cap exceeded or pool area without approver → finance controller.
+- PO currency differs from document currency → finance for FX policy.
+- Agreement silent on rebate ownership or cancellation → account director before planning.
 
 ## Return and handoff
+Return `commercial_terms`, `po_limits`, `po_link_decisions`, `po_transfer_proposal`, `reserve_setup`, `billing_route`, `scope_exceptions`. Include tenant, titular and billing client, job ids and JobNumber, PO code, document ids and revision, status (`draft`/`blocked`/`pending_approval`/`completed` only when verified), evidence references, blockers, approvals required and next stage.
+**Owner:** Account director and finance. **Next:** `agency-budget-control`, `agency-fee-contracts`, `agency-media-planning`, `agency-production-estimating`.
 
-Return these named artifacts: `commercial_terms`, `po_limits`, `billing_route`, `fee_rules`, `cancellation_terms`, `scope_exceptions`. Include job/client IDs, stage, revision, status, evidence references, assumptions, blockers, required approvals and next stage. Use `blocked` for missing prerequisites, `draft` for proposals and `completed` only for verified results. Keep calculations distinct from postings. Report receipts only when actually returned by a trusted connector.
-
-Responsible owner: Commercial owner and controller. Next stage: budget-control and media-planning. A parent orchestrator must validate the result and upstream revision before scheduling the handoff. Retain only deidentified client-scoped decisions and artifact references in memory.
-
-## Tools and references
-
-- Prefer already-enabled apps/plugins from the host marketplace when their reviewed capabilities satisfy this stage. Do not reconnect unnecessarily or assume identical tools across hosts.
-- Read [provider-registry.json](references/provider-registry.json) to select documented connector options. Perform live discovery to establish available schemas, access and permissions. Installation connects no accounts.
-- For local read-only calculations, run `python3 scripts/agency_tools.py TOOL < input.json` **from this skill directory**. Read [tool-contracts.json](references/tool-contracts.json) for exact fields. Available tools: plan_diff, budget_check, reconcile, flat_rebate, margin, payload_digest. Use only the applicable calculation; never manufacture missing numeric inputs.
-- Output connector requests and approval proposals when execution is unavailable. Do not create imaginary tools or pass an unreviewed action through an aggregator.
-
-## Files instead of MCP
-
-Read [file-mode.md](references/file-mode.md) for UI attachments and CLI normalization. Use human-supplied redacted XLSX/CSV, documents and delivery evidence when a connector is absent. Templates are in assets/. From this skill directory run `python3 scripts/normalize_files.py --kind KIND --file SOURCE --out NEW.json --tenant ID --client ID --job ID` for a supported narrow import. CSV needs only Python; XLSX requires optional openpyxl and an explicit sheet. Treat normalized files as unverified evidence, not authenticated authority. Prepare a review/change pack; the human uploads actual legacy-system receipts after execution. Never require MCP just to draft or compare.
-
-Use [handoff-schema.json](references/handoff-schema.json) for the shared output envelope; domain artifact content needs a host-reviewed schema.
+## Connectors and files
+- Provider ids: `hubspot` or `notion` for agreement records, `xero` or `quickbooks` for billing-client references, `composio` or `zapier` only for host-approved document intake. Host marketplace documents/email may hold the signed PO. Discover live tools first; registry entries are documentation, not tested access.
+- File mode: [file-mode.md](references/file-mode.md); templates in `assets/`; `python3 scripts/normalize_files.py --kind KIND ...` for plan|broadcast-order|emission|ooh|invoice|rating when the documents to link arrive as exported plans or invoices.

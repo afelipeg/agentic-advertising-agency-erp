@@ -1,4 +1,4 @@
 interface:
-  display_name: "Plan media within commercial limits"
-  short_description: "Plan media within commercial limits"
-  default_prompt: "Use $agency-media-planning to review my agency inputs and prepare the next safe operational step."
+  display_name: "Media Planning"
+  short_description: "Plans, monthly schedules, pricing, approvals, billing release"
+  default_prompt: "Use $agency-media-planning to build and price the November schedule for this open JobNumber."

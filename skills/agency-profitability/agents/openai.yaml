@@ -1,4 +1,4 @@
 interface:
-  display_name: "Analyze agency job profitability"
-  short_description: "Analyze agency job profitability"
-  default_prompt: "Use $agency-profitability to review my agency inputs and prepare the next safe operational step."
+  display_name: "Agency Profitability"
+  short_description: "Job and client P&L, valued hours, overhead allocation"
+  default_prompt: "Use $agency-profitability to build client profitability for last month with overhead allocated by contribution share."

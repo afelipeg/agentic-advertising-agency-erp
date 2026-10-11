@@ -2,17 +2,9 @@
 """Minimal stdio MCP server for read-only local arithmetic, newline JSON-RPC."""
 import json
 import sys
-from agency_tools import SCHEMAS, OUTPUT_SCHEMAS, run, strict_json
+from agency_tools import SCHEMAS, OUTPUT_SCHEMAS, DESCRIPTIONS, run, strict_json
 
 VERSIONS = {"2024-11-05", "2025-03-26", "2025-06-18"}
-DESCRIPTIONS = {
-    "plan_diff": "Compare normalized plan lines and flag committed changes; does not revise orders or approve execution.",
-    "budget_check": "Calculate available budget from disjoint balances; does not reserve funds.",
-    "reconcile": "Compare normalized order, delivery and invoice amounts; does not post entries.",
-    "flat_rebate": "Calculate a flat rebate and client share; not marginal tiers or settlement.",
-    "margin": "Calculate agency margin separately from managed media spend.",
-    "payload_digest": "Hash a JSON proposal; this hash cannot authorize execution.",
-}
 
 def handle(request):
     if type(request) is not dict or request.get("jsonrpc") != "2.0" or not isinstance(request.get("method"), str):
@@ -26,7 +18,7 @@ def handle(request):
             raise ValueError("Parameters must be an object")
         if method == "initialize":
             version = p.get("protocolVersion")
-            response["result"] = {"protocolVersion": version if version in VERSIONS else "2025-06-18", "capabilities": {"tools": {"listChanged": False}}, "serverInfo": {"name": "agency-erp-local", "version": "0.1.0"}}
+            response["result"] = {"protocolVersion": version if version in VERSIONS else "2025-06-18", "capabilities": {"tools": {"listChanged": False}}, "serverInfo": {"name": "agency-erp-local", "version": "0.2.0"}}
         elif method == "ping":
             response["result"] = {}
         elif method == "tools/list":
@@ -35,11 +27,11 @@ def handle(request):
             try:
                 output = run(p.get("name"), p.get("arguments", {}))
                 response["result"] = {"content": [{"type": "text", "text": json.dumps(output, allow_nan=False)}], "structuredContent": output, "isError": False}
-            except (ValueError, TypeError) as exc:
+            except (ValueError, TypeError, OverflowError) as exc:
                 response["result"] = {"content": [{"type": "text", "text": str(exc)}], "isError": True}
         else:
             response["error"] = {"code": -32601, "message": "Method not found"}
-    except (ValueError, TypeError) as exc:
+    except (ValueError, TypeError, OverflowError) as exc:
         response["error"] = {"code": -32602, "message": str(exc)}
     return response
 

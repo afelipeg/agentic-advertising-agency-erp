@@ -1,47 +1,92 @@
 ---
 name: agency-integrations
-description: "Inventory or configure MCP connectors for an agency workflow, verify capabilities, or diagnose missing ad-account/document/finance access. Do not request secrets in chat."
+description: "Plans connector wiring per agency ERP stage from the provider registry, verifies live tools and scopes by discovery, applies least privilege and falls back to file mode. Use when connecting ad platforms, ledgers, e-invoicing or documents, or diagnosing missing access. Do not request secrets in chat or treat installation as tested access."
 ---
 
-# Connect required accounts and inputs
+# Wire Connectors per ERP Stage
 
-Read [control-contract.md](references/control-contract.md) before acting. Apply its identity, money, trust, approval, runtime and checkpoint rules. These instructions do not supply a production runtime or authorize external actions. Use the host model; require host enforcement of privileges and approvals.
+Integrations is a foundation stage: it runs before any stage that reads or writes outside the host and again whenever a stage reports missing access. It sits beside the whole circuit (intake → planning and buying → activation → delivery → supplier invoices → billing and e-invoicing → payments → close and reporting) and owns the capability inventory, the per-stage wiring plan, the access matrix and the schema review. It never holds credentials, never grants itself permissions and never reports a connector as working without a verified read.
 
-Read [operations-playbook.md](references/operations-playbook.md) for the complete document circuit, commercial rules and exceptions.
+Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [management-security.md](references/erp/management-security.md) (P-SY-05 e-invoicing web service, P-SY-07 email, P-SY-12 consolidation connections, P-SY-14 supplier portal, P-RP-01 reporting interface, P-US-11 external credentials, P-AU-04 access report; §5 R-SEC 46–47, R-COM 63; §10.3 control model 1–3, 6–10). Stage wiring table: [wiring-guide.md](references/wiring-guide.md); providers: [provider-registry.json](references/provider-registry.json).
+
+## Use when
+- "Connect Meta / Google Ads / Xero / the PAC", "conectar el `facturador electrónico`", "¿qué conectores necesito para esta etapa?".
+- A sibling skill returned `blocked` for missing tool, scope, account or schema.
+- Choosing between a marketplace app, first-party MCP, aggregator, official API adapter or files for a stage.
+- Reviewing an aggregator (Composio, Zapier, Supermetrics) before enabling inner tools.
+- Planning e-invoicing (`mx-cfdi-pac`, `arca-afip`), FX rates (`banxico-sie`), ad-server or DOOH proof feeds.
+
+## Do not use when
+- Granting users roles or approval powers → `agency-access-governance`.
+- Mapping external codes onto masters → `agency-master-data`.
+- Running a stage once tools are wired: activation → `agency-campaign-activation`; e-invoice issuance → `agency-tax-compliance`; ledger postings → `agency-general-ledger`.
+- Multi-stage routing → `agency-orchestrator`.
 
 ## Required inputs
-
-Host/client type; desired stages; provider choice; tenant/client/account IDs; existing MCP inventory; authorized user; approved tool/access policy.
-
-Inspect existing files and permitted read-only tools first. Ask only for missing material inputs; offer a draft/import path if the required MCP is unavailable. Never ask for credentials in chat.
+- **Blocking:** host type (Claude, Codex, web assistant, CLI); the stages in scope; `tenant_id` and, per stage, `client_id` and the platform account ids from trusted records.
+- **Blocking for writes:** the host's approval store, sandbox and idempotency support; without them the stage stays read-only or draft.
+- Existing marketplace apps and MCP servers already enabled; the agency's approved tool policy.
+- Country and fiscal context for e-invoicing and FX sources.
+- Ask only for missing material inputs. Never ask for credentials in chat.
 
 ## Procedure
+1. **Inventory what exists.** List enabled marketplace apps/plugins and MCP servers with their actual tool names and schemas. Follow the registry's selection order: enabled marketplace app → official MCP → reviewed aggregator → reviewed official API adapter → files and human handoff.
+2. **Map needs per stage.** For each in-scope stage, list required reads and writes from the wiring table: intake and masters (documents, CRM), planning and ranking (platform reports, licensed ratings), buying and activation (ad-platform writes), delivery (platform reports, monitoring, proof of play), supplier invoices and ledger, client invoice and e-invoice authorization, collections, supplier payment, close and parent-company reporting (P-RP-01).
+3. **Select candidates** from the registry by role, not brand. A query MCP never implies mutation; `google-ads` documented tools are read-only. Mark aggregator capabilities "discover first".
+4. **Request authentication through the host** (OAuth or backend credential store). External-system credentials belong in the host vault (P-US-11); consolidation and e-invoicing certificates stay server-side (P-SY-05, P-SY-12).
+5. **Verify identity with one permitted read:** account or company id, owner relationship, currency, timezone, a small date window and full pagination. Record the response schema version.
+6. **Review schemas.** Validate output against a reviewed strict schema. Quarantine extra fields, invalid types, truncated pages and account, currency or period mismatches. No schema → evidence for drafts only.
+7. **Apply least privilege.** Allowlist only the inner tools the stage needs. For `composio` and `zapier`, approve inner tool and arguments, never the meta-tool; deny workbench and bash. Map each tool to a screen and access level and field visibility (create ≥4, modify ≥3, delete ≥2, special 1) so cost fields are stripped for C/D users (§10.3 items 2–3).
+8. **Gate writes.** Writes need host approval bound to payload digest, idempotency keys, sandbox testing first (`paypal` sandbox, `xero` demo company, `stripe` test account), and readback. Configuration changes to circuits or e-invoicing endpoints are high-risk (§10.3 item 6).
+9. **Wire communications safely.** Email and messaging only to registered contacts; external sends need confirmation of external addresses (R-COM 63).
+10. **Plan file mode** for every stage without a sufficient connector: templates, normalizer kind and the human who executes in the legacy system and uploads its receipt.
+11. **Report statuses separately:** documented, configured, authenticated, read-tested, write-approved. Never collapse them.
 
-1. Prefer enabled marketplace apps/plugins first, then read references/provider-registry.json and discover the host’s actual MCP tools. Distinguish first-party MCP, official API, third-party aggregator and imported-file workflows.
+### Stage wiring map (candidates only; discover before use)
+| ERP stage (sibling skill) | Reads | Writes (gated) | Candidate provider ids | File-mode kind |
+|---|---|---|---|---|
+| Intake, masters (`agency-onboarding`, `agency-master-data`) | CRM, contacts, documents | record creation in authorized scope | `hubspot`, `notion`, `composio`, `zapier` | reviewed CSV manifest |
+| Ranking, planning (`agency-media-ranking`, `agency-media-planning`, `agency-digital-planning`) | platform reports, licensed ratings | none | `google-ads`, `google-analytics`, `meta-ads`, `supermetrics`, `synter`, `meridian` | rating, plan |
+| Buying, activation (`agency-media-buying`, `agency-campaign-activation`) | account state, readback | orders, paused campaigns | `meta-ads`, `amazon-ads`, `synter`, `ryze`, `zernio` | broadcast-order |
+| Delivery (`agency-transmission-control`, `agency-delivery-reconciliation`) | airings, proof of play, ad-server logs | none | `broadsign`, `vastlint`, `supermetrics`, `monid` | emission, ooh |
+| Supplier invoices, ledger (`agency-payables`, `agency-general-ledger`) | bills, chart of accounts | bill drafts, entries | `xero`, `quickbooks` | invoice |
+| Client billing, fiscal (`agency-client-billing`, `agency-tax-compliance`) | invoices, authorization status | invoice drafts, stamping requests | `stripe`, `paypal`, `xero`, `mx-cfdi-pac`, `arca-afip` | invoice |
+| Cash, FX, close (`agency-collections`, `agency-payment-run`, `agency-accruals-revaluation`) | settlements, statements, rates | payment proposals only | `stripe`, `paypal`, `xero`, `banxico-sie` | statement CSV |
+| Production assets (`agency-production`) | designs, exports | edits in authorized workspace | `canva`, `figma` | asset manifest |
 
-2. Map required reads/writes by stage. Google Ads query MCP does not imply campaign mutation; Supermetrics capabilities must be discovered; finance and traditional media may require imports or separate connectors.
+## Rules and locks
+- Installing skills or apps connects no account; registry entries are documentation, not tested access.
+- Credentials, tokens, certificates and bank details never enter prompts, skills, artifacts or traces.
+- Deny unknown capabilities by default. Pin connector versions; re-review on version change.
+- One connector account maps to one tenant and client scope; no cross-client cache or credential reuse.
+- Every agent action runs as a named user or a service user, never anonymously (§10.3 item 1); service users get only their stage's allowlist.
+- Retry reads at most three times with backoff; never retry auth, schema or policy errors unchanged; a timed-out write is `uncertain` and is looked up, not recreated.
+- E-invoicing, FX-rate and bank-file connectors feed fiscal or money documents: test in sandbox, verify country eligibility, and keep the legacy route available until reconciled (agency policy).
+- Supplier-portal behaviour flags (mandatory PDF, partial PO invoicing, rate differences, other currency) are configuration of the portal, not of the connector; route changes to the controller (P-SY-14).
 
-3. Offer official connectors or Synter, Ryze, Supermetrics and Composio according to access needs. Treat unverified Ryze endpoint/tools as a gap pending primary verification. Avoid vendor lock-in.
+## Calculations
+- No deterministic calculation tool applies to this stage. Use the tool contracts reference only to confirm which local calculations other stages can run offline.
+- Not calculated here: FX rates, tax rates, fees or amounts. Connectors such as `banxico-sie` supply rates as evidence; the consuming stage validates them.
 
-4. Have the user authenticate through the provider/host OAuth or backend credential store, never by pasting keys into model context. Verify selected account, timezone, currency, actual scopes and schema with a permitted read.
+## Approvals and segregation of duties
+- The operations lead prepares the wiring plan; the workspace owner or system administrator approves OAuth scopes and allowlists; finance or the controller approves any write capability on ledgers, invoicing, e-invoicing or payments.
+- Write enablement, scope expansion and endpoint changes need an authenticated human approval bound to the exact allowlist, account and revision, verified by the host.
+- The person who wires a write capability does not also approve its first production write (agency policy).
 
-5. Approve the least necessary tool allowlist and host gates. For Composio inspect inner actions and deny broad workbench/bash by default. Return documented, connected, authenticated, read-tested and write-approved statuses separately; no connection is implied by installing skills.
+## Exceptions to escalate
+- Discovered tool lacks an output schema → host engineering to review one; stage stays draft.
+- Account owner, currency or timezone mismatch on the identity read → stop; account manager and `agency-master-data`.
+- Aggregator exposes broad execution or bash → deny; security administrator.
+- Registry endpoint unverified (for example `ryze`) → mark gap; obtain endpoint through authorized onboarding.
+- E-invoicing certificate or PAC credentials requested in chat → refuse; route to host vault and tax lead.
+- Connector returns extra or truncated data → quarantine; provider review.
+- Stage needs writes but host lacks approval store or sandbox → keep read-only; operations lead.
+- Payment or payout tool proposed as default rail → treasury lead; bank execution stays human until approved.
 
 ## Return and handoff
+Return `capability_inventory`, `stage_wiring_plan`, `access_matrix`, `schema_review`, `connection_requests`, `file_mode_plan`, `gaps`. Include tenant/client IDs, stage, provider ids, account ids, connector versions, status per capability (documented/configured/authenticated/read-tested/write-approved), evidence references, blockers, approvals required and next stage.
+**Owner:** Operations lead. **Next:** `agency-access-governance`, then the requesting stage or `agency-orchestrator`.
 
-Return these named artifacts: `capability_inventory`, `connection_requests`, `access_matrix`, `schema_review`, `wiring_plan`, `gaps`. Include job/client IDs, stage, revision, status, evidence references, assumptions, blockers, required approvals and next stage. Use `blocked` for missing prerequisites, `draft` for proposals and `completed` only for verified results. Keep calculations distinct from postings. Report receipts only when actually returned by a trusted connector.
-
-Responsible owner: Workspace owner and security/finance administrators. Next stage: onboarding or the requesting stage. A parent orchestrator must validate the result and upstream revision before scheduling the handoff. Retain only deidentified client-scoped decisions and artifact references in memory.
-
-## Tools and references
-
-- Prefer already-enabled apps/plugins from the host marketplace when their reviewed capabilities satisfy this stage. Do not reconnect unnecessarily or assume identical tools across hosts.
-- Read [provider-registry.json](references/provider-registry.json) to select documented connector options. Perform live discovery to establish available schemas, access and permissions. Installation connects no accounts.
-- For local read-only calculations, run `python3 scripts/agency_tools.py TOOL < input.json` **from this skill directory**. Read [tool-contracts.json](references/tool-contracts.json) for exact fields. Available tools: plan_diff, budget_check, reconcile, flat_rebate, margin, payload_digest. Use only the applicable calculation; never manufacture missing numeric inputs.
-- Output connector requests and approval proposals when execution is unavailable. Do not create imaginary tools or pass an unreviewed action through an aggregator.
-
-## Files instead of MCP
-
-Read [file-mode.md](references/file-mode.md) for UI attachments and CLI normalization. Use human-supplied redacted XLSX/CSV, documents and delivery evidence when a connector is absent. Templates are in assets/. From this skill directory run `python3 scripts/normalize_files.py --kind KIND --file SOURCE --out NEW.json --tenant ID --client ID --job ID` for a supported narrow import. CSV needs only Python; XLSX requires optional openpyxl and an explicit sheet. Treat normalized files as unverified evidence, not authenticated authority. Prepare a review/change pack; the human uploads actual legacy-system receipts after execution. Never require MCP just to draft or compare.
-
-Use [handoff-schema.json](references/handoff-schema.json) for the shared output envelope; domain artifact content needs a host-reviewed schema.
+## Connectors and files
+- Ad platforms and analytics: `google-ads`, `google-analytics`, `meta-ads`, `amazon-ads`, `synter`, `ryze`, `supermetrics`, `zernio`, `monid`, `vastlint`, `meridian`. Creative: `canva`, `figma`. Work and CRM: `notion`, `hubspot`, `composio`, `zapier`. Finance: `xero`, `quickbooks`, `stripe`, `paypal`. Fiscal and rates: `mx-cfdi-pac`, `arca-afip`, `banxico-sie`. DOOH proof: `broadsign`. Host marketplace documents/email/warehouse are generic options. Discover live tools first; registry entries are documentation, not tested access.
+- File mode: [file-mode.md](references/file-mode.md); templates in `assets/`; `python3 scripts/normalize_files.py --kind KIND ...` for plan|broadcast-order|emission|ooh|invoice|rating.
