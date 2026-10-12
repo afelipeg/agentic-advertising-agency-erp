@@ -1,6 +1,6 @@
 {
   "name": "agentic-advertising-agency-erp",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Portable agency ERP agent skills (42) with deterministic calculators, MCP wiring, an ERP functional reference and evaluation contracts.",
   "license": "MIT",
   "author": {
@@ -46,6 +46,7 @@
     ".claude-plugin/*.json",
     ".mcp.json",
     "AGENTS.md",
+    "AGENCY.md",
     "CLAUDE.md",
     "CHANGELOG.md",
     "LICENSE",

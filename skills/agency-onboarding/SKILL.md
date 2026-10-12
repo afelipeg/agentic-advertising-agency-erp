@@ -9,6 +9,8 @@ Onboarding is the front door of the agency circuit: lead or won pitch → **trad
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [accounts-jobs.md](references/erp/accounts-jobs.md) (P-01 to P-05, P-19, P-20; §3.1, §3.2, §3.10, §3.11; §4.4; §5 rules 1–11, 57–58; §10.1 J1, J2, J10).
 
+Agency policy: apply `agency`, `jobs`, `commercial`, `connectors` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - A client is won, a brand or product launches, or client data changes ("alta de cliente", "nuevo `Cliente Titular`", "alta de producto / marca").
 - Linking a trade-name client to its legal billing entities (`Cliente de Facturación`), or setting commission percentages, rate-card mode and PO control.

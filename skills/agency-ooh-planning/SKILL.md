@@ -9,6 +9,8 @@ This stage prices and specifies the out-of-home (`Vía Pública`), digital out-o
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [media-masters-ooh.md](references/erp/media-masters-ooh.md) (§1 seller-side framing, OOH rules 44–57, surcharges rule 24, VAT condition 39, §11 gaps 1–6; cited below as MM rule n). [media-planning.md](references/erp/media-planning.md) (P04 ranking without book, P05 body, P06 press and OOH variants, R4, R5, R6, R7, R9, R17, gaps 2 and 4).
 
+Agency policy: apply `currencies`, `commercial` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - Adding OOH items to a plan: days (`Días`), boards (`Ctls.`), circuits (`Ctos.`) and rate per circuit (P06).
 - Adding press items with cm (`Cmts.`) × columns (`Cols.`), position or colour surcharges (`Recargos`) (P06, R7).

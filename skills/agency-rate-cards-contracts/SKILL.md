@@ -9,6 +9,8 @@ This stage sits between media master data and planning: masters (outlets, public
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [media-buying.md](references/erp/media-buying.md) (§2.1 P-RC-01..13, §2.2 P-CT-01..05, §4.1–4.2, BR-T-01..12, BR-D-01..05, BR-C-01..12, §10.3, §11 gaps 1, 2, 8, 10, 12, 15) and [media-masters-ooh.md](references/erp/media-masters-ooh.md) (§3.2 classification entities, rules 13–17 duration pricing, 24 surcharges, 45 and 59 OOH rate card and agreement, §11 gap 1).
 
+Agency policy: apply `approvals`, `commercial` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Route approvers with `approval_route`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - Creating or renewing a rate card (`tarifario`) for an outlet, printed (`tarifa impresa`, all clients) or client-negotiated.
 - Mass updating rates: apply amount, apply discounts 1–4, copy with a coefficient (`Copiar Tarifario`, `Usa Tarifario Base`).

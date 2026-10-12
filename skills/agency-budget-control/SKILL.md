@@ -9,6 +9,8 @@ This gate runs before a document consumes client authority: JobNumber, client PO
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [accounts-jobs.md](references/erp/accounts-jobs.md) (P-17 PO control points, P-18 reserve control types, P-06 step 9 estimated investment, rules 20 and 59–62, jobs J8–J9) and [media-planning.md](references/erp/media-planning.md) (P05 step 8 budget/objective, P10–P12 client approval and credit override, 4.5 approval configuration, R30, R32, section 10.3).
 
+Agency policy: apply `currencies`, `approvals`, `commercial` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Route approvers with `approval_route`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - "¿Hay saldo en la PO?", "check PO balance", "disponible del presupuesto", "reserva presupuestal" before approving an estimate or `pauta`.
 - A plan or estimate is about to be approved by the client and the billing client has a credit limit (`Límite de Crédito`).

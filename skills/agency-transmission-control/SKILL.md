@@ -9,6 +9,8 @@ This stage proves performance: insertion orders → **monitoring import, code ma
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [media-buying.md](references/erp/media-buying.md) (§2.4 P-SV-01..08, §4.3 spot lifecycle, §4.5 certification, BR-V-01..06, BR-O-08, §10.4, §11 gaps 11, 13) and [media-planning.md](references/erp/media-planning.md) (P25 rescheduling, P28 post-evaluation, P30 spot control, R23–R25).
 
+Agency policy: apply `commercial`, `connectors` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - "Import today's monitoring file", `importación de archivos de monitoreo`, Ibope or Monitor logs.
 - Mapping unknown channels, clients, products or materials from the monitoring vendor (`códigos externos`, `Cód. Int. 04`).

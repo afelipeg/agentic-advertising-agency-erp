@@ -9,6 +9,8 @@ Integrations is a foundation stage: it runs before any stage that reads or write
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [management-security.md](references/erp/management-security.md) (P-SY-05 e-invoicing web service, P-SY-07 email, P-SY-12 consolidation connections, P-SY-14 supplier portal, P-RP-01 reporting interface, P-US-11 external credentials, P-AU-04 access report; §5 R-SEC 46–47, R-COM 63; §10.3 control model 1–3, 6–10). Stage wiring table: [wiring-guide.md](references/wiring-guide.md); providers: [provider-registry.json](references/provider-registry.json).
 
+Agency policy: apply `roles`, `connectors` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - "Connect Meta / Google Ads / Xero / the PAC", "conectar el `facturador electrónico`", "¿qué conectores necesito para esta etapa?".
 - A sibling skill returned `blocked` for missing tool, scope, account or schema.
@@ -30,7 +32,7 @@ Read [control-contract.md](references/control-contract.md) first and apply it. C
 - Ask only for missing material inputs. Never ask for credentials in chat.
 
 ## Procedure
-1. **Inventory what exists.** List enabled marketplace apps/plugins and MCP servers with their actual tool names and schemas. Follow the registry's selection order: enabled marketplace app → official MCP → reviewed aggregator → reviewed official API adapter → files and human handoff.
+1. **Inventory what exists.** List enabled marketplace apps/plugins and MCP servers with their actual tool names and schemas. Follow the registry's selection order: enabled marketplace app → official MCP → reviewed aggregator → reviewed official API adapter → files and human handoff. When `AGENCY.md` lists `connectors.enabled`, only those registry ids are candidates; adding one is a policy change made in AGENCY.md by its owners, not by this skill.
 2. **Map needs per stage.** For each in-scope stage, list required reads and writes from the wiring table: intake and masters (documents, CRM), planning and ranking (platform reports, licensed ratings), buying and activation (ad-platform writes), delivery (platform reports, monitoring, proof of play), supplier invoices and ledger, client invoice and e-invoice authorization, collections, supplier payment, close and parent-company reporting (P-RP-01).
 3. **Select candidates** from the registry by role, not brand. A query MCP never implies mutation; `google-ads` documented tools are read-only. Mark aggregator capabilities "discover first".
 4. **Request authentication through the host** (OAuth or backend credential store). External-system credentials belong in the host vault (P-US-11); consolidation and e-invoicing certificates stay server-side (P-SY-05, P-SY-12).

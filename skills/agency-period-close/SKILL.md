@@ -9,6 +9,8 @@ The close is what makes Accounting the single source of truth: operational modul
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [accounting.md](references/erp/accounting.md) (P19, P21, P23–P25, §4.2 period states, §4.3 fiscal year, BR-13, BR-50 to BR-53, §10.3 controls, §10.4 exceptions, §11 gaps 6, 7) · [payables-treasury.md](references/erp/payables-treasury.md) (rule 21 release period, rule 24 bank reconciliation proof, rule 29 aging, rule 30 cut-off reports, §10.3 period guard).
 
+Agency policy: apply `approvals`, `fx`, `accounting` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Route approvers with `approval_route`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - Running the monthly close (`cierre mensual`): pre-close (`pre-cierre`) of Clients, Suppliers, Treasury and Accounting subledgers, ordered close jobs and definitive close (`cierre definitivo`).
 - Checking whether a month can close: mandatory gates, missing jobs, open exceptions.

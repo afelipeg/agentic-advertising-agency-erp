@@ -9,6 +9,8 @@ This stage sits between an open `JobNumber` and the media plan: rating book (`Bo
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [media-planning.md](references/erp/media-planning.md) (P01 book, P02 import, P03 discontinuous market, P04 ranking, P43 planning files, R18, R19, R34, R35, §4.6 lifecycle, §10, gaps 5 and 13).
 
+Agency policy: apply `commercial`, `connectors` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - A planner needs a rating book imported from provider files, refreshed, extended with targets or weighted per outlet (`Ponderar`) for TV, radio or cable.
 - A market without periodic measurement needs a discontinuous-market book built from network base markets (`Book de Mercado Discontinuo`).

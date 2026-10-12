@@ -9,6 +9,8 @@ This stage reads balances and open items produced by receivables, payables, trea
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [management-security.md](references/erp/management-security.md) (P-CF-01 to P-CF-12, rules R-CF 1–17, §6, §10.1–10.4 cashflow jobs and exceptions, gaps 2 and 8) and [payables-treasury.md](references/erp/payables-treasury.md) (payment lists P9–P10 and locks rules 5–7, release date rule 21, availability rule 26, payment-delay rule 28, aging rule 29, cheques P25–P26, gap 3 pay-when-paid).
 
+Agency policy: apply `currencies`, `fx`, `commercial`, `collections` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - "Cash flow", "flujo de caja", "Cash Flow Previsional", "will we cover payroll / the Friday payment run?", "liquidity gap".
 - Building a daily, weekly or strategic (monthly) projection from actual balances and open items.

@@ -9,6 +9,8 @@ Fixed assets (`bienes de uso`) enter from the expense circuit: an expense reques
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [accounting.md](references/erp/accounting.md) (P27, P28, §3.4 fixed-asset concept and depreciation criterion, §4.7, BR-20 to BR-25, E41–E44, Anexo Bienes de Uso in §9, §11 gap 10) · [expenses.md](references/erp/expenses.md) (P5 fixed-asset request variant, rule 20 asset trigger, §6 B1 posting, §7 handoff to fixed assets).
 
+Agency policy: apply `currencies`, `approvals`, `accounting` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Route approvers with `approval_route`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - Registering an asset from an expense request or invoice (`alta de bien de uso`, `solicitud de gastos` with B1 concept), or reviewing an import of legacy assets with prior accumulated depreciation.
 - Preparing a depreciation run (`amortizaciones`, voucher type 94) with cost-center mode and division.

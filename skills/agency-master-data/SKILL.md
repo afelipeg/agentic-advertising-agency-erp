@@ -9,6 +9,8 @@ Master data is the reference backbone under every document in the circuit: intak
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [media-masters-ooh.md](references/erp/media-masters-ooh.md) (§2.0 generic pattern; P01–P04, P06, P09, P12–P14, P16–P20, P25; §3.1–3.3; §5 rules 1–5, 9–17, 20–22, 34–41; §6; §10.2); [accounts-jobs.md](references/erp/accounts-jobs.md) (P-01 to P-05; §3.1–3.4; §5 rules 1–8; §6 observation code 22); [management-security.md](references/erp/management-security.md) (P-SY-09, P-SY-10, P-SY-12; §3 division and cost center; §4 provisional master change; §10.4).
 
+Agency policy: apply `roles`, `approvals`, `taxes`, `jobs` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Route approvers with `approval_route`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - Creating or validating masters: client, product, billing-client link, supplier, outlet (`Medio`), programme, daypart set (`Franja Horaria`), duration coefficients, publication type, material, target, zone.
 - Linking ledger accounts to media types, publication types or production types by observation code ("cuentas contables por tipo de medio").

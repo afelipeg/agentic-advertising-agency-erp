@@ -9,6 +9,8 @@ This stage runs while campaigns are live: activation and orders → **diagnosis 
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [media-planning.md](references/erp/media-planning.md) (P05 step 8 budget/objective, P34 objective widget, P35 step 7 planned vs actual, P28–P29 post-evaluation and re-rate, P33 distribution analysis, R19 audience metrics, R27–R28, R36 share control, §11 gaps 5, 14).
 
+Agency policy: apply `approvals`, `commercial`, `connectors` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Route approvers with `approval_route`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - "How is the campaign pacing?", "are we on TRP target?", `avance de pauta`, `desvío vs objetivo`, `planificado vs real`.
 - Reviewing digital delivery (clicks, impressions, CTR, CPC) or offline post-evaluation (TRP, CPR, CPM, reach, frequency) against the plan objective.

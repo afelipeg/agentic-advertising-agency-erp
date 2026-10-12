@@ -9,6 +9,8 @@ This gate sits after work is approved for billing (`Aprobado para Facturar`) and
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [receivables.md](references/erp/receivables.md) (§2.15 P-14 final PO number and related-documents export, §3 billing-client master, §8.1 tax-status check and related-documents configs, §10.3); [accounts-jobs.md](references/erp/accounts-jobs.md) (P-06 billing codes, P-08, P-17 client POs, §3.1 `Adjunto obligatorio`, §3.8 `ClientPO`, §5 rules 15–17, 22, 59–61, §10.2 invoiced locks). `AJ-Rn` = accounts-jobs §5 rule n; `AR-Rn` = receivables §5 rule n.
 
+Agency policy: apply `taxes`, `jobs`, `commercial` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - "Can we bill this estimate? The client needs its PO number on the invoice", "falta la OC del cliente", "número de pedido", "hoja de entrada de servicio".
 - A client requires a mandatory attachment at approval for billing (`Adjunto obligatorio`) or a custom billing field (`Datos Adicionales` with billing-prerequisite category).

@@ -9,6 +9,8 @@ The revenue budget (`Presupuesto de Ingresos`) is the planning layer over the ac
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [accounts-jobs.md](references/erp/accounts-jobs.md) (P-25 revenue budget, entity `RevenueBudgetVersion` in 3.11, lifecycle 4.6, rules 69–73 and 76–77, report rows "Revenue budget queries", job J17, gap 10) and [management-security.md](references/erp/management-security.md) (P-RP-03 forecast stub and gap 1, R-SEC 41 supervisor visibility level A, R-AP and section 10.3 configuration-change control).
 
+Agency policy: apply `agency`, `currencies`, `commercial` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - "Presupuesto de ingresos", "budget anual de ingresos", "forecast de gross income", "nueva versión del presupuesto" for one or more clients.
 - Entering investment by month for media (by media and supplier) and production (by production type), with commission % and cost-difference %.

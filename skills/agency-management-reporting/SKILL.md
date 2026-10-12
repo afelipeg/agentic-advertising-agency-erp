@@ -9,6 +9,8 @@ This stage sits after period close (agency-period-close) and reads the ledger, s
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [management-security.md](references/erp/management-security.md) (P-RP-01 to P-RP-03, rules R-RP 18–20, timesheet rules 29, 35 and 37, §6, §9 KPIs, §10.1 `reporting.validate_mapping` and `reporting.export_period`, gaps 1 and 11) and [accounting.md](references/erp/accounting.md) (§3.1 rubros with Hyperion code, §3.3 observation codes, BR-50 to BR-53 close and post-close controls, P09 WIP aging, 8A/8B reporting entries, §9 reports and KPIs).
 
+Agency policy: apply `agency`, `currencies`, `accounting` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - "Monthly pack", "reporting a casa matriz", "HFM export", "Hyperion mapping", "cierre de reporting", "management accounts".
 - Checking which accounts, cost centers or clients lack an interface code before export (unmapped means unreported).

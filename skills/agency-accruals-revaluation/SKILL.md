@@ -9,6 +9,8 @@ These are the batch jobs only Accounting runs once a month is pre-closed: they t
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [accounting.md](references/erp/accounting.md) (P07–P13, P26, §4.4–4.6, BR-15 to BR-19, BR-28 to BR-38, E19–E35, E50, §11 gaps 3, 4, 7) · [production.md](references/erp/production.md) (§4.1 estimate states, rules 20–26 locks, override engine rules 50–60, §6 month-end accrual) · [media-buying.md](references/erp/media-buying.md) (P-OP-07 order close, P-OC-02 cut-off months, §4.6, BR-OC-00 to BR-OC-09, §6 PO/PD provisions).
 
+Agency policy: apply `currencies`, `approvals`, `fx`, `accounting` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Route approvers with `approval_route`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - Month-end provisions: Gross Income provision (`provisión de Gross Income`, unbilled revenue / uninvoiced cost), WIP (`trabajos en proceso`), expense provision (`provisión de gastos`), overcommission provision (`provisión de overcomisiones`).
 - FX revaluation (`diferencia de cambio`) of open receivables, payables and foreign-currency GL accounts at the month-end rate.

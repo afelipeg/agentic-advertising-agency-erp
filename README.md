@@ -4,7 +4,7 @@ Open-source agent skills that run the **complete back office of an advertising a
 
 Version 0.2 is built on a **functional reverse engineering of a mature Latin American agency ERP**: about 1,330 public help pages were analysed and paraphrased into an [ERP functional reference](docs/erp-reference/README.md) with processes, document lifecycles, numbered business rules, accounting impacts, cross-module handoffs and country behaviour. Every skill is grounded in that reference and cites its rule ids.
 
-**42 self-contained Agent Skills · 25 read-only deterministic calculators (also as a local MCP) · ERP functional reference · connector registry for official MCPs · 118 synthetic behaviour cases · one-click downloads for the Claude and Gemini apps, a ChatGPT/Gem pack, an npm/npx installer, a Claude Code plugin marketplace and a Gemini CLI extension.** MIT licensed. The package adds expertise, calculations and handoffs to your host; it is not a hosted ERP, payment service or autonomous runtime. No credentials, LLM keys or provider subscriptions are bundled. [Guía en español](README.es.md).
+**42 self-contained Agent Skills · 26 read-only deterministic calculators (also as a local MCP) · one `AGENCY.md` policy file that every skill and every agent reads · ERP functional reference · connector registry for official MCPs · 122 synthetic behaviour cases · one-click downloads for the Claude and Gemini apps, a ChatGPT/Gem pack, an npm/npx installer, a Claude Code plugin marketplace and a Gemini CLI extension.** MIT licensed. The package adds expertise, calculations and handoffs to your host; it is not a hosted ERP, payment service or autonomous runtime. No credentials, LLM keys or provider subscriptions are bundled. [Guía en español](README.es.md).
 
 > Independent project, not affiliated with any ERP vendor. The reference describes publicly documented functional behaviour in our own words; no vendor code, screens or manual text are redistributed.
 
@@ -119,10 +119,21 @@ Want them all at once? [agency-erp-all-skills.zip](https://github.com/afelipeg/a
 
 </details>
 
+### Make it yours: AGENCY.md
+
+The skills know how an agency back office works. `AGENCY.md` tells them how **your** agency runs it: who approves what and up to which amount, your currencies, tax rates, account codes, job types, payment terms and the apps you connected. Write it once; every skill follows it.
+
+1. Download [AGENCY.md](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/AGENCY.md). It comes with example values for a Mexico-based agency.
+2. Replace the values inside the `json agency-policy` block (you can ask Claude or ChatGPT to help you fill it in). Have finance review the approvals and tax rates.
+3. Add it next to the skills: in Claude, put it in a **Project's files** (or attach it to the chat); in ChatGPT, upload it under **Knowledge** with the other files; in a Gemini Gem, add it as knowledge.
+4. When something changes, edit the file and upload it again. Change it once, every skill applies it.
+
+> AGENCY.md sets **parameters, not permissions**: it decides which person approves, never whether a person approves. Passwords, API keys and bank or card numbers never go in it.
+
 ### Good to know
 
 - Free and open source (MIT). Not a cloud ERP and it doesn't store your data.
-- It doesn't replace your accountant: tax rates, FX rates and policies come from you.
+- It doesn't replace your accountant: tax rates, FX rates and policies come from you, in `AGENCY.md`.
 - Start in draft mode; connect your tools once you trust the results.
 
 ---
@@ -206,13 +217,26 @@ Each skill folder contains `SKILL.md`, Codex UI metadata, the shared execution c
 
 ### Deterministic calculators
 
-Money arithmetic never comes from the model. `tools/agency_tools.py` (copied into every skill) and the optional stdio MCP expose 25 read-only tools with strict input and output schemas, integer minor units and no network: `media_line_cost`, `discount_cascade`, `audience_metrics`, `tiered_commission` (flat, value scale, slab, marginal and stepped overcommission engines, validated against the reference's worked examples), `estimate_totals`, `hourly_fee_settlement`, `payment_terms`, `withholding`, `fx_revaluation`, `aging`, `allocate`, `installment_schedule`, `depreciation_schedule`, `journal_check`, `cash_projection`, `spot_match`, `credit_exposure`, `invoice_check`, `job_number`, plus `plan_diff`, `budget_check`, `reconcile`, `flat_rebate`, `margin` and `payload_digest`.
+Money arithmetic never comes from the model. `tools/agency_tools.py` (copied into every skill) and the optional stdio MCP expose 26 read-only tools with strict input and output schemas, integer minor units and no network: `media_line_cost`, `discount_cascade`, `audience_metrics`, `tiered_commission` (flat, value scale, slab, marginal and stepped overcommission engines, validated against the reference's worked examples), `estimate_totals`, `hourly_fee_settlement`, `payment_terms`, `withholding`, `fx_revaluation`, `aging`, `allocate`, `installment_schedule`, `depreciation_schedule`, `journal_check`, `cash_projection`, `spot_match`, `credit_exposure`, `invoice_check`, `job_number`, `approval_route` (approver roles from the AGENCY.md tiers; always requires a human), plus `plan_diff`, `budget_check`, `reconcile`, `flat_rebate`, `margin` and `payload_digest`.
 
 ```sh
 echo '{"currency":"MXN","method":"marginal","base_minor":550000,"reduction_bps":0,"deductions_minor":0,"flat_bps":0,"brackets":[{"from_minor":0,"bps":500,"amount_minor":0},{"from_minor":200000,"bps":300,"amount_minor":0},{"from_minor":500000,"bps":200,"amount_minor":0}],"cap_minor":null,"prior_adjusted_base_minor":null,"client_share_mode":"percent","client_share_bps":5000,"client_share_fixed_minor":0}' | node bin/agency-erp.mjs tool tiered_commission
 ```
 
 Tax tables, FX rates and agency policy are inputs, never bundled assumptions.
+
+### Agency policy (AGENCY.md)
+
+One policy file for every skill and every agent. Skills look for it in this order: a file the user attaches or names, `AGENCY.md` at the project root, then `~/.agency-erp/AGENCY.md`. Only its `json agency-policy` block is policy: `approvals` (per action and currency, ascending amount tiers of human roles), `currencies`, `roles`, `taxes`, `fx`, `jobs`, `commercial`, `collections`, `accounting` and `connectors`. Each skill's `SKILL.md` names the sections it applies (generated from `contracts/workflows.json`), and approvers are routed with the `approval_route` calculator.
+
+```sh
+node bin/agency-erp.mjs policy init --global   # writes ~/.agency-erp/AGENCY.md (example values); never overwrites
+node bin/agency-erp.mjs policy check           # ./AGENCY.md, then ~/.agency-erp/AGENCY.md; exit 1 if invalid
+```
+
+Then point each project at it with one line in its `AGENTS.md` or `CLAUDE.md`: `Read ~/.agency-erp/AGENCY.md before using any agency-erp skill.` Change a threshold once and Claude Code, Codex and Gemini CLI apply it in every project.
+
+Precedence: control contract → AGENCY.md → the user's request → reference defaults (*confirm locally*). Every role in a tier approves (different people, never the maker), and a higher tier keeps the approvers below it. The validator rejects anything that would weaken control: empty approver lists or role names that point to software, a higher tier that drops an approver, `segregation_of_duties: false`, unknown fields or connectors, hidden or duplicated policy blocks, override phrases in values and anything that looks like a credential. Name and phrase checks are best effort; whoever reviews AGENCY.md changes stays accountable. An invalid file is ignored as a whole, never partially applied. Keep your filled-in copy in a private fork and change it by pull request; details in [docs/agency-policy.md](docs/agency-policy.md).
 
 ### Install
 

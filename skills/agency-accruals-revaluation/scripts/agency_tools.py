@@ -267,6 +267,27 @@ ERP_SCHEMAS = {
                           "declared_total_minor": integer(), "rounding_tolerance_minor": integer(0, 10000)}),
 }
 
+# Approval routing from the agency policy overlay (AGENCY.md). Routing names who approves;
+# it never removes the human approval required by the control contract.
+APPROVAL_ACTIONS = ("client_estimate", "media_order", "production_order", "plan_change", "campaign_launch", "supplier_invoice",
+                    "client_invoice", "credit_note", "payment_run", "cash_settlement", "journal_entry", "budget_change",
+                    "credit_override", "write_off", "period_reopen", "master_data_change", "access_change", "message_send")
+ROLE = {"type": "string", "pattern": "^[a-z][a-z0-9_]{1,47}$"}
+NON_HUMAN_ROLES = frozenset({"ai", "agent", "assistant", "bot", "system", "auto", "automatic", "automation", "llm", "model",
+                             "none", "nobody", "anyone", "any", "all", "self", "maker", "skip"})
+# Best-effort guard: a role containing any of these tokens names software, not an accountable person.
+NON_HUMAN_TOKENS = frozenset({"ai", "bot", "bots", "agent", "agents", "agentic", "auto", "automatic", "automated", "automation",
+                              "llm", "gpt", "chatgpt", "claude", "gemini", "codex", "copilot", "model", "system", "svc",
+                              "engine", "script", "robot", "rpa", "api", "mcp", "webhook", "cron", "nobody", "anyone", "skip"})
+VERSION_ID = {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$"}
+
+def non_human(role):
+    return role in NON_HUMAN_ROLES or bool(NON_HUMAN_TOKENS & set(role.split("_")))
+APPROVAL_RULE = obj({"action": enum(*APPROVAL_ACTIONS), "currency": CURRENCY,
+                     "tiers": arr(obj({"up_to_minor": nullable(integer()), "roles": arr(ROLE, 10)}), 10)})
+ERP_SCHEMAS["approval_route"] = obj({"policy_version": VERSION_ID, "action": enum(*APPROVAL_ACTIONS), "currency": CURRENCY,
+                                     "amount_minor": integer(), "rules": arr(APPROVAL_RULE, 200)})
+
 CURRENCY_TOTAL = obj({"currency": CURRENCY, "sale_minor": integer(), "cost_minor": integer(), "service_minor": integer(),
                       "supplier_commission_minor": integer(), "gross_income_minor": SIGNED})
 ERP_OUTPUT_SCHEMAS = {
@@ -319,6 +340,12 @@ ERP_OUTPUT_SCHEMAS = {
                           "vat_by_rate": arr(obj({"vat_bps": BPS, "net_minor": integer(), "vat_minor": integer()}), 50)}),
 }
 
+ERP_OUTPUT_SCHEMAS["approval_route"] = obj({"policy_version": VERSION_ID, "action": enum(*APPROVAL_ACTIONS), "currency": CURRENCY, "amount_minor": integer(),
+                                            "status": enum("routed", "no_rule_confirm_locally"), "tier_index": nullable(integer(0, 9)),
+                                            "approver_roles": arr(ROLE, 10), "quorum": enum("all_distinct", "confirm_locally"),
+                                            "human_approval_required": {"type": "boolean"},
+                                            "authorizes_execution": {"type": "boolean"}})
+
 ERP_DESCRIPTIONS = {
     "job_number": "Compose and check a 12-character job code (client+product+year digit+typology+billing code+sequence); reports typology/billing restrictions, does not open jobs.",
     "media_line_cost": "Price one media line by calculation type (per second, per unit, per thousand, per action, package); no rate-card lookup.",
@@ -338,6 +365,7 @@ ERP_DESCRIPTIONS = {
     "cash_projection": "Project cash by week or month from dated inflows/outflows with terms, delays, probabilities and opening balances.",
     "spot_match": "Match ordered broadcast spots to monitored airings with a time tolerance; returns exact, tolerance, ambiguous and unmatched sets.",
     "credit_exposure": "Check a client credit limit against open receivables, approved unbilled work and a new request.",
+    "approval_route": "Route an action and amount to the approver roles of the matching AGENCY.md tier; every listed role approves, each a different person who is not the maker. Never authorizes execution.",
     "invoice_check": "Recompute invoice VAT by rate and total against the declared amount with an explicit rounding tolerance.",
 }
 
@@ -861,6 +889,43 @@ def _invoice_check(a):
     return {"currency": a["currency"], "net_minor": net, "vat_minor": vat, "computed_total_minor": computed, "difference_minor": diff, "status": status,
             "vat_by_rate": [{"vat_bps": k, "net_minor": by_rate[k][0], "vat_minor": by_rate[k][1]} for k in sorted(by_rate)]}
 
+def check_approval_rules(rules):
+    """Shared structural rules for AGENCY.md approvals; raises ValueError on anything that would weaken human approval."""
+    seen = set()
+    for i, rule in enumerate(rules):
+        key = (rule["action"], rule["currency"])
+        if key in seen:
+            raise ValueError(f"approvals[{i}]: duplicate rule for {rule['action']} in {rule['currency']}")
+        seen.add(key)
+        tiers = rule["tiers"]
+        if not tiers:
+            raise ValueError(f"approvals[{i}]: at least one tier is required")
+        if tiers[-1]["up_to_minor"] is not None:
+            raise ValueError(f"approvals[{i}]: the last tier must be unbounded (up_to_minor null)")
+        previous = -1
+        for j, tier in enumerate(tiers):
+            if not tier["roles"] or len(set(tier["roles"])) != len(tier["roles"]):
+                raise ValueError(f"approvals[{i}].tiers[{j}]: roles must be non-empty and unique")
+            if any(non_human(role) for role in tier["roles"]):
+                raise ValueError(f"approvals[{i}].tiers[{j}]: approvers must be accountable human roles")
+            if j and not set(tiers[j - 1]["roles"]) <= set(tier["roles"]):
+                raise ValueError(f"approvals[{i}].tiers[{j}]: a higher tier must keep every approver of the tier below and may only add more")
+            if j < len(tiers) - 1:
+                if tier["up_to_minor"] is None or tier["up_to_minor"] <= previous:
+                    raise ValueError(f"approvals[{i}].tiers[{j}]: thresholds must increase and only the last tier is unbounded")
+                previous = tier["up_to_minor"]
+
+def _approval_route(a):
+    check_approval_rules(a["rules"])
+    base = {"policy_version": a["policy_version"], "action": a["action"], "currency": a["currency"], "amount_minor": a["amount_minor"],
+            "human_approval_required": True, "authorizes_execution": False}
+    for rule in a["rules"]:
+        if rule["action"] == a["action"] and rule["currency"] == a["currency"]:
+            for index, tier in enumerate(rule["tiers"]):
+                if tier["up_to_minor"] is None or a["amount_minor"] <= tier["up_to_minor"]:
+                    return {**base, "status": "routed", "tier_index": index, "approver_roles": list(tier["roles"]), "quorum": "all_distinct"}
+    return {**base, "status": "no_rule_confirm_locally", "tier_index": None, "approver_roles": [], "quorum": "confirm_locally"}
+
 ERP_TOOLS = {
     "job_number": _job_number, "media_line_cost": _media_line_cost, "discount_cascade": _discount_cascade,
     "audience_metrics": _audience_metrics, "tiered_commission": _tiered_commission, "estimate_totals": _estimate_totals,
@@ -868,6 +933,7 @@ ERP_TOOLS = {
     "fx_revaluation": _fx_revaluation, "aging": _aging, "allocate": _allocate, "installment_schedule": _installment_schedule,
     "depreciation_schedule": _depreciation_schedule, "journal_check": _journal_check, "cash_projection": _cash_projection,
     "spot_match": _spot_match, "credit_exposure": _credit_exposure, "invoice_check": _invoice_check,
+    "approval_route": _approval_route,
 }
 assert set(ERP_TOOLS) == set(ERP_SCHEMAS) == set(ERP_OUTPUT_SCHEMAS) == set(ERP_DESCRIPTIONS)
 SCHEMAS.update(ERP_SCHEMAS)

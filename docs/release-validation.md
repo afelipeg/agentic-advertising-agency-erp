@@ -1,8 +1,27 @@
-# 0.3.0 release candidate validation
+# 0.4.0 release validation
 
-Validation date: 2026-10-11. Portable skill package, ERP functional reference and local read-only tooling. It does not certify a production ERP or autonomous execution.
+Validation date: 2026-10-12. Portable skill package, agency policy overlay, ERP functional reference and local read-only tooling. It does not certify a production ERP or autonomous execution.
 
 ## Verified locally
+
+| Check | Result |
+| --- | --- |
+| Package consistency (`npm run check`) | Passed: 42 skills, 26 local tools, 122 synthetic behaviour scenarios, catalogue = frontmatter descriptions, per-skill ERP references and policy sections, generated `Agency policy:` line present and current in every SKILL.md, the example `AGENCY.md` valid, no resource/asset/generated-doc drift, portable links. Injected drift (stale policy line, invalid AGENCY.md, edited mirrored validator) was detected. |
+| Python tests (`npm test`) | 86 passed, including 24 for the policy validator and `approval_route` (software role names, tiers that drop approvers, hidden, nested or look-alike policy blocks, CRLF, Unicode and paraphrased override phrases, secrets, CLI exit codes). |
+| Node installer/export/bundle/policy tests | 7 passed, including `policy init` (never overwrites, refuses symlinks) and `policy check`. |
+| Deterministic business fixtures (`npm run eval`) | 20 of 20 passed. Zero model runs. |
+| MCP | `tools/list` returns 26 tools including `approval_route`; a rule naming a non-human approver returns `isError` instead of a route. |
+| npm package | 1,071 files including `AGENCY.md`, `docs/agency-policy.md` and `tools/agency_policy.py`; installed from the packed tarball, `policy init` and `policy check` worked and the validator ran from an installed skill folder. |
+| Claude Code plugin | `claude plugin validate .` passed with one expected warning (root `CLAUDE.md` is maintainer guidance, not plugin context). |
+| App bundles | `scripts/build_release.py` produced 49 assets (42 skill zips, all-skills zip, ChatGPT/Gem pack, calculators, `AGENCY.md`, `agency_policy.py`, checksums); all 42 extracted bundles passed the official `skills-ref validate`; the build is deterministic (identical checksums on rebuild). |
+
+An independent reviewer audited the overlay before release and found ways a passing file could still weaken approvals (software-like role names outside the exact deny list, a higher tier with fewer approvers, look-alike or hidden policy fences, CRLF files, Unicode hyphens) plus an unstated approval quorum and lax CLI options. All were fixed and covered by tests. Role-name and phrase checks remain best effort; human review of AGENCY.md changes is part of the control.
+
+## 0.3.0 validation (2026-10-11)
+
+Portable skill package, ERP functional reference and local read-only tooling. It does not certify a production ERP or autonomous execution.
+
+### Verified locally
 
 | Check | Result |
 | --- | --- |
@@ -36,7 +55,7 @@ An independent reviewer, working without the authoring context, audited the calc
 
 All were fixed and covered by tests.
 
-## Coverage and boundaries
+### Coverage and boundaries
 
 The ERP reference was built from ~1,330 public help pages of a reference agency ERP and paraphrased into 11 domain chapters plus a circuit map. Training pages that contain only video titles, stub screens and items the source leaves ambiguous are listed as gaps; skills label them *confirm locally*. Country depth is highest for Argentina and Colombia; Mexico appears mainly through CFDI stamping and counter-receipts. Tax tables, e-invoicing providers, FX sources and statutory layouts must come from the host.
 
@@ -44,6 +63,6 @@ Connector documentation was reviewed (Meta Ads MCP, Intuit QuickBooks MCP, Notio
 
 There are no instrumented host trajectories or model baseline in this release; the behaviour scenarios are synthetic acceptance cases for forward-testing in your host.
 
-## Publication status
+### Publication status
 
-Source changes are proposed on branch `feat/erp-reverse-engineering`. The npm registry package is not published and no hosted service is claimed. Check the repository's Actions tab for remote CI results.
+Releases are published from `main` by the release workflow. The npm registry package is not published and no hosted service is claimed. Check the repository's Actions tab for remote CI results.

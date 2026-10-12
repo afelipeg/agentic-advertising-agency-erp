@@ -9,6 +9,8 @@ This stage reads the circuit after billing, supplier invoicing, timesheets and m
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [accounts-jobs.md](references/erp/accounts-jobs.md) (rules 74–80 profitability formulas, §6 job P&L and WIP, §9 ROT and client profitability reports, J16, gaps 6 and 11) and [accounting.md](references/erp/accounting.md) (BR-54 and BR-55 staff cost and overhead, P08–P09 provisions, BR-52 control 3, §3.2 dimensions, §9 work-order profitability).
 
+Agency policy: apply `currencies`, `commercial`, `accounting` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - "Is this job profitable?", "rentabilidad por cliente", "job P&L", "ROT" (`Inversión y Gross Income por Cliente`), media profitability (`Rentabilidad de Medios`).
 - Valuing hours at internal cost and at client rate for a job, contract or client.

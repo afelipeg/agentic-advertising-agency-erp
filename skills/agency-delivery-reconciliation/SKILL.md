@@ -9,6 +9,8 @@ This stage sits between commitment and payable. Media insertion orders (`Órdene
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [supplier-invoicing.md](references/erp/supplier-invoicing.md) (section 2.1 load types, P-01 to P-17, P-30, P-31, lifecycles 4.1 and 4.3, R-01 to R-14, R-24, R-36, gaps 1–4) — [media-buying.md](references/erp/media-buying.md) (P-OP-07 close, P-OP-08 reopen, P-SV-03 to P-SV-05 verification, lifecycle 4.5, BR-O-08, BR-O-09, BR-V-01 to BR-V-06, BR-D-01 to BR-D-04).
 
+Agency policy: apply `approvals`, `commercial`, `connectors` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Route approvers with `approval_route`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - A supplier invoice, credit note (`NC`) or debit note (`ND`) must be matched to media spots (`avisos`), production estimate items or expense request lines.
 - Someone asks what is still pending to receive, "facturas a recibir", "diferencias pendientes" or for a three-way match by supplier or period.

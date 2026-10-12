@@ -9,6 +9,8 @@ This stage sits after supplier invoice registration (agency-payables) and before
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [payables-treasury.md](references/erp/payables-treasury.md) (P9 to P19 payment list, OP types, release, undo flows, availability, bank export/import; rules 5 to 11, 13 to 17, 21 to 23, 28, 31, 35, 39; PaymentList and PaymentOrder lifecycles; accounting impacts in section 6; controls 10.3; gaps 2, 3, 13, 15).
 
+Agency policy: apply `currencies`, `approvals`, `accounting` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Route approvers with `approval_route`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - Preparing the recurring payment list ("lista de pagos provisoria") from open supplier invoices due in a window.
 - Reviewing which payables are covered by fully collected client invoices (pay-when-paid evidence) before payment.

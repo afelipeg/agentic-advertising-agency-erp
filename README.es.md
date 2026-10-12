@@ -4,7 +4,7 @@ Skills abiertas para que tu asistente (las apps de Claude, ChatGPT o Gemini, o C
 
 La versión 0.2 se basa en una **ingeniería en reversa funcional de un ERP de agencias maduro de Latinoamérica**: se analizaron ~1,330 páginas públicas de su ayuda y se reescribieron como una [referencia funcional del ERP](docs/erp-reference/README.md) con procesos, ciclos de vida de documentos, reglas numeradas, impactos contables, handoffs entre módulos y comportamiento por país. Cada skill cita esas reglas.
 
-**42 skills autocontenidas · 25 calculadoras deterministas de solo lectura (también como MCP local) · referencia funcional del ERP · registro de MCP oficiales · 118 casos de comportamiento sintéticos · descargas listas para las apps de Claude y Gemini, paquete para ChatGPT/Gem, instalador npm/npx, marketplace de plugins de Claude Code y extensión de Gemini CLI.** Licencia MIT. No incluye credenciales, llaves ni suscripciones; no es un ERP alojado ni ejecuta pagos por sí solo.
+**42 skills autocontenidas · 26 calculadoras deterministas de solo lectura (también como MCP local) · un solo `AGENCY.md` con la política de tu agencia que leen todas las skills y todos los agentes · referencia funcional del ERP · registro de MCP oficiales · 122 casos de comportamiento sintéticos · descargas listas para las apps de Claude y Gemini, paquete para ChatGPT/Gem, instalador npm/npx, marketplace de plugins de Claude Code y extensión de Gemini CLI.** Licencia MIT. No incluye credenciales, llaves ni suscripciones; no es un ERP alojado ni ejecuta pagos por sí solo.
 
 > Proyecto independiente, sin afiliación con ningún proveedor de ERP. La referencia describe comportamiento funcional públicamente documentado con redacción propia; no redistribuye código, pantallas ni texto del manual.
 
@@ -119,10 +119,21 @@ Puedes trabajar con Excel, PDF o CSV sin conectar nada. Conectar tus apps es opc
 
 </details>
 
+### Hazlo tuyo: AGENCY.md
+
+Las skills saben cómo funciona el back office de una agencia. `AGENCY.md` les dice cómo lo maneja **tu** agencia: quién aprueba qué y hasta qué monto, tus monedas, tasas de impuestos, cuentas contables, tipos de job, plazos de pago y las apps que conectaste. Lo escribes una vez y todas las skills lo siguen.
+
+1. Descarga [AGENCY.md](https://github.com/afelipeg/agentic-advertising-agency-erp/releases/latest/download/AGENCY.md). Trae valores de ejemplo de una agencia en México.
+2. Cambia los valores dentro del bloque `json agency-policy` (puedes pedirle a Claude o a ChatGPT que te ayude a llenarlo). Que finanzas revise aprobaciones y tasas.
+3. Súbelo junto con las skills: en Claude, en los **archivos de un Proyecto** (o adjúntalo al chat); en ChatGPT, en **Conocimiento** con los demás archivos; en un Gem de Gemini, como conocimiento.
+4. Cuando algo cambie, edita el archivo y vuelve a subirlo. Lo cambias una vez y todas las skills lo aplican.
+
+> AGENCY.md fija **parámetros, no permisos**: decide qué persona aprueba, nunca si una persona aprueba. Contraseñas, llaves de API y números de cuenta o tarjeta nunca van ahí.
+
 ### Lo que conviene saber
 
 - Gratis y de código abierto (licencia MIT). No es un ERP en la nube ni guarda tus datos.
-- No sustituye a tu contador: tasas de impuestos, tipos de cambio y políticas las pones tú.
+- No sustituye a tu contador: tasas de impuestos, tipos de cambio y políticas las pones tú, en `AGENCY.md`.
 - Empieza en modo borrador; cuando confíes en el resultado, conecta tus herramientas.
 
 ---
@@ -165,7 +176,20 @@ npx skills add afelipeg/agentic-advertising-agency-erp --agent codex claude-code
 
 ### Calculadoras
 
-El dinero nunca lo calcula el modelo: escalas de overcomisión (fija, por valor, por tramo, marginal y escalonada, validadas con los ejemplos del manual), cascada de descuentos y fee, GRP/CPR/CPM, totales de presupuesto con líneas directas, liquidación de fee por horas, vencimientos con días hábiles, retenciones, revaluación cambiaria, aging, prorrateo exacto, cuotas, depreciación, validación de asientos, flujo de caja, matching de spots, exposición de crédito y verificación de facturas. Tasas de impuestos, tipos de cambio y políticas de la agencia siempre son insumos.
+El dinero nunca lo calcula el modelo: escalas de overcomisión (fija, por valor, por tramo, marginal y escalonada, validadas con los ejemplos del manual), cascada de descuentos y fee, GRP/CPR/CPM, totales de presupuesto con líneas directas, liquidación de fee por horas, vencimientos con días hábiles, retenciones, revaluación cambiaria, aging, prorrateo exacto, cuotas, depreciación, validación de asientos, flujo de caja, matching de spots, exposición de crédito y verificación de facturas, y `approval_route`, que nombra a los aprobadores según los tramos de `AGENCY.md` (siempre exige una persona). Tasas de impuestos, tipos de cambio y políticas de la agencia siempre son insumos.
+
+### Política de la agencia (AGENCY.md)
+
+Un solo archivo de política para todas las skills y todos los agentes. Las skills lo buscan en este orden: un archivo que el usuario adjunte o nombre, `AGENCY.md` en la raíz del proyecto y luego `~/.agency-erp/AGENCY.md`. Solo el bloque `json agency-policy` es política: `approvals` (por acción y moneda, tramos de monto ascendentes con roles humanos), `currencies`, `roles`, `taxes`, `fx`, `jobs`, `commercial`, `collections`, `accounting` y `connectors`. Cada `SKILL.md` dice qué secciones aplica (se genera desde `contracts/workflows.json`).
+
+```sh
+node bin/agency-erp.mjs policy init --global   # escribe ~/.agency-erp/AGENCY.md con valores de ejemplo; nunca sobrescribe
+node bin/agency-erp.mjs policy check           # ./AGENCY.md y luego ~/.agency-erp/AGENCY.md; sale con 1 si es inválido
+```
+
+En cada proyecto basta una línea en su `AGENTS.md` o `CLAUDE.md`: `Read ~/.agency-erp/AGENCY.md before using any agency-erp skill.` Cambias un umbral una vez y Claude Code, Codex y Gemini CLI lo aplican en todos los proyectos.
+
+Precedencia: contrato de control → AGENCY.md → el pedido del usuario → valores de referencia (*confirm locally*). Todos los roles de un tramo aprueban (personas distintas, nunca quien preparó) y un tramo mayor conserva a los aprobadores del anterior. El validador rechaza todo lo que debilite controles: tramos sin aprobadores o con nombres de rol que apunten a software, un tramo mayor que quite aprobadores, `segregation_of_duties: false`, campos o conectores desconocidos, bloques de política ocultos o duplicados, frases para saltarse aprobaciones y cualquier cosa que parezca una credencial. Las revisiones de nombres y frases son de mejor esfuerzo; quien aprueba los cambios a AGENCY.md sigue siendo responsable. Un archivo inválido se ignora completo, nunca a medias. Guarda tu copia en un fork privado y cámbiala por pull request. Detalle en [docs/agency-policy.md](docs/agency-policy.md).
 
 ## Conectar lo mínimo
 

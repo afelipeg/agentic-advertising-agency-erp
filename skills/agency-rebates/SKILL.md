@@ -9,6 +9,8 @@ This stage sits after media orders and production estimates are executed and sup
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [media-buying.md](references/erp/media-buying.md) (P-OC-01 to P-OC-05, BR-OC-00 to BR-OC-11, §4.6, §10.3–10.4, gaps 3–7); [production.md](references/erp/production.md) (P30, rules 50–60); [receivables.md](references/erp/receivables.md) (P-09 to P-13, rules 6–8, 31–32, §4.4); [supplier-invoicing.md](references/erp/supplier-invoicing.md) (P-22 to P-25, R-15 to R-19).
 
+Agency policy: apply `approvals`, `commercial`, `accounting` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Route approvers with `approval_route`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - "Generate October overcommission pendings for supplier X", "overcomisiones", "rappel", "bonificación por volumen", "incentivos a proveedores".
 - Computing a tiered rebate (value scale, slab, marginal, stepped) or a flat one, with cap, % reduction and contract sequencing (`Orden Generación Pendiente`).

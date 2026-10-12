@@ -9,6 +9,8 @@ This stage builds the broadcast body of a media plan: ranking → Radio and TV p
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [media-planning.md](references/erp/media-planning.md) (P06, P22–P24, P27–P29, P34, P38, R3, R4, R17, R20–R22, R25, R26, §9 Traffic Schedule, §10.3). [media-masters-ooh.md](references/erp/media-masters-ooh.md) (P09 dayparts, P14–P15 materials and royalties, P20 duration coefficients, rules 13–17 duration pricing, 20–21 dayparts and cut-off hour; cited below as MM rule n).
 
+Agency policy: apply `currencies`, `commercial` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - Generating a TV, radio or cable plan from a ranking, or appending a ranking to an existing plan (P34).
 - Distributing N spots per program across allowed days in the spot distribution window (`Distribución de Avisos`) (P06).

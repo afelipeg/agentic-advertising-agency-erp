@@ -9,6 +9,8 @@ This stage is the cash ledger of the agency circuit: receipts from agency-collec
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [payables-treasury.md](references/erp/payables-treasury.md) (P20 cheque pickup, P22 to P27, P28 withholdings suffered; lifecycles OwnCheck, ThirdPartyCheck, Deposit, BankReconciliation, CardStatement; rules 17 to 20, 24 to 27, 33; section 6; controls 10.3; gaps 5, 10, 16) — [receivables.md](references/erp/receivables.md) (P-17 receipt instruments and third-party cheques, P-18 void/delete guards when cheques were endorsed, rule 30, section 6 customer receipt entries).
 
+Agency policy: apply `currencies`, `approvals`, `accounting` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Route approvers with `approval_route`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - Collected cash or third-party cheques (`cheques de terceros`) must be deposited, or funds moved between own banks ("depósito bancario", "transferencia entre bancos").
 - Bank statement charges or credits (maintenance, cheque tax, perceptions, interest) need recording with VAT ("débitos y créditos bancarios").

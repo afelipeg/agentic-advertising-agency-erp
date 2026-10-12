@@ -9,6 +9,8 @@ This stage sits after client approval of a production estimate (agency-productio
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [production.md](references/erp/production.md) (royalties P28–P29, E5–E6, §4.4, R44–R49; event staff P41, E19–E20; approval for billing P19; §10.4–10.5; gaps 13 and 16). Rule ids below are that document's §5 numbers.
 
+Agency policy: apply `approvals`, `taxes`, `commercial` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Route approvers with `approval_route`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - Planning a workback schedule and checking creative versions against brief, specs, brand and accessibility before release.
 - Registering or reviewing a royalty or talent contract: voice-over (`Locutor`), model, music, production house; modality `Por Meses` or `Por Repeticiones`; expiry; extension (`Extensión de Contrato`).

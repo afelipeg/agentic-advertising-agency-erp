@@ -9,6 +9,8 @@ This stage turns controlled supplier documents into recognised payables. Upstrea
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [supplier-invoicing.md](references/erp/supplier-invoicing.md) (S-HDR, S-SAVE, section 2.1 load types, P-11 to P-13, P-20 to P-29, lifecycles 4.2 and 4.4, R-01, R-03, R-12 to R-41, section 10.3) — [payables-treasury.md](references/erp/payables-treasury.md) (P1 to P4 reception, return, counter-receipt, batches; P7 portal validation; P8 platform taxonomy lines; rules 1 to 4; lifecycles of InvoiceReceipt and PortalInvoice).
 
+Agency policy: apply `currencies`, `approvals`, `taxes`, `accounting` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Route approvers with `approval_route`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - A supplier invoice, credit note (`NC`), debit note (`ND`) or Mexican `Anexo` arrives by email, portal, XML or paper and must be logged ("ingresar comprobante", "tráfico de facturas").
 - A document must be returned to the supplier with a reason, re-entered after correction, or assigned to a responsible checker.

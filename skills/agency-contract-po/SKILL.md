@@ -9,6 +9,8 @@ This stage sits between the JobNumber and the documents that consume client mone
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [accounts-jobs.md](references/erp/accounts-jobs.md) (P-17 client POs and transfers, P-18 budget reserve, entities 3.8–3.9, rules 59–62, jobs J8–J9) and [receivables.md](references/erp/receivables.md) (rule 13 rounding to a client's round PO, rule 26 split codes, final PO number on the sales document, section 10.3 approved-for-billing precondition).
 
+Agency policy: apply `currencies`, `approvals`, `commercial` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Route approvers with `approval_route`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - A client sends a purchase order or signed agreement: "cargar PO del cliente", "orden de compra del cliente", "contrato firmado", "`Nº Pedido cliente`".
 - Linking an estimate or media plan (`pauta`) to a client PO, or checking whether a document may be linked.

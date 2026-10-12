@@ -9,6 +9,8 @@ This stage runs the reference ERP's digital planner (`Planificación Digital`): 
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [media-planning.md](references/erp/media-planning.md) (P35 digital planner steps 1–9, P06 internet classic plan, R4, R27, R28, §4.4, §10.4, gaps 3 and 11). [media-masters-ooh.md](references/erp/media-masters-ooh.md) (digital masters in §3.2, P19 fee by publication type, P26 taxonomy, rules 29, 31–33; cited below as MM rule n). [payables-treasury.md](references/erp/payables-treasury.md) (P7 portal invoice validation, P8 taxonomy line reconciliation, rule 3, §10.3 controls; cited below as AP Pn or AP rule n).
 
+Agency policy: apply `currencies`, `commercial`, `connectors` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - Creating a digital plan from a ranking linked to an open JobNumber: platform, publication type, format, buy type, clicks, impressions, CTR, gross rate and AdServer per item (P35 steps 1–3).
 - Rendering naming strings and UTM URLs from the client's taxonomy templates (`Taxonomía`) for product, plan, item, creative and UTM levels (MM P26).

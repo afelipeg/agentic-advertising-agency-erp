@@ -18,7 +18,7 @@ def handle(request):
             raise ValueError("Parameters must be an object")
         if method == "initialize":
             version = p.get("protocolVersion")
-            response["result"] = {"protocolVersion": version if version in VERSIONS else "2025-06-18", "capabilities": {"tools": {"listChanged": False}}, "serverInfo": {"name": "agency-erp-local", "version": "0.3.0"}}
+            response["result"] = {"protocolVersion": version if version in VERSIONS else "2025-06-18", "capabilities": {"tools": {"listChanged": False}}, "serverInfo": {"name": "agency-erp-local", "version": "0.4.0"}}
         elif method == "ping":
             response["result"] = {}
         elif method == "tools/list":

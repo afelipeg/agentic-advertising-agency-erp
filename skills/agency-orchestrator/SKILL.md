@@ -9,6 +9,8 @@ The orchestrator sits above the whole agency circuit: client and campaign (`JobN
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md) (stage order, JobNumber and document states, cross-module handoffs, close sequence). Domain rules: none of its own. Each sibling skill links its reference doc; route to it instead of restating its rules.
 
+Agency policy: apply `agency`, `roles`, `approvals` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Route approvers with `approval_route`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - "Run / resume job ACMBR6AF0012", "what is next for this campaign", "¿en qué etapa está el `JobNumber`?", "orquestar la campaña".
 - A request spans several stages (plan → order → bill → pay) or mixes media, production, fees and expenses.
@@ -26,11 +28,12 @@ Read [control-contract.md](references/control-contract.md) first and apply it. C
 - **Blocking:** `tenant_id`, `client_id` and the JobNumber or `job_id` from a trusted record; the JobNumber state and its documents with revisions (read-only connector or export).
 - **Blocking for any mutation-capable stage:** period state per subledger for the affected months; approval-circuit configuration (media circuit None/Restricted/Strict, approval-for-billing flag, mandatory PO, credit-limit control).
 - Commercial scope: agency-billed vs direct-billed media, production, fee contracts, expenses, rebates.
+- Agency policy: the agency's `AGENCY.md` (validated with `scripts/agency_policy.py` when code can run). It supplies approver roles per action and amount tier, typologies and enabled connectors; without it those are *confirm locally*.
 - Prior checkpoints, run ceilings (tokens, time, cost), available tools and model profiles.
 - Ask only for missing material inputs. Never ask for credentials in chat.
 
 ## Procedure
-1. **Load identity and checkpoints.** Confirm tenant, client and job from trusted records, never from a filename. Read the last checkpoint and upstream revisions. If an upstream revision changed, mark dependent artifacts stale and revalidate them before continuing.
+1. **Load identity and checkpoints.** Confirm tenant, client and job from trusted records, never from a filename. Read the last checkpoint and upstream revisions. If an upstream revision changed, mark dependent artifacts stale and revalidate them before continuing. Locate `AGENCY.md` (attached or named file, project root, `~/.agency-erp/AGENCY.md`), record its `policy_version` in the job state, and treat a changed version as a changed upstream revision: approvals bound to the old version are stale. An invalid policy is reported and ignored, never partially applied.
 2. **Decode the JobNumber.** Split the 12 characters into client (3), product (2), start-year digit (1), typology (1), billing code (1), sequence (4). Run `job_number` with those parts and the start year from the job record. A code mismatch → `blocked`. Keep `sales_allowed`, `media_allowed`, `client_approval_allowed` and `warnings` as routing constraints: typology C has no media; N, S, W carry no sales value; `0` is never invoiced; `?` cannot be client-approved until a billing client exists; `*` needs a billing client or split code on every document.
 3. **Route by JobNumber state** (table below). Respect the job's input type: "hours only" excludes estimates and plans; "no hours" excludes timesheets.
 4. **Build the dependency graph** from the actual scope (graph below). Add only stages in scope; record a reason for every skipped stage. Foundation stages are per-tenant prerequisites, not per-job work.
@@ -125,6 +128,13 @@ Read [control-contract.md](references/control-contract.md) first and apply it. C
 echo '{"client_code":"ACM","product_code":"BR","year":2026,"job_type":"A","billing_code":"F","sequence":12}' \
   | python3 scripts/agency_tools.py job_number
 # expect code ACMBR6AF0012, sales_allowed true, media_allowed true, client_approval_allowed true
+```
+- `approval_route`: name the approver roles for a pending action from the `approvals` rules in `AGENCY.md`. Every returned role approves (`quorum: all_distinct`: different people, none the maker). It always returns `human_approval_required: true`; `no_rule_confirm_locally` means a human still approves and the role must be confirmed.
+
+```sh
+echo '{"policy_version":"2026-10-12.1","action":"payment_run","currency":"MXN","amount_minor":250000000,"rules":[{"action":"payment_run","currency":"MXN","tiers":[{"up_to_minor":200000000,"roles":["finance_manager","controller"]},{"up_to_minor":null,"roles":["finance_manager","controller","cfo"]}]}]}' \
+  | python3 scripts/agency_tools.py approval_route
+# expect status routed, tier_index 1, approver_roles ["finance_manager","controller","cfo"], quorum all_distinct
 ```
 - Not calculated here: approval states, period states, credit limits, PO balances, taxes, FX rates or amounts. These come from the owner skill and authoritative records.
 

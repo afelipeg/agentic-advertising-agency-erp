@@ -9,6 +9,8 @@ This stage sits between an open JobNumber (agency-job-lifecycle) and client bill
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [production.md](references/erp/production.md) (processes P01–P27, lifecycles §4.1–4.2, rules R1–R43 in §5, controls and exceptions §10.4–10.5, gaps 3, 4, 11, 12). Rule ids below are that document's §5 numbers.
 
+Agency policy: apply `currencies`, `taxes`, `commercial` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - Someone asks to "quote", "cotizar", or build a `presupuesto de producción` / `estimado` for audiovisual, print, digital, event or agency-internal work on an open JobNumber.
 - Adding indirect lines, direct lines (`Dire`), agency-performed lines (supplier `0000`), cost-rendering lines (`rendición de costos`) or price-list lines (`lista de precios`).

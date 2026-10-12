@@ -9,6 +9,8 @@ Tasks and hours are the labour layer of each JobNumber: brief or contact report 
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [accounts-jobs.md](references/erp/accounts-jobs.md) (P-21 tasks, P-22 JPM, P-23 timesheet closing and control, lifecycle 4.3 and 4.7, rules 50–56 and 66–68, rule 80 hour valuation, jobs J11, J12, J18) and [management-security.md](references/erp/management-security.md) (P-GN-06 to P-GN-08 entry, approval and past-hour edits, timesheet lifecycle in section 4, rules R-TS 21–38, R-SEC 44 approve-hours power, R-AP 58 task options, section 10.3 segregation).
 
+Agency policy: apply `roles`, `commercial` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - "Enviar tarea", "pedido interno", "tarea pendiente", "reasignar tarea", "devolver tarea" for a JobNumber, or a task-delay report.
 - Checking task dates: requested by Accounts, internal consensus, promised to client.

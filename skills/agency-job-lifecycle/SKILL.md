@@ -9,6 +9,8 @@ The JobNumber (`JobNumber`, campaign or job) is the unit of analysis of the agen
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [accounts-jobs.md](references/erp/accounts-jobs.md) (P-06 to P-12, P-16, entities 3.3–3.4, lifecycle 4.1, rules 12–29, section 10 jobs J3, J13, J14).
 
+Agency policy: apply `agency`, `approvals`, `jobs` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Route approvers with `approval_route`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - Opening a new campaign job: "open a JobNumber", "abrir un job", "alta de campaña", "nuevo `JobNumber` facturable / no facturable".
 - Checking or explaining a job code, its typology (`Tipología del Trabajo`) or billing code (`Código de Facturación` F / 0 / ? / *).

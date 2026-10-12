@@ -53,3 +53,26 @@ test('gemini target installs into .gemini/skills',async()=>{
     await access(join(dir,'.gemini/skills/agency-collections/SKILL.md'));
   }finally{await rm(dir,{recursive:true,force:true});}
 });
+test('policy init writes an example once and policy check validates it',async()=>{
+  const dir=await mkdtemp(join(tmpdir(),'agency-policy-'));
+  try{
+    let r=run(['policy','init','--dry-run'],dir);assert.equal(r.status,0,r.stderr);await assert.rejects(access(join(dir,'AGENCY.md')));
+    r=run(['policy','init'],dir);assert.equal(r.status,0,r.stderr);
+    assert.equal(await readFile(join(dir,'AGENCY.md'),'utf8'),await readFile(join(root,'AGENCY.md'),'utf8'));
+    r=run(['policy','init'],dir);assert.equal(r.status,1);assert.match(r.stderr,/Already exists/);
+    r=run(['policy','check'],dir);assert.equal(r.status,0,r.stdout+r.stderr);assert.equal(JSON.parse(r.stdout).valid,true);
+    const {writeFile}=await import('node:fs/promises');
+    const text=(await readFile(join(dir,'AGENCY.md'),'utf8')).replace('"segregation_of_duties": true','"segregation_of_duties": false');
+    await writeFile(join(dir,'weak.md'),text);
+    r=run(['policy','check','--file','weak.md'],dir);assert.equal(r.status,1);assert.equal(JSON.parse(r.stdout).valid,false);
+    r=run(['policy','init','--global','--cwd',dir],dir);assert.equal(r.status,1);
+    r=run(['policy','nope'],dir);assert.equal(r.status,1);
+  }finally{await rm(dir,{recursive:true,force:true});}
+});
+test('policy init refuses a symlinked destination',async()=>{
+  const dir=await mkdtemp(join(tmpdir(),'agency-policy-link-')),outside=await mkdtemp(join(tmpdir(),'agency-policy-out-'));
+  try{
+    await symlink(outside,join(dir,'proj'));
+    const r=run(['policy','init','--cwd',join(dir,'proj')],dir);assert.equal(r.status,1);assert.match(r.stderr,/Symlink/);assert.deepEqual(await readdir(outside),[]);
+  }finally{await rm(dir,{recursive:true,force:true});await rm(outside,{recursive:true,force:true});}
+});

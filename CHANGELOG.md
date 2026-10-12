@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.4.0 — 2026-10-12
+
+### Added
+- **`AGENCY.md` agency policy overlay:** one file with an agency's parameters (approval tiers per action and currency, roles, currencies, reviewed tax rates, FX source, job typologies, commercial defaults, dunning, close day and account codes, enabled connectors) that every skill applies in every host. Lookup order: attached or named file, project root, `~/.agency-erp/AGENCY.md`. Ships with synthetic example values.
+- **`tools/agency_policy.py` validator** (mirrored into every skill's `scripts/`): strict schema, segregation of duties required, approver roles that name people rather than software (best effort), ascending tiers with an unbounded last tier where each higher tier keeps the approvers below it, declared roles and currencies, known connector ids, a single canonical policy block (no hidden, nested or look-alike fences), CRLF and Unicode normalisation, secret and override-phrase detection. An invalid file is ignored as a whole.
+- **`approval_route` calculator** (26 tools, also on the MCP): returns the approver roles for an action, currency and amount from the AGENCY.md tiers, with the `policy_version` and `quorum: all_distinct` (every listed role approves, different people, never the maker); always `human_approval_required: true`, never authorizes execution.
+- **CLI:** `agency-erp policy init [--global|--cwd PATH] [--dry-run]` (never overwrites, refuses symlinks) and `agency-erp policy check [--file PATH]`.
+- **Circuit wiring:** each catalogue entry lists the policy sections it applies; `npm run sync` writes one generated `Agency policy:` line into each `SKILL.md` and `docs/workflow.md`. The control contract, circuit map (section 7) and orchestrator and integrations procedures apply the overlay; skills that apply approvals route them with `approval_route`.
+- Release assets `AGENCY.md` and `agency_policy.py`; the ChatGPT/Gem instructions and knowledge file apply an uploaded AGENCY.md.
+- Tests for the validator, routing and CLI; two deterministic fixtures (20 total) and four behaviour scenarios (122 total), including an overlay that tries to auto-approve payments.
+
 ## 0.3.0 — 2026-10-11
 
 ### Added

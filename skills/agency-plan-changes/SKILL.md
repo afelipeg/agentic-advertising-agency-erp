@@ -9,6 +9,8 @@ This stage handles every change to a plan once it has an approved revision or or
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [media-planning.md](references/erp/media-planning.md) (P09 revisions, P13–P15 reject/recover/cancel, P16 order rate validation, P17–P21 order modification and add-to-order, P25 rescheduling, P26 delete, P29 re-rate, P30 control locks, P34 item locks, R2, R17, R26, R27, R29, §4.3 spot state machine and locks, §10.3). [media-buying.md](references/erp/media-buying.md) (P-OP-03, P-OP-05, P-OP-06, P-OP-08, §4.4 order lifecycle, BR-O-04 to BR-O-10).
 
+Agency policy: apply `approvals`, `commercial` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Route approvers with `approval_route`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - A client or agency requests changes to an approved or ordered plan: spot counts, dates, program, duration, publication type, billing type, direct/indirect, contract, material, rate or vendor.
 - Dropped spots after control must be rescheduled (`Reprogramar avisos`), or rejected spots recovered (`Recuperar avisos`).

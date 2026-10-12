@@ -17,18 +17,24 @@
   "owner": "Account director and controller",
   "next_stage": "agency-onboarding and agency-integrations for new jobs, then dependency-ready stages",
   "procedure": [
-   "Load identity, checkpoints and upstream revisions; mark stale dependents.",
+   "Load identity, checkpoints, upstream revisions and the AGENCY.md policy_version; mark stale dependents.",
    "Decode the JobNumber with job_number and keep its typology and billing flags as routing constraints.",
    "Route by JobNumber state and place each document in its lifecycle state with one owner skill.",
    "Build the dependency graph for the actual scope and record reasons for skipped stages.",
    "Check period, PO, credit, client-approval, closed-order and billing gates before dispatching mutations.",
-   "Dispatch read-only work concurrently, serialize shared mutations, and digest approval requests with payload_digest.",
+   "Dispatch read-only work concurrently, serialize shared mutations, name approvers with approval_route and digest approval requests with payload_digest.",
    "Assess job close readiness and the month-end period gate, then checkpoint and return."
   ],
   "references": [],
+  "policy": [
+   "agency",
+   "roles",
+   "approvals"
+  ],
   "tools": [
    "payload_digest",
-   "job_number"
+   "job_number",
+   "approval_route"
   ]
  },
  {
@@ -58,6 +64,12 @@
   ],
   "references": [
    "accounts-jobs"
+  ],
+  "policy": [
+   "agency",
+   "jobs",
+   "commercial",
+   "connectors"
   ],
   "tools": [
    "job_number"
@@ -92,8 +104,15 @@
    "accounts-jobs",
    "management-security"
   ],
+  "policy": [
+   "roles",
+   "approvals",
+   "taxes",
+   "jobs"
+  ],
   "tools": [
-   "job_number"
+   "job_number",
+   "approval_route"
   ]
  },
  {
@@ -113,7 +132,7 @@
   "owner": "Operations lead",
   "next_stage": "agency-access-governance, then the requesting stage or agency-orchestrator",
   "procedure": [
-   "Inventory enabled apps and MCP tools and follow the registry selection order.",
+   "Inventory enabled apps and MCP tools, follow the registry selection order and keep to AGENCY.md connectors.enabled.",
    "Map required reads and writes per stage and select candidates by role, not brand.",
    "Request authentication through the host vault and verify identity with one permitted read.",
    "Review output schemas and quarantine mismatches; no schema means drafts only.",
@@ -122,6 +141,10 @@
   ],
   "references": [
    "management-security"
+  ],
+  "policy": [
+   "roles",
+   "connectors"
   ],
   "tools": []
  },
@@ -152,8 +175,14 @@
   "references": [
    "management-security"
   ],
+  "policy": [
+   "roles",
+   "approvals",
+   "connectors"
+  ],
   "tools": [
-   "payload_digest"
+   "payload_digest",
+   "approval_route"
   ]
  },
  {
@@ -182,8 +211,14 @@
   "references": [
    "accounts-jobs"
   ],
+  "policy": [
+   "agency",
+   "approvals",
+   "jobs"
+  ],
   "tools": [
-   "job_number"
+   "job_number",
+   "approval_route"
   ]
  },
  {
@@ -214,9 +249,15 @@
    "accounts-jobs",
    "receivables"
   ],
+  "policy": [
+   "currencies",
+   "approvals",
+   "commercial"
+  ],
   "tools": [
    "budget_check",
-   "installment_schedule"
+   "installment_schedule",
+   "approval_route"
   ]
  },
  {
@@ -245,9 +286,15 @@
    "accounts-jobs",
    "media-planning"
   ],
+  "policy": [
+   "currencies",
+   "approvals",
+   "commercial"
+  ],
   "tools": [
    "budget_check",
-   "credit_exposure"
+   "credit_exposure",
+   "approval_route"
   ]
  },
  {
@@ -277,10 +324,16 @@
    "accounts-jobs",
    "expenses"
   ],
+  "policy": [
+   "currencies",
+   "approvals",
+   "commercial"
+  ],
   "tools": [
    "hourly_fee_settlement",
    "installment_schedule",
-   "allocate"
+   "allocate",
+   "approval_route"
   ]
  },
  {
@@ -310,6 +363,10 @@
   "references": [
    "accounts-jobs",
    "management-security"
+  ],
+  "policy": [
+   "roles",
+   "commercial"
   ],
   "tools": [
    "allocate",
@@ -343,6 +400,11 @@
    "accounts-jobs",
    "management-security"
   ],
+  "policy": [
+   "agency",
+   "currencies",
+   "commercial"
+  ],
   "tools": [
    "allocate",
    "margin"
@@ -373,6 +435,11 @@
   ],
   "references": [
    "production"
+  ],
+  "policy": [
+   "currencies",
+   "taxes",
+   "commercial"
   ],
   "tools": [
    "estimate_totals",
@@ -406,8 +473,14 @@
   "references": [
    "production"
   ],
+  "policy": [
+   "approvals",
+   "taxes",
+   "commercial"
+  ],
   "tools": [
-   "payload_digest"
+   "payload_digest",
+   "approval_route"
   ]
  },
  {
@@ -436,6 +509,10 @@
   ],
   "references": [
    "media-planning"
+  ],
+  "policy": [
+   "commercial",
+   "connectors"
   ],
   "tools": [
    "audience_metrics"
@@ -469,6 +546,11 @@
   "references": [
    "media-planning",
    "media-masters-ooh"
+  ],
+  "policy": [
+   "currencies",
+   "jobs",
+   "commercial"
   ],
   "tools": [
    "media_line_cost",
@@ -506,6 +588,10 @@
    "media-planning",
    "media-masters-ooh"
   ],
+  "policy": [
+   "currencies",
+   "commercial"
+  ],
   "tools": [
    "media_line_cost",
    "discount_cascade",
@@ -538,6 +624,10 @@
   "references": [
    "media-masters-ooh",
    "media-planning"
+  ],
+  "policy": [
+   "currencies",
+   "commercial"
   ],
   "tools": [
    "media_line_cost",
@@ -574,6 +664,11 @@
    "media-masters-ooh",
    "payables-treasury"
   ],
+  "policy": [
+   "currencies",
+   "commercial",
+   "connectors"
+  ],
   "tools": [
    "media_line_cost",
    "discount_cascade",
@@ -609,11 +704,16 @@
    "media-buying",
    "media-masters-ooh"
   ],
+  "policy": [
+   "approvals",
+   "commercial"
+  ],
   "tools": [
    "discount_cascade",
    "media_line_cost",
    "installment_schedule",
-   "budget_check"
+   "budget_check",
+   "approval_route"
   ]
  },
  {
@@ -642,11 +742,17 @@
   "references": [
    "media-buying"
   ],
+  "policy": [
+   "currencies",
+   "approvals",
+   "commercial"
+  ],
   "tools": [
    "discount_cascade",
    "media_line_cost",
    "credit_exposure",
-   "plan_diff"
+   "plan_diff",
+   "approval_route"
   ]
  },
  {
@@ -676,6 +782,10 @@
   "references": [
    "media-buying",
    "media-planning"
+  ],
+  "policy": [
+   "commercial",
+   "connectors"
   ],
   "tools": [
    "spot_match",
@@ -713,9 +823,14 @@
    "media-planning",
    "media-buying"
   ],
+  "policy": [
+   "approvals",
+   "commercial"
+  ],
   "tools": [
    "plan_diff",
-   "budget_check"
+   "budget_check",
+   "approval_route"
   ]
  },
  {
@@ -745,9 +860,14 @@
   "references": [
    "media-planning"
   ],
+  "policy": [
+   "approvals",
+   "connectors"
+  ],
   "tools": [
    "payload_digest",
-   "budget_check"
+   "budget_check",
+   "approval_route"
   ]
  },
  {
@@ -776,10 +896,16 @@
   "references": [
    "media-planning"
   ],
+  "policy": [
+   "approvals",
+   "commercial",
+   "connectors"
+  ],
   "tools": [
    "audience_metrics",
    "budget_check",
-   "plan_diff"
+   "plan_diff",
+   "approval_route"
   ]
  },
  {
@@ -810,6 +936,10 @@
   ],
   "references": [
    "media-masters-ooh"
+  ],
+  "policy": [
+   "commercial",
+   "connectors"
   ],
   "tools": [
    "media_line_cost",
@@ -845,10 +975,16 @@
    "supplier-invoicing",
    "media-buying"
   ],
+  "policy": [
+   "approvals",
+   "commercial",
+   "connectors"
+  ],
   "tools": [
    "reconcile",
    "invoice_check",
-   "spot_match"
+   "spot_match",
+   "approval_route"
   ]
  },
  {
@@ -879,11 +1015,18 @@
    "supplier-invoicing",
    "payables-treasury"
   ],
+  "policy": [
+   "currencies",
+   "approvals",
+   "taxes",
+   "accounting"
+  ],
   "tools": [
    "invoice_check",
    "reconcile",
    "payment_terms",
-   "tiered_commission"
+   "tiered_commission",
+   "approval_route"
   ]
  },
  {
@@ -913,11 +1056,17 @@
   "references": [
    "payables-treasury"
   ],
+  "policy": [
+   "currencies",
+   "approvals",
+   "accounting"
+  ],
   "tools": [
    "withholding",
    "payment_terms",
    "aging",
-   "fx_revaluation"
+   "fx_revaluation",
+   "approval_route"
   ]
  },
  {
@@ -949,10 +1098,16 @@
    "payables-treasury",
    "receivables"
   ],
+  "policy": [
+   "currencies",
+   "approvals",
+   "accounting"
+  ],
   "tools": [
    "reconcile",
    "allocate",
-   "journal_check"
+   "journal_check",
+   "approval_route"
   ]
  },
  {
@@ -984,12 +1139,20 @@
    "production",
    "media-planning"
   ],
+  "policy": [
+   "currencies",
+   "approvals",
+   "taxes",
+   "commercial",
+   "accounting"
+  ],
   "tools": [
    "discount_cascade",
    "estimate_totals",
    "payment_terms",
    "allocate",
-   "invoice_check"
+   "invoice_check",
+   "approval_route"
   ]
  },
  {
@@ -1018,6 +1181,11 @@
   "references": [
    "receivables",
    "accounts-jobs"
+  ],
+  "policy": [
+   "taxes",
+   "jobs",
+   "commercial"
   ],
   "tools": []
  },
@@ -1048,12 +1216,19 @@
   "references": [
    "receivables"
   ],
+  "policy": [
+   "currencies",
+   "approvals",
+   "commercial",
+   "collections"
+  ],
   "tools": [
    "aging",
    "credit_exposure",
    "allocate",
    "withholding",
-   "payment_terms"
+   "payment_terms",
+   "approval_route"
   ]
  },
  {
@@ -1085,10 +1260,16 @@
    "receivables",
    "supplier-invoicing"
   ],
+  "policy": [
+   "approvals",
+   "commercial",
+   "accounting"
+  ],
   "tools": [
    "tiered_commission",
    "flat_rebate",
-   "allocate"
+   "allocate",
+   "approval_route"
   ]
  },
  {
@@ -1119,11 +1300,17 @@
   "references": [
    "expenses"
   ],
+  "policy": [
+   "approvals",
+   "taxes",
+   "accounting"
+  ],
   "tools": [
    "allocate",
    "installment_schedule",
    "invoice_check",
-   "budget_check"
+   "budget_check",
+   "approval_route"
   ]
  },
  {
@@ -1155,9 +1342,15 @@
    "supplier-invoicing",
    "accounting"
   ],
+  "policy": [
+   "agency",
+   "approvals",
+   "taxes"
+  ],
   "tools": [
    "invoice_check",
-   "withholding"
+   "withholding",
+   "approval_route"
   ]
  },
  {
@@ -1186,9 +1379,15 @@
   "references": [
    "accounting"
   ],
+  "policy": [
+   "currencies",
+   "approvals",
+   "accounting"
+  ],
   "tools": [
    "journal_check",
-   "allocate"
+   "allocate",
+   "approval_route"
   ]
  },
  {
@@ -1222,11 +1421,18 @@
    "production",
    "media-buying"
   ],
+  "policy": [
+   "currencies",
+   "approvals",
+   "fx",
+   "accounting"
+  ],
   "tools": [
    "fx_revaluation",
    "journal_check",
    "tiered_commission",
-   "allocate"
+   "allocate",
+   "approval_route"
   ]
  },
  {
@@ -1254,9 +1460,15 @@
    "accounting",
    "expenses"
   ],
+  "policy": [
+   "currencies",
+   "approvals",
+   "accounting"
+  ],
   "tools": [
    "depreciation_schedule",
-   "journal_check"
+   "journal_check",
+   "approval_route"
   ]
  },
  {
@@ -1287,10 +1499,16 @@
    "accounting",
    "payables-treasury"
   ],
+  "policy": [
+   "approvals",
+   "fx",
+   "accounting"
+  ],
   "tools": [
    "journal_check",
    "fx_revaluation",
-   "aging"
+   "aging",
+   "approval_route"
   ]
  },
  {
@@ -1318,6 +1536,11 @@
   ],
   "references": [
    "accounts-jobs",
+   "accounting"
+  ],
+  "policy": [
+   "currencies",
+   "commercial",
    "accounting"
   ],
   "tools": [
@@ -1352,6 +1575,12 @@
    "management-security",
    "payables-treasury"
   ],
+  "policy": [
+   "currencies",
+   "fx",
+   "commercial",
+   "collections"
+  ],
   "tools": [
    "cash_projection",
    "payment_terms",
@@ -1381,6 +1610,11 @@
   ],
   "references": [
    "management-security",
+   "accounting"
+  ],
+  "policy": [
+   "agency",
+   "currencies",
    "accounting"
   ],
   "tools": [

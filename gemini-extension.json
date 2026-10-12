@@ -1,6 +1,6 @@
 {
   "name": "agency-erp",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "42 agent skills for an advertising agency's back office (jobs, production, media planning and buying, spot control, invoices, billing, collections, payments, tax, ledger, close, profitability) plus read-only calculators.",
   "contextFileName": "GEMINI.md",
   "mcpServers": {

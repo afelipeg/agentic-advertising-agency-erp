@@ -9,6 +9,8 @@ This stage takes ordered digital plan items to the ad platforms: digital plan an
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [media-planning.md](references/erp/media-planning.md) (P35 Digital Planner steps 3–9, P26 taxonomy via media masters, R4 digital pricing, R15 currency, R27–R28 order cost and Google/Meta adjustment, §10.3 controls, §11 gap 11).
 
+Agency policy: apply `approvals`, `connectors` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Route approvers with `approval_route`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - "Launch the approved digital plan", "build the campaigns paused", `activar campaña`, `subir pauta digital`.
 - Creating campaigns, ad sets/ad groups and ads from ordered digital items with the client taxonomy (`taxonomía`) naming and UTMs.

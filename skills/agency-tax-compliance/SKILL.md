@@ -9,6 +9,8 @@ This stage wraps the fiscal side of the circuit: it takes drafts approved in `ag
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [receivables.md](references/erp/receivables.md) (P-14 fiscal validation, §4.6, §5 rules 13–18, 25, 28, §8 country matrix, gap 13); [supplier-invoicing.md](references/erp/supplier-invoicing.md) (S-CAI, R-03, R-12, R-23 to R-29, R-41, §8 country matrix); [accounting.md](references/erp/accounting.md) (P05 withholding settlement, P14 VAT position, P15 non-computable VAT, P16 IIBB position, P29 statutory files, BR-39 to BR-43, BR-50 close order). Below `AR-Rn` = receivables §5 rule n.
 
+Agency policy: apply `agency`, `approvals`, `taxes` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Route approvers with `approval_route`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - "Request CAE for today's invoices on point of sale 0003", "solicitar CAE", "timbrar CFDI", "adjuntar XML timbrados".
 - Checking fiscal numbering gaps per point of sale × document type × letter, or a CAE/PAC rejection.

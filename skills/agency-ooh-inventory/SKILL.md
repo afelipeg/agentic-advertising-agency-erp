@@ -9,6 +9,8 @@ This optional vertical serves agencies or groups that own billboard faces (`cart
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [media-masters-ooh.md](references/erp/media-masters-ooh.md) (§1 framing fact 2, P40–P50, §3.2 OOH entities, §4.1–4.6 lifecycles, rules 44–61, §6 OOH accounting, §9 OOH reports, §10.1–10.3, §11 gaps 1–8, 20).
 
+Agency policy: apply `commercial`, `connectors` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - "Which faces are free in zone X for November?", `disponibilidad`, `ocupación`, distressed inventory.
 - Creating a reservation for a salesperson or converting it to an order when the advertiser PO arrives (`generar orden`).

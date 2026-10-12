@@ -9,6 +9,8 @@ Fee contracts replace or complement commission: client agreement → **fixed-fee
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [accounts-jobs.md](references/erp/accounts-jobs.md) (P-13 fixed fee, P-14 hourly fee and P-14a–e, P-15 staff-hour estimate, P-16 patterns, entity 3.5, lifecycle 4.2, rules 30–49, section 6 observation code 22, job J4–J7) and [expenses.md](references/erp/expenses.md) (P20 fee-contract cross-reference: contract types, separate media and production instalments, no commission on fee-linked estimates).
 
+Agency policy: apply `currencies`, `approvals`, `commercial` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Route approvers with `approval_route`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - "Armar contrato de fee", "fee mensual", "retainer", "fee por horas", "honorarios fijos" for a titular client.
 - Attaching JobNumbers to a contract by list, by percentage or by `Patrón de JobNumber`, including self-assignment prompts.

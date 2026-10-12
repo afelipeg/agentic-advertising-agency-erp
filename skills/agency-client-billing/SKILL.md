@@ -9,6 +9,8 @@ This stage sits between operations and collection: approved media plans (`Pauta`
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [receivables.md](references/erp/receivables.md) (§2.1–2.17 processes P-01 to P-16, §5 rules 1–15, 20, 25–29, §10.3–10.4); [production.md](references/erp/production.md) (P19–P20 approval for billing, §5 rules 12, 16, 20–22, 33); [media-planning.md](references/erp/media-planning.md) (P31 approve for billing, §5 R9–R11, R15, R32, §7 handoff to AR). Below, `AR-Rn` = receivables §5 rule n, `PR-Rn` = production §5 rule n, `MP-Rn` = media-planning §5 rule n.
 
+Agency policy: apply `currencies`, `approvals`, `taxes`, `commercial`, `accounting` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Route approvers with `approval_route`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - "Bill the approved October schedules for client X", "facturar pendientes", "facturación de medios, producción y fees".
 - Building an invoice from approved estimate lines, including partial billing (`% de anticipo`, amount per item).

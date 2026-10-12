@@ -9,6 +9,8 @@ This stage covers spend that is neither media buying nor client production purch
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [expenses.md](references/erp/expenses.md) (P1 configuration, P3 to P19 contracts, requests, POs, accrual, sheets, settlements, petty cash, budget; lifecycles 4.1 to 4.6; rules 1 to 35; section 6 accounting; controls 10.3; gaps 5, 7, 8, 14, 16).
 
+Agency policy: apply `approvals`, `taxes`, `accounting` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Route approvers with `approval_route`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - A recurring supplier agreement (rent, insurance, subscriptions) must become an expense contract with a monthly schedule.
 - A one-off purchase needs an expense request, its approval route, or an expense PO ("solicitud de gastos", "orden de compra de gastos").

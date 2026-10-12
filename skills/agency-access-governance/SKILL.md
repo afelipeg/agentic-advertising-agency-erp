@@ -9,6 +9,8 @@ Access governance is a foundation stage under the whole circuit: every stage, fr
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [management-security.md](references/erp/management-security.md) (P-SY-01, P-SY-06, P-SY-10, P-SY-11; P-US-01 to P-US-10; P-AU-01 to P-AU-08; §3 user, profile, role, specific activity; §4 user and profile lifecycles; §5 R-SEC 39–51, R-AP 52–58, R-AUD 67–69; §10.3; §11 items 3, 5, 18).
 
+Agency policy: apply `roles`, `approvals`, `connectors` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Route approvers with `approval_route`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - New joiner, role change, leaver ("alta / baja de usuario", "cambio de perfil", "reasignar responsabilidades").
 - Reviewing profiles (`Perfiles`), functional roles (`Roles Funcionales`) and specific activities (`Actividades Específicas`) such as approve for billing or finalize payment lists.

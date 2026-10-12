@@ -9,6 +9,8 @@ Accounting sits downstream of every operational module: media plans, production 
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [accounting.md](references/erp/accounting.md) (P01–P06, P20–P22, P25, §3.1–3.3 entities and observation codes, §4.1 entry lifecycle, BR-01 to BR-12, §6 event patterns, §10.3 controls, §11 gaps).
 
+Agency policy: apply `currencies`, `approvals`, `accounting` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Route approvers with `approval_route`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - Drafting or checking a manual entry: payroll, taxes, reclassification, accrual correction, IFRS/USGAAP reporting entry (`asiento manual`, `contra-asiento`).
 - Creating or changing a rubro, GL account, subaccount (`sub-cuenta`) or voucher type, or validating the chart (missing parent rubros, bridge group parity).

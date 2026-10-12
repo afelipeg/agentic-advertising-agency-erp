@@ -11,6 +11,8 @@ const args = process.argv.slice(2);
 const names = (await readdir(join(root, 'skills'))).sort();
 const help = `agency-erp list
 agency-erp install --agent codex|claude-code|gemini [--skill NAME] [--global] [--cwd PATH] [--dry-run]
+agency-erp policy init [--global] [--cwd PATH] [--dry-run]
+agency-erp policy check [--file PATH]
 agency-erp doctor
 agency-erp export --host claude-ai|gpt --out PATH
 agency-erp bundle --skill NAME --out PATH.zip
@@ -21,6 +23,7 @@ agency-erp mcp
 agency-erp demo
 
 Install adds self-contained skills only; it never connects accounts or overwrites existing skills.
+Policy init writes an example AGENCY.md (your agency's parameters) to the project or ~/.agency-erp; it never overwrites one.
 Export creates an instruction document for a web assistant, not a native skill installation.`;
 
 async function exists(path) { try { await access(path); return true; } catch { return false; } }
@@ -38,7 +41,7 @@ function options(values) {
   const o = {};
   for (let i=0;i<values.length;i++) {
     const key = values[i];
-    if (!['--agent','--skill','--cwd','--global','--dry-run','--host','--out','--profile'].includes(key) || key in o) throw new Error(`Unknown or repeated option: ${key}`);
+    if (!['--agent','--skill','--cwd','--global','--dry-run','--host','--out','--profile','--file'].includes(key) || key in o) throw new Error(`Unknown or repeated option: ${key}`);
     if (['--global','--dry-run'].includes(key)) o[key] = true;
     else { if (!values[i+1] || values[i+1].startsWith('--')) throw new Error(`Missing value: ${key}`); o[key]=values[++i]; }
   }
@@ -68,6 +71,29 @@ try {
       if (!o['--dry-run']) { await mkdir(dest,{recursive:true}); await cp(join(root,'skills',name),target,{recursive:true,errorOnExist:true,force:false}); }
       console.log(`${o['--dry-run'] ? 'Would install' : 'Installed'} ${name} → ${target}`);
     }
+  } else if (command === 'policy') {
+    const [sub, ...more]=rest, o=options(more);
+    const allowed={init:['--global','--cwd','--dry-run'],check:['--file']}[sub];
+    if (allowed && Object.keys(o).some(k=>!allowed.includes(k))) throw new Error(sub==='init' ? 'Use policy init [--global] [--cwd PATH] [--dry-run]' : 'Use policy check [--file PATH]');
+    if (sub === 'init') {
+      if (o['--global'] && o['--cwd']) throw new Error('Choose --global or --cwd, not both.');
+      const dir=o['--global'] ? join(homedir(),'.agency-erp') : resolve(o['--cwd'] || process.cwd());
+      const target=join(dir,'AGENCY.md');
+      await rejectSymlinks(target);
+      if (await exists(target)) throw new Error(`Already exists: ${target}. Edit it, or move it aside yourself before creating a new one.`);
+      if (!o['--dry-run']) {
+        await mkdir(dir,{recursive:true});
+        const {open}=await import('node:fs/promises');
+        const file=await open(target,'wx'); try { await file.writeFile(await readFile(join(root,'AGENCY.md'))); } finally { await file.close(); }
+      }
+      console.log(`${o['--dry-run'] ? 'Would write' : 'Wrote'} example policy → ${target}`);
+      console.log('Replace the example values, then run: agency-erp policy check' + (o['--global'] ? ` --file ${target}` : ''));
+      if (o['--global']) console.log(`Point each project at it with one line in AGENTS.md or CLAUDE.md: "Read ${target} before using any agency-erp skill."`);
+    } else if (sub === 'check') {
+      const result=spawnSync('python3',[join(root,'tools','agency_policy.py'),...(o['--file'] ? [resolve(o['--file'])] : [])],{stdio:'inherit',shell:false});
+      if (result.error) throw new Error('Python 3 is required to validate AGENCY.md.');
+      process.exitCode=result.status ?? 1;
+    } else throw new Error('Use policy init or policy check');
   } else if (command === 'doctor') {
     const py=spawnSync('python3',['--version'],{encoding:'utf8',shell:false});
     console.log(JSON.stringify({node:process.version,python:py.status===0?(py.stdout||py.stderr).trim():null,skills:names.length,accounts_connected_by_package:false,production_runtime_included:false},null,2));

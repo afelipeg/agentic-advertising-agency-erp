@@ -2,7 +2,7 @@
 
 Generated from `contracts/workflows.json` by `scripts/sync_resources.py`; edit the catalogue, not this file.
 
-Start with agency-orchestrator and agency-integrations; run only relevant stages. The circuit map is [erp-reference/e2e-circuit.md](erp-reference/e2e-circuit.md); detailed rules live in [operations-playbook.md](operations-playbook.md) and the [ERP functional reference](erp-reference/README.md). Skills accept connected tools or supplied files ([file-mode.md](file-mode.md), [integrations.md](integrations.md)). This catalogue is a routing index, not authorization.
+Start with agency-orchestrator and agency-integrations; run only relevant stages. The circuit map is [erp-reference/e2e-circuit.md](erp-reference/e2e-circuit.md); detailed rules live in [operations-playbook.md](operations-playbook.md) and the [ERP functional reference](erp-reference/README.md). Skills accept connected tools or supplied files ([file-mode.md](file-mode.md), [integrations.md](integrations.md)) and apply the agency parameters from `AGENCY.md` ([agency-policy.md](agency-policy.md)). This catalogue is a routing index, not authorization.
 
 ## agency-orchestrator
 
@@ -12,16 +12,16 @@ Runs an agency job end to end: reads JobNumber and document state, maps the next
 
 **Outputs:** `job_state`, `dependency_graph`, `period_gate_status`, `task_assignments`, `blockers`, `approval_requests`, `checkpoints`, `next_stage`
 
-**ERP reference:** circuit map only. **Tools:** `payload_digest`, `job_number`.
+**ERP reference:** circuit map only. **Agency policy:** `agency`, `roles`, `approvals`. **Tools:** `payload_digest`, `job_number`, `approval_route`.
 
 **Owner:** Account director and controller. **Next:** agency-onboarding and agency-integrations for new jobs, then dependency-ready stages.
 
-1. Load identity, checkpoints and upstream revisions; mark stale dependents.
+1. Load identity, checkpoints, upstream revisions and the AGENCY.md policy_version; mark stale dependents.
 2. Decode the JobNumber with job_number and keep its typology and billing flags as routing constraints.
 3. Route by JobNumber state and place each document in its lifecycle state with one owner skill.
 4. Build the dependency graph for the actual scope and record reasons for skipped stages.
 5. Check period, PO, credit, client-approval, closed-order and billing gates before dispatching mutations.
-6. Dispatch read-only work concurrently, serialize shared mutations, and digest approval requests with payload_digest.
+6. Dispatch read-only work concurrently, serialize shared mutations, name approvers with approval_route and digest approval requests with payload_digest.
 7. Assess job close readiness and the month-end period gate, then checkpoint and return.
 
 ## agency-onboarding
@@ -32,7 +32,7 @@ Onboards a client or brand: owner vs billing clients, products, attention groups
 
 **Outputs:** `intake_pack`, `owner_client_draft`, `billing_client_links`, `product_drafts`, `attention_group_plan`, `provisional_approval_requests`, `brief_draft`, `intake_gaps`
 
-**ERP reference:** [accounts-jobs](erp-reference/accounts-jobs.md). **Tools:** `job_number`.
+**ERP reference:** [accounts-jobs](erp-reference/accounts-jobs.md). **Agency policy:** `agency`, `jobs`, `commercial`, `connectors`. **Tools:** `job_number`.
 
 **Owner:** Account manager. **Next:** agency-master-data, then agency-job-lifecycle and agency-contract-po.
 
@@ -51,7 +51,7 @@ Maintains agency masters: clients, suppliers, media outlets, programs, dayparts,
 
 **Outputs:** `master_change_set`, `validation_report`, `duplicate_candidates`, `ledger_link_map`, `external_code_map`, `deactivation_plan`, `provisional_approval_requests`
 
-**ERP reference:** [media-masters-ooh](erp-reference/media-masters-ooh.md), [accounts-jobs](erp-reference/accounts-jobs.md), [management-security](erp-reference/management-security.md). **Tools:** `job_number`.
+**ERP reference:** [media-masters-ooh](erp-reference/media-masters-ooh.md), [accounts-jobs](erp-reference/accounts-jobs.md), [management-security](erp-reference/management-security.md). **Agency policy:** `roles`, `approvals`, `taxes`, `jobs`. **Tools:** `job_number`, `approval_route`.
 
 **Owner:** Data steward and controller. **Next:** agency-job-lifecycle, agency-rate-cards-contracts, agency-media-planning, agency-general-ledger.
 
@@ -70,11 +70,11 @@ Plans which connectors each ERP stage needs (ad platforms, ledgers, e-invoicing,
 
 **Outputs:** `capability_inventory`, `stage_wiring_plan`, `access_matrix`, `schema_review`, `connection_requests`, `file_mode_plan`, `gaps`
 
-**ERP reference:** [management-security](erp-reference/management-security.md). **Tools:** none.
+**ERP reference:** [management-security](erp-reference/management-security.md). **Agency policy:** `roles`, `connectors`. **Tools:** none.
 
 **Owner:** Operations lead. **Next:** agency-access-governance, then the requesting stage or agency-orchestrator.
 
-1. Inventory enabled apps and MCP tools and follow the registry selection order.
+1. Inventory enabled apps and MCP tools, follow the registry selection order and keep to AGENCY.md connectors.enabled.
 2. Map required reads and writes per stage and select candidates by role, not brand.
 3. Request authentication through the host vault and verify identity with one permitted read.
 4. Review output schemas and quarantine mismatches; no schema means drafts only.
@@ -89,7 +89,7 @@ Reviews roles, approval powers, cost visibility and segregation of duties; contr
 
 **Outputs:** `access_matrix`, `capability_register`, `sod_conflicts`, `access_change_requests`, `config_change_requests`, `offboarding_plan`, `audit_evidence_pack`
 
-**ERP reference:** [management-security](erp-reference/management-security.md). **Tools:** `payload_digest`.
+**ERP reference:** [management-security](erp-reference/management-security.md). **Agency policy:** `roles`, `approvals`, `connectors`. **Tools:** `payload_digest`, `approval_route`.
 
 **Owner:** Controller and system administrator. **Next:** agency-integrations, agency-orchestrator, or the requesting stage.
 
@@ -108,7 +108,7 @@ Creates, moves, re-bills and closes campaign JobNumbers under typology and billi
 
 **Outputs:** `job_proposal`, `job_code_check`, `move_or_substitution_plan`, `close_readiness`, `inactive_job_list`, `job_audit_note`
 
-**ERP reference:** [accounts-jobs](erp-reference/accounts-jobs.md). **Tools:** `job_number`.
+**ERP reference:** [accounts-jobs](erp-reference/accounts-jobs.md). **Agency policy:** `agency`, `approvals`, `jobs`. **Tools:** `job_number`, `approval_route`.
 
 **Owner:** Account director (accounts close) and finance (definitive close). **Next:** agency-fee-contracts, agency-contract-po, agency-production-estimating, agency-media-planning, agency-period-close.
 
@@ -127,7 +127,7 @@ Turns signed client agreements and client POs into PO limits, document links, tr
 
 **Outputs:** `commercial_terms`, `po_limits`, `po_link_decisions`, `po_transfer_proposal`, `reserve_setup`, `billing_route`, `scope_exceptions`
 
-**ERP reference:** [accounts-jobs](erp-reference/accounts-jobs.md), [receivables](erp-reference/receivables.md). **Tools:** `budget_check`, `installment_schedule`.
+**ERP reference:** [accounts-jobs](erp-reference/accounts-jobs.md), [receivables](erp-reference/receivables.md). **Agency policy:** `currencies`, `approvals`, `commercial`. **Tools:** `budget_check`, `installment_schedule`, `approval_route`.
 
 **Owner:** Account director and finance. **Next:** agency-budget-control, agency-fee-contracts, agency-media-planning, agency-production-estimating.
 
@@ -146,7 +146,7 @@ Checks client PO, budget reserve and credit-limit headroom before client approva
 
 **Outputs:** `budget_check`, `credit_check`, `reservation_proposal`, `balance_revision`, `blocking_exceptions`
 
-**ERP reference:** [accounts-jobs](erp-reference/accounts-jobs.md), [media-planning](erp-reference/media-planning.md). **Tools:** `budget_check`, `credit_exposure`.
+**ERP reference:** [accounts-jobs](erp-reference/accounts-jobs.md), [media-planning](erp-reference/media-planning.md). **Agency policy:** `currencies`, `approvals`, `commercial`. **Tools:** `budget_check`, `credit_exposure`, `approval_route`.
 
 **Owner:** Finance controller. **Next:** agency-media-planning, agency-media-buying, agency-production-estimating.
 
@@ -165,7 +165,7 @@ Drafts fixed and hourly fee contracts: instalments, media/production split, job 
 
 **Outputs:** `fee_contract_draft`, `instalment_schedule`, `job_allocation`, `hourly_settlement`, `approval_proposal`, `fee_exceptions`
 
-**ERP reference:** [accounts-jobs](erp-reference/accounts-jobs.md), [expenses](erp-reference/expenses.md). **Tools:** `hourly_fee_settlement`, `installment_schedule`, `allocate`.
+**ERP reference:** [accounts-jobs](erp-reference/accounts-jobs.md), [expenses](erp-reference/expenses.md). **Agency policy:** `currencies`, `approvals`, `commercial`. **Tools:** `hourly_fee_settlement`, `installment_schedule`, `allocate`, `approval_route`.
 
 **Owner:** Account director and billing. **Next:** agency-client-billing, agency-accruals-revaluation, agency-profitability.
 
@@ -184,7 +184,7 @@ Tracks job tasks through their states and validates, approves and values timeshe
 
 **Outputs:** `task_actions`, `task_delay_report`, `timesheet_validation`, `hour_approval_queue`, `hour_valuation`, `chargeability_report`, `timesheet_close_proposal`
 
-**ERP reference:** [accounts-jobs](erp-reference/accounts-jobs.md), [management-security](erp-reference/management-security.md). **Tools:** `allocate`, `hourly_fee_settlement`.
+**ERP reference:** [accounts-jobs](erp-reference/accounts-jobs.md), [management-security](erp-reference/management-security.md). **Agency policy:** `roles`, `commercial`. **Tools:** `allocate`, `hourly_fee_settlement`.
 
 **Owner:** Traffic manager and team leads. **Next:** agency-fee-contracts, agency-job-lifecycle, agency-profitability.
 
@@ -203,7 +203,7 @@ Builds the yearly revenue budget by client, product and month (investment, commi
 
 **Outputs:** `budget_version`, `budget_lines`, `income_projection`, `plan_vs_actual`, `version_lock_proposal`, `budget_exceptions`
 
-**ERP reference:** [accounts-jobs](erp-reference/accounts-jobs.md), [management-security](erp-reference/management-security.md). **Tools:** `allocate`, `margin`.
+**ERP reference:** [accounts-jobs](erp-reference/accounts-jobs.md), [management-security](erp-reference/management-security.md). **Agency policy:** `agency`, `currencies`, `commercial`. **Tools:** `allocate`, `margin`.
 
 **Owner:** Finance planning lead. **Next:** agency-management-reporting, agency-cash-forecast, agency-profitability.
 
@@ -222,7 +222,7 @@ Builds production estimates: line types, price lists, supplier quotes and award,
 
 **Outputs:** `estimate_draft`, `estimate_totals`, `supplier_comparison`, `client_approval_pack`, `purchase_order_drafts`, `post_buy_variance`
 
-**ERP reference:** [production](erp-reference/production.md). **Tools:** `estimate_totals`, `allocate`, `credit_exposure`.
+**ERP reference:** [production](erp-reference/production.md). **Agency policy:** `currencies`, `taxes`, `commercial`. **Tools:** `estimate_totals`, `allocate`, `credit_exposure`.
 
 **Owner:** Producer and account director. **Next:** agency-production.
 
@@ -241,7 +241,7 @@ Runs creative delivery: asset QA, talent and royalty contracts, event staff and 
 
 **Outputs:** `production_schedule`, `asset_manifest`, `qa_findings`, `rights_check`, `staff_assignment`, `release_candidates`
 
-**ERP reference:** [production](erp-reference/production.md). **Tools:** `payload_digest`.
+**ERP reference:** [production](erp-reference/production.md). **Agency policy:** `approvals`, `taxes`, `commercial`. **Tools:** `payload_digest`, `approval_route`.
 
 **Owner:** Producer and brand/legal approver. **Next:** agency-campaign-activation.
 
@@ -260,7 +260,7 @@ Loads a licensed rating book and builds rankings with targets, affinity, CPR and
 
 **Outputs:** `rating_book_manifest`, `ranking_spec`, `candidate_table`, `data_quality_exceptions`, `commercial_inheritance`, `planning_handoff`
 
-**ERP reference:** [media-planning](erp-reference/media-planning.md). **Tools:** `audience_metrics`.
+**ERP reference:** [media-planning](erp-reference/media-planning.md). **Agency policy:** `commercial`, `connectors`. **Tools:** `audience_metrics`.
 
 **Owner:** Media planner. **Next:** agency-tv-radio-planning, agency-media-planning, agency-digital-planning, agency-ooh-planning.
 
@@ -280,7 +280,7 @@ Builds a media plan from a JobNumber: monthly schedules, spots priced per media 
 
 **Outputs:** `media_plan`, `schedule_register`, `item_pricing`, `plan_totals`, `objective_summary`, `approval_payload`, `billing_release`
 
-**ERP reference:** [media-planning](erp-reference/media-planning.md), [media-masters-ooh](erp-reference/media-masters-ooh.md). **Tools:** `media_line_cost`, `discount_cascade`, `audience_metrics`, `credit_exposure`, `plan_diff`.
+**ERP reference:** [media-planning](erp-reference/media-planning.md), [media-masters-ooh](erp-reference/media-masters-ooh.md). **Agency policy:** `currencies`, `jobs`, `commercial`. **Tools:** `media_line_cost`, `discount_cascade`, `audience_metrics`, `credit_exposure`, `plan_diff`.
 
 **Owner:** Media planner. **Next:** agency-budget-control, agency-media-buying, agency-client-billing; agency-production in parallel.
 
@@ -300,7 +300,7 @@ Plans TV, radio and cable schedules by program or daypart: duration pricing, spo
 
 **Outputs:** `broadcast_schedule`, `spot_register`, `rate_basis`, `material_distribution`, `traffic_instructions`, `evaluation_report`
 
-**ERP reference:** [media-planning](erp-reference/media-planning.md), [media-masters-ooh](erp-reference/media-masters-ooh.md). **Tools:** `media_line_cost`, `discount_cascade`, `audience_metrics`.
+**ERP reference:** [media-planning](erp-reference/media-planning.md), [media-masters-ooh](erp-reference/media-masters-ooh.md). **Agency policy:** `currencies`, `commercial`. **Tools:** `media_line_cost`, `discount_cascade`, `audience_metrics`.
 
 **Owner:** Broadcast planner. **Next:** agency-media-planning, agency-media-buying, agency-production, agency-transmission-control.
 
@@ -320,7 +320,7 @@ Plans agency-side out-of-home, DOOH and print: circuits x rate, faces, press siz
 
 **Outputs:** `site_plan`, `ooh_line_pricing`, `cost_schedule`, `evidence_requirements`, `booking_proposals`, `exceptions`
 
-**ERP reference:** [media-masters-ooh](erp-reference/media-masters-ooh.md), [media-planning](erp-reference/media-planning.md). **Tools:** `media_line_cost`, `discount_cascade`, `allocate`.
+**ERP reference:** [media-masters-ooh](erp-reference/media-masters-ooh.md), [media-planning](erp-reference/media-planning.md). **Agency policy:** `currencies`, `commercial`. **Tools:** `media_line_cost`, `discount_cascade`, `allocate`.
 
 **Owner:** OOH planner. **Next:** agency-media-planning, agency-media-buying, agency-production-estimating, agency-delivery-reconciliation.
 
@@ -339,7 +339,7 @@ Plans digital buys (CPM, CPC, CPV, CPA), builds naming taxonomy and UTMs, syncs 
 
 **Outputs:** `digital_plan`, `taxonomy_strings`, `adserver_costs`, `actuals_snapshot`, `invoice_match_register`, `order_adjustment_proposal`
 
-**ERP reference:** [media-planning](erp-reference/media-planning.md), [media-masters-ooh](erp-reference/media-masters-ooh.md), [payables-treasury](erp-reference/payables-treasury.md). **Tools:** `media_line_cost`, `discount_cascade`, `reconcile`, `invoice_check`.
+**ERP reference:** [media-planning](erp-reference/media-planning.md), [media-masters-ooh](erp-reference/media-masters-ooh.md), [payables-treasury](erp-reference/payables-treasury.md). **Agency policy:** `currencies`, `commercial`, `connectors`. **Tools:** `media_line_cost`, `discount_cascade`, `reconcile`, `invoice_check`.
 
 **Owner:** Digital planner. **Next:** agency-media-planning, agency-media-buying, agency-campaign-activation, agency-delivery-reconciliation, agency-payables.
 
@@ -359,7 +359,7 @@ Maintains media rate cards (buy and sell prices, client cards, validity) and med
 
 **Outputs:** `rate_card_drafts`, `contract_drafts`, `installment_schedules`, `contract_balance_report`, `adjustment_transfer_proposals`, `pricing_exceptions`
 
-**ERP reference:** [media-buying](erp-reference/media-buying.md), [media-masters-ooh](erp-reference/media-masters-ooh.md). **Tools:** `discount_cascade`, `media_line_cost`, `installment_schedule`, `budget_check`.
+**ERP reference:** [media-buying](erp-reference/media-buying.md), [media-masters-ooh](erp-reference/media-masters-ooh.md). **Agency policy:** `approvals`, `commercial`. **Tools:** `discount_cascade`, `media_line_cost`, `installment_schedule`, `budget_check`, `approval_route`.
 
 **Owner:** Media buying director. **Next:** agency-media-planning, agency-tv-radio-planning, agency-digital-planning, agency-media-buying, agency-client-billing.
 
@@ -379,7 +379,7 @@ Prepares insertion orders from client-approved schedules with credit gates, vers
 
 **Outputs:** `order_drafts`, `order_versions`, `send_packs`, `close_reopen_proposals`, `commitment_updates`, `supplier_exceptions`
 
-**ERP reference:** [media-buying](erp-reference/media-buying.md). **Tools:** `discount_cascade`, `media_line_cost`, `credit_exposure`, `plan_diff`.
+**ERP reference:** [media-buying](erp-reference/media-buying.md). **Agency policy:** `currencies`, `approvals`, `commercial`. **Tools:** `discount_cascade`, `media_line_cost`, `credit_exposure`, `plan_diff`, `approval_route`.
 
 **Owner:** Media buyer. **Next:** agency-transmission-control, agency-campaign-activation, agency-payables, agency-client-billing.
 
@@ -398,7 +398,7 @@ Checks ordered TV and radio spots against monitoring data: auto and manual match
 
 **Outputs:** `emission_match`, `missing_or_extra_insertions`, `material_exceptions`, `makegood_register`, `close_readiness`, `postbuy_report`, `finance_handoff`
 
-**ERP reference:** [media-buying](erp-reference/media-buying.md), [media-planning](erp-reference/media-planning.md). **Tools:** `spot_match`, `reconcile`.
+**ERP reference:** [media-buying](erp-reference/media-buying.md), [media-planning](erp-reference/media-planning.md). **Agency policy:** `commercial`, `connectors`. **Tools:** `spot_match`, `reconcile`.
 
 **Owner:** Media buyer and traffic. **Next:** agency-media-buying, agency-plan-changes, agency-delivery-reconciliation, agency-payables.
 
@@ -417,7 +417,7 @@ Revises approved or ordered media plans as new versions: diff vs baseline, locks
 
 **Outputs:** `baseline_revision`, `proposed_revision`, `line_diff`, `lock_report`, `currency_deltas`, `order_version_actions`, `approval_pack`, `verified_receipts`, `blocked_actions`
 
-**ERP reference:** [media-planning](erp-reference/media-planning.md), [media-buying](erp-reference/media-buying.md). **Tools:** `plan_diff`, `budget_check`.
+**ERP reference:** [media-planning](erp-reference/media-planning.md), [media-buying](erp-reference/media-buying.md). **Agency policy:** `approvals`, `commercial`. **Tools:** `plan_diff`, `budget_check`, `approval_route`.
 
 **Owner:** Media planner and account director. **Next:** agency-media-buying, agency-budget-control, agency-transmission-control, agency-client-billing, agency-delivery-reconciliation.
 
@@ -437,7 +437,7 @@ Prepares and, after approval, launches digital campaigns via verified tools (Met
 
 **Outputs:** `activation_proposal`, `taxonomy_names`, `preflight_results`, `external_ids`, `readback_report`, `execution_receipts`, `uncertain_actions`
 
-**ERP reference:** [media-planning](erp-reference/media-planning.md). **Tools:** `payload_digest`, `budget_check`.
+**ERP reference:** [media-planning](erp-reference/media-planning.md). **Agency policy:** `approvals`, `connectors`. **Tools:** `payload_digest`, `budget_check`, `approval_route`.
 
 **Owner:** Campaign manager. **Next:** agency-campaign-optimization, agency-delivery-reconciliation.
 
@@ -456,7 +456,7 @@ Diagnoses pacing and performance vs the approved plan and proposes bounded bid, 
 
 **Outputs:** `diagnostic`, `objective_deviation`, `optimization_proposal`, `experiment_plan`, `constraint_check`, `verified_change_receipts`
 
-**ERP reference:** [media-planning](erp-reference/media-planning.md). **Tools:** `audience_metrics`, `budget_check`, `plan_diff`.
+**ERP reference:** [media-planning](erp-reference/media-planning.md). **Agency policy:** `approvals`, `commercial`, `connectors`. **Tools:** `audience_metrics`, `budget_check`, `plan_diff`, `approval_route`.
 
 **Owner:** Performance lead. **Next:** agency-campaign-activation, agency-plan-changes, agency-budget-control, agency-delivery-reconciliation.
 
@@ -475,7 +475,7 @@ Runs a media owner's billboard inventory: faces, availability, reservations to o
 
 **Outputs:** `availability_report`, `reservations`, `ooh_orders`, `monthly_suborders`, `face_motif_assignments`, `posting_batches`, `agreement_balances`, `inventory_exceptions`
 
-**ERP reference:** [media-masters-ooh](erp-reference/media-masters-ooh.md). **Tools:** `media_line_cost`, `discount_cascade`, `allocate`, `installment_schedule`.
+**ERP reference:** [media-masters-ooh](erp-reference/media-masters-ooh.md). **Agency policy:** `commercial`, `connectors`. **Tools:** `media_line_cost`, `discount_cascade`, `allocate`, `installment_schedule`.
 
 **Owner:** OOH sales manager (media-owner vertical). **Next:** agency-client-billing, agency-collections, agency-profitability.
 
@@ -495,7 +495,7 @@ Matches supplier invoices to closed orders, production items or expense requests
 
 **Outputs:** `match_result`, `discrepancies`, `evidence_links`, `payable_candidate`, `writeoff_proposals`
 
-**ERP reference:** [supplier-invoicing](erp-reference/supplier-invoicing.md), [media-buying](erp-reference/media-buying.md). **Tools:** `reconcile`, `invoice_check`, `spot_match`.
+**ERP reference:** [supplier-invoicing](erp-reference/supplier-invoicing.md), [media-buying](erp-reference/media-buying.md). **Agency policy:** `approvals`, `commercial`, `connectors`. **Tools:** `reconcile`, `invoice_check`, `spot_match`, `approval_route`.
 
 **Owner:** Media/finance analyst. **Next:** agency-payables, agency-client-billing, agency-accruals-revaluation.
 
@@ -515,7 +515,7 @@ Logs supplier invoices, checks duplicates and math, picks the load type and prep
 
 **Outputs:** `reception_log`, `duplicate_check`, `normalized_invoice`, `registration_proposal`, `holds`, `posting_receipt`
 
-**ERP reference:** [supplier-invoicing](erp-reference/supplier-invoicing.md), [payables-treasury](erp-reference/payables-treasury.md). **Tools:** `invoice_check`, `reconcile`, `payment_terms`, `tiered_commission`.
+**ERP reference:** [supplier-invoicing](erp-reference/supplier-invoicing.md), [payables-treasury](erp-reference/payables-treasury.md). **Agency policy:** `currencies`, `approvals`, `taxes`, `accounting`. **Tools:** `invoice_check`, `reconcile`, `payment_terms`, `tiered_commission`, `approval_route`.
 
 **Owner:** AP lead. **Next:** agency-payment-run, agency-tax-compliance, agency-accruals-revaluation.
 
@@ -535,7 +535,7 @@ Proposes supplier payment lists, payment orders, withholdings and release instru
 
 **Outputs:** `payment_list_proposal`, `payment_orders_draft`, `withholding_schedule`, `release_proposal`, `bank_file_request`, `approval_requests`
 
-**ERP reference:** [payables-treasury](erp-reference/payables-treasury.md). **Tools:** `withholding`, `payment_terms`, `aging`, `fx_revaluation`.
+**ERP reference:** [payables-treasury](erp-reference/payables-treasury.md). **Agency policy:** `currencies`, `approvals`, `accounting`. **Tools:** `withholding`, `payment_terms`, `aging`, `fx_revaluation`, `approval_route`.
 
 **Owner:** Treasury lead (preparer) and finance approver. **Next:** agency-cash-settlement, agency-tax-compliance, agency-cash-forecast.
 
@@ -555,7 +555,7 @@ Prepares deposits, transfers, bank charges, bank reconciliation, cheque lifecycl
 
 **Outputs:** `deposit_proposals`, `bank_charge_entries`, `reconciliation_report`, `cheque_actions`, `card_statement_match`, `availability_snapshot`, `unapplied_cash`
 
-**ERP reference:** [payables-treasury](erp-reference/payables-treasury.md), [receivables](erp-reference/receivables.md). **Tools:** `reconcile`, `allocate`, `journal_check`.
+**ERP reference:** [payables-treasury](erp-reference/payables-treasury.md), [receivables](erp-reference/receivables.md). **Agency policy:** `currencies`, `approvals`, `accounting`. **Tools:** `reconcile`, `allocate`, `journal_check`, `approval_route`.
 
 **Owner:** Treasury lead. **Next:** agency-period-close, agency-cash-forecast, agency-collections, agency-payment-run.
 
@@ -575,7 +575,7 @@ Prepares client invoices and credit/debit notes from plans, estimates and fees a
 
 **Outputs:** `billing_selection`, `invoice_drafts`, `credit_debit_note_drafts`, `fee_calculation`, `split_allocation`, `billing_exceptions`
 
-**ERP reference:** [receivables](erp-reference/receivables.md), [production](erp-reference/production.md), [media-planning](erp-reference/media-planning.md). **Tools:** `discount_cascade`, `estimate_totals`, `payment_terms`, `allocate`, `invoice_check`.
+**ERP reference:** [receivables](erp-reference/receivables.md), [production](erp-reference/production.md), [media-planning](erp-reference/media-planning.md). **Agency policy:** `currencies`, `approvals`, `taxes`, `commercial`, `accounting`. **Tools:** `discount_cascade`, `estimate_totals`, `payment_terms`, `allocate`, `invoice_check`, `approval_route`.
 
 **Owner:** Billing lead. **Next:** agency-tax-compliance.
 
@@ -595,7 +595,7 @@ Checks client-specific prerequisites (client PO, service entry, attachments, cus
 
 **Outputs:** `requirement_matrix`, `evidence_matches`, `missing_requirements`, `issuance_ready`, `locked_field_changes`, `owner_requests`
 
-**ERP reference:** [receivables](erp-reference/receivables.md), [accounts-jobs](erp-reference/accounts-jobs.md). **Tools:** none.
+**ERP reference:** [receivables](erp-reference/receivables.md), [accounts-jobs](erp-reference/accounts-jobs.md). **Agency policy:** `taxes`, `jobs`, `commercial`. **Tools:** none.
 
 **Owner:** Billing lead and account manager. **Next:** agency-client-billing.
 
@@ -614,7 +614,7 @@ Prepares customer receipts applying cash, cheques, transfers and withholding cer
 
 **Outputs:** `receipt_proposal`, `application_plan`, `withholding_certificates`, `advance_applications`, `aging_report`, `credit_exposure`, `followup_worklist`
 
-**ERP reference:** [receivables](erp-reference/receivables.md). **Tools:** `aging`, `credit_exposure`, `allocate`, `withholding`, `payment_terms`.
+**ERP reference:** [receivables](erp-reference/receivables.md). **Agency policy:** `currencies`, `approvals`, `commercial`, `collections`. **Tools:** `aging`, `credit_exposure`, `allocate`, `withholding`, `payment_terms`, `approval_route`.
 
 **Owner:** Credit and collections lead. **Next:** agency-cash-settlement.
 
@@ -633,7 +633,7 @@ Calculates supplier overcommissions, volume rebates, incentives and finder fees 
 
 **Outputs:** `eligible_base`, `rebate_calculation`, `pending_register`, `provision_proposal`, `client_rebates`, `rebate_exceptions`
 
-**ERP reference:** [media-buying](erp-reference/media-buying.md), [production](erp-reference/production.md), [receivables](erp-reference/receivables.md), [supplier-invoicing](erp-reference/supplier-invoicing.md). **Tools:** `tiered_commission`, `flat_rebate`, `allocate`.
+**ERP reference:** [media-buying](erp-reference/media-buying.md), [production](erp-reference/production.md), [receivables](erp-reference/receivables.md), [supplier-invoicing](erp-reference/supplier-invoicing.md). **Agency policy:** `approvals`, `commercial`, `accounting`. **Tools:** `tiered_commission`, `flat_rebate`, `allocate`, `approval_route`.
 
 **Owner:** Controller and media director. **Next:** agency-accruals-revaluation.
 
@@ -652,7 +652,7 @@ Controls agency overhead: expense contracts and requests, employee expense sheet
 
 **Outputs:** `expense_request_drafts`, `contract_schedule`, `sheet_review`, `settlement_proposal`, `deferral_schedule`, `budget_check_result`, `approval_requests`
 
-**ERP reference:** [expenses](erp-reference/expenses.md). **Tools:** `allocate`, `installment_schedule`, `invoice_check`, `budget_check`.
+**ERP reference:** [expenses](erp-reference/expenses.md). **Agency policy:** `approvals`, `taxes`, `accounting`. **Tools:** `allocate`, `installment_schedule`, `invoice_check`, `budget_check`, `approval_route`.
 
 **Owner:** Office manager and controller. **Next:** agency-payables, agency-payment-run, agency-cash-settlement, agency-profitability.
 
@@ -672,7 +672,7 @@ Prepares e-invoice authorization (Mexico CFDI, Argentina CAE), VAT books, withho
 
 **Outputs:** `authorization_requests`, `numbering_report`, `vat_books_reconciliation`, `withholding_perception_schedule`, `certificate_register`, `tax_positions`, `statutory_exports`
 
-**ERP reference:** [receivables](erp-reference/receivables.md), [supplier-invoicing](erp-reference/supplier-invoicing.md), [accounting](erp-reference/accounting.md). **Tools:** `invoice_check`, `withholding`.
+**ERP reference:** [receivables](erp-reference/receivables.md), [supplier-invoicing](erp-reference/supplier-invoicing.md), [accounting](erp-reference/accounting.md). **Agency policy:** `agency`, `approvals`, `taxes`. **Tools:** `invoice_check`, `withholding`, `approval_route`.
 
 **Owner:** Tax lead. **Next:** agency-period-close.
 
@@ -691,7 +691,7 @@ Drafts and validates chart of accounts, account tags, voucher types and manual j
 
 **Outputs:** `journal_entry_proposal`, `journal_check_report`, `coa_change_proposal`, `opening_balance_reconciliation`, `integration_difference_report`
 
-**ERP reference:** [accounting](erp-reference/accounting.md). **Tools:** `journal_check`, `allocate`.
+**ERP reference:** [accounting](erp-reference/accounting.md). **Agency policy:** `currencies`, `approvals`, `accounting`. **Tools:** `journal_check`, `allocate`, `approval_route`.
 
 **Owner:** Chief accountant. **Next:** agency-accruals-revaluation.
 
@@ -711,7 +711,7 @@ Prepares month-end jobs: unbilled revenue and cost provisions, WIP, overcommissi
 
 **Outputs:** `fx_revaluation_proposal`, `gross_income_provision_proposal`, `wip_reclass_proposal`, `expense_provision_proposal`, `overcommission_provision_proposal`, `ot_close_proposal`, `ic_reclass_proposal`, `close_job_checklist`
 
-**ERP reference:** [accounting](erp-reference/accounting.md), [production](erp-reference/production.md), [media-buying](erp-reference/media-buying.md). **Tools:** `fx_revaluation`, `journal_check`, `tiered_commission`, `allocate`.
+**ERP reference:** [accounting](erp-reference/accounting.md), [production](erp-reference/production.md), [media-buying](erp-reference/media-buying.md). **Agency policy:** `currencies`, `approvals`, `fx`, `accounting`. **Tools:** `fx_revaluation`, `journal_check`, `tiered_commission`, `allocate`, `approval_route`.
 
 **Owner:** Chief accountant. **Next:** agency-period-close.
 
@@ -731,7 +731,7 @@ Prepares the fixed-asset register, monthly depreciation, disposals and annex fro
 
 **Outputs:** `asset_register_changes`, `depreciation_run_proposal`, `disposal_proposal`, `fixed_asset_annex`
 
-**ERP reference:** [accounting](erp-reference/accounting.md), [expenses](erp-reference/expenses.md). **Tools:** `depreciation_schedule`, `journal_check`.
+**ERP reference:** [accounting](erp-reference/accounting.md), [expenses](erp-reference/expenses.md). **Agency policy:** `currencies`, `approvals`, `accounting`. **Tools:** `depreciation_schedule`, `journal_check`, `approval_route`.
 
 **Owner:** Chief accountant. **Next:** agency-period-close.
 
@@ -750,7 +750,7 @@ Sequences the monthly and year-end close: subledger pre-close, ordered close job
 
 **Outputs:** `close_checklist`, `close_job_status`, `post_close_reconciliations`, `unresolved_balances`, `lock_proposal`, `reopen_plan`, `adjustment_plan`
 
-**ERP reference:** [accounting](erp-reference/accounting.md), [payables-treasury](erp-reference/payables-treasury.md). **Tools:** `journal_check`, `fx_revaluation`, `aging`.
+**ERP reference:** [accounting](erp-reference/accounting.md), [payables-treasury](erp-reference/payables-treasury.md). **Agency policy:** `approvals`, `fx`, `accounting`. **Tools:** `journal_check`, `fx_revaluation`, `aging`, `approval_route`.
 
 **Owner:** Controller. **Next:** agency-management-reporting.
 
@@ -769,7 +769,7 @@ Analyzes job, client and media profitability: gross income, valued hours, expens
 
 **Outputs:** `job_pnl`, `client_profitability`, `overhead_allocation`, `margin_bridge`, `managed_spend`, `completeness_gaps`
 
-**ERP reference:** [accounts-jobs](erp-reference/accounts-jobs.md), [accounting](erp-reference/accounting.md). **Tools:** `margin`, `allocate`.
+**ERP reference:** [accounts-jobs](erp-reference/accounts-jobs.md), [accounting](erp-reference/accounting.md). **Agency policy:** `currencies`, `commercial`, `accounting`. **Tools:** `margin`, `allocate`.
 
 **Owner:** Finance controller. **Next:** agency-management-reporting.
 
@@ -788,7 +788,7 @@ Projects agency cash by day, week or month from balances, receivables, payables,
 
 **Outputs:** `cash_forecast`, `currency_buckets`, `undated_pipeline`, `collection_scenarios`, `supplier_exposure`, `liquidity_gaps`
 
-**ERP reference:** [management-security](erp-reference/management-security.md), [payables-treasury](erp-reference/payables-treasury.md). **Tools:** `cash_projection`, `payment_terms`, `aging`.
+**ERP reference:** [management-security](erp-reference/management-security.md), [payables-treasury](erp-reference/payables-treasury.md). **Agency policy:** `currencies`, `fx`, `commercial`, `collections`. **Tools:** `cash_projection`, `payment_terms`, `aging`.
 
 **Owner:** CFO / treasury. **Next:** agency-payment-run.
 
@@ -807,7 +807,7 @@ Prepares the monthly management pack and HQ reporting exports, checks account ma
 
 **Outputs:** `management_pack`, `mapping_coverage`, `export_files`, `kpi_summary`, `variance_commentary`
 
-**ERP reference:** [management-security](erp-reference/management-security.md), [accounting](erp-reference/accounting.md). **Tools:** `margin`, `aging`, `allocate`.
+**ERP reference:** [management-security](erp-reference/management-security.md), [accounting](erp-reference/accounting.md). **Agency policy:** `agency`, `currencies`, `accounting`. **Tools:** `margin`, `aging`, `allocate`.
 
 **Owner:** Controller and CFO. **Next:** agency-period-close.
 

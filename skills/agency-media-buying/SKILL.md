@@ -9,6 +9,8 @@ This stage turns client-approved schedule (`pauta`) spots into insertion orders 
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [media-buying.md](references/erp/media-buying.md) (§2.3 P-OP-01..12, §4.3–4.5 lifecycles, BR-O-01..13, BR-T-12, BR-D-01..05, §10.3–10.4 controls and exceptions, §11 gaps 9, 14, 19).
 
+Agency policy: apply `currencies`, `approvals`, `commercial` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Route approvers with `approval_route`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - "Order the approved schedule", "generate the OP", `ordenar pauta`, `orden manual`, `orden automática`.
 - Changing an issued order: rate, discounts, notes, vendor (`modificar proveedor`), with or without a new version (`Mod. Rev.`, `anula y reemplaza`).

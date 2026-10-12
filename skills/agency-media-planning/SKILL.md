@@ -9,6 +9,8 @@ This stage turns an open `JobNumber` into a priced, schedulable media budget: ra
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [media-planning.md](references/erp/media-planning.md) (P05–P07, P09–P14, P31, P34 objective widget, §4 lifecycles and spot state machine, R1–R17, R29–R30, §10.3 controls, gaps 1, 2, 6). [media-masters-ooh.md](references/erp/media-masters-ooh.md) (classification rules 1–12, surcharges and additional costs rules 24–30, agency service %, VAT condition 39; cited below as MM rule n).
 
+Agency policy: apply `currencies`, `jobs`, `commercial` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - Building a new plan header from a JobNumber, copying a plan (`Copiar Plan`) or generating one from a ranking.
 - Adding items and spots across monthly schedules and pricing them per media type (TV/radio seconds, press cm × columns, OOH circuits, digital units).

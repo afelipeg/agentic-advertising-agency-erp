@@ -111,4 +111,24 @@ Full table: `accounting.md` §3.3 (docs/erp-reference in the repository; mirrore
 - Formulas left implicit: discount cascade (compound assumed, additive available), CPR/CPM/affinity (industry definitions), marginal vs slab for some incentive scales, hourly-fee overage split, proration of OOH orders across months, withholding formulas per country.
 - Country coverage is deepest for Argentina, then Colombia; Mexico appears mainly through CFDI stamping, counter-receipts and TV Azteca/Televisa specifics. Supply your own tax tables, e-invoicing provider and statutory layouts.
 
-Each skill lists these as *confirm locally* where they matter. Contribute verified rules back with evidence (see CONTRIBUTING.md).
+Each skill lists these as *confirm locally* where they matter, unless the agency fixes them in `AGENCY.md` (section 7). Contribute verified rules back with evidence (see CONTRIBUTING.md).
+
+## 7. Agency policy overlay (AGENCY.md)
+
+What the reference leaves *configurable* or *confirm locally*, an agency fixes once in `AGENCY.md` ([agency-policy.md](../agency-policy.md)). The circuit itself does not change: the overlay only parameterises its gates.
+
+| Circuit point | AGENCY.md section | Effect |
+|---|---|---|
+| JobNumber typology | `jobs.typologies` | which typology letters exist and which forbid sales values |
+| Credit limit gate | `approvals` (`credit_override`), `collections` | who may override and how often limits are reviewed |
+| Client approval of plans and estimates | `approvals` (`client_estimate`, `plan_change`), `commercial.plan_change_tolerance_bps` | approver per amount tier; size of change that reopens approval |
+| Orders, POs, launch | `approvals` (`media_order`, `production_order`, `campaign_launch`), `connectors` | approver per tier; which platforms may receive an approved order |
+| Supplier invoice control | `approvals` (`supplier_invoice`), `taxes`, `accounting.accounts` | approver, reviewed rates, payable accounts |
+| Client billing and notes | `approvals` (`client_invoice`, `credit_note`), `taxes`, `commercial` | approver, VAT and withholding rates, terms and agency fee |
+| Two-person payment list and release | `approvals` (`payment_run`, `cash_settlement`), `segregation_of_duties` | the two roles per tier; preparer never approves |
+| FX and accruals | `fx`, `accounting` | rate source, revaluation cadence, accrual and FX accounts |
+| Pre-close and close | `accounting.close_day`, `approvals` (`journal_entry`, `period_reopen`, `write_off`) | calendar and who may post, reopen or write off |
+| Masters and access | `approvals` (`master_data_change`, `access_change`), `roles` | who changes suppliers, banks, accounts and permissions |
+
+Route every approver with `approval_route` and carry `policy_version` through the handoff. Without a valid overlay the gates still apply, with approvers and values marked *confirm locally*.
+

@@ -4,11 +4,12 @@ import json
 from pathlib import Path
 import re
 import sys
-from sync_resources import ROOT, MIRRORS, ERP_DIR, mirrored_bytes, erp_references, render_workflow_doc, tool_contracts
+from sync_resources import ROOT, MIRRORS, ERP_DIR, mirrored_bytes, erp_references, render_workflow_doc, tool_contracts, policy_line
 sys.path.insert(0,str(ROOT/'tools'))
 from agency_tools import SCHEMAS
+import agency_policy
 
-WORKFLOW_KEYS={'name','title','description','inputs','outputs','owner','next_stage','procedure','references','tools'}
+WORKFLOW_KEYS={'name','title','description','inputs','outputs','owner','next_stage','procedure','references','policy','tools'}
 
 def check():
     errors=[]
@@ -29,6 +30,9 @@ def check():
         if not isinstance(w.get('inputs'),str) or not isinstance(w.get('next_stage'),str): errors.append(f"{w.get('name')}: inputs/next_stage must be strings")
         for tool in w.get('tools',[]):
             if tool not in SCHEMAS: errors.append(f"{w['name']}: unknown tool {tool}")
+        policy=w.get('policy',[])
+        if not policy or any(p not in agency_policy.SECTIONS for p in policy) or len(set(policy))!=len(policy): errors.append(f"{w.get('name')}: policy sections must be a non-empty list of known AGENCY.md sections")
+        if ('approvals' in policy) != ('approval_route' in w.get('tools',[])): errors.append(f"{w.get('name')}: skills that apply approvals must route them with approval_route (and only those)")
     for skill in sorted((ROOT/'skills').iterdir()):
         if not skill.is_dir(): continue
         text=(skill/'SKILL.md').read_text()
@@ -41,6 +45,7 @@ def check():
                 if skill.name in by_name and by_name[skill.name]['description']!=description: errors.append(f'{skill.name}: description differs from workflow catalogue')
             except ValueError: errors.append(f'{skill.name}: invalid description string')
         if len(text.splitlines())>500 or '[TODO' in text: errors.append(f'{skill.name}: unfinished or oversized instructions')
+        if skill.name in by_name and text.count('\nAgency policy: ')!=1 or (skill.name in by_name and policy_line(by_name[skill.name]) not in text): errors.append(f'{skill.name}: Agency policy line missing or stale; run npm run sync')
         for tool in by_name.get(skill.name,{}).get('tools',[]):
             if tool not in text: errors.append(f'{skill.name}: catalogue tool {tool} not explained in SKILL.md')
         for source,target in MIRRORS.items():
@@ -65,8 +70,11 @@ def check():
     if uncovered: errors.append('Skills without behavior scenarios: '+', '.join(uncovered))
     for path in ROOT.rglob('*.json'):
         if '.git' not in path.parts and 'node_modules' not in path.parts: json.loads(path.read_text())
-    for required in ('README.md','README.es.md','LICENSE','AGENTS.md','docs/workflow.md','docs/architecture.md','docs/erp-reference/e2e-circuit.md','tools/mcp_server.py','scripts/demo.py','.claude-plugin/marketplace.json','.claude-plugin/plugin.json','gemini-extension.json','GEMINI.md','scripts/build_release.py'):
+    for required in ('README.md','README.es.md','LICENSE','AGENTS.md','docs/workflow.md','docs/architecture.md','docs/erp-reference/e2e-circuit.md','tools/mcp_server.py','scripts/demo.py','.claude-plugin/marketplace.json','.claude-plugin/plugin.json','gemini-extension.json','GEMINI.md','scripts/build_release.py','AGENCY.md','docs/agency-policy.md','tools/agency_policy.py'):
         if not (ROOT/required).is_file(): errors.append('Missing '+required)
+    _policy,policy_errors,_warnings=agency_policy.check_file(ROOT/'AGENCY.md')
+    errors+=[f'AGENCY.md: {e}' for e in policy_errors]
+    if set(agency_policy.PROFILES)!=set(json.loads((ROOT/'integrations/profiles.json').read_text())): errors.append('agency_policy.PROFILES differs from integrations/profiles.json')
     versions={json.loads((ROOT/f).read_text())['version'] for f in ('package.json','.claude-plugin/plugin.json','gemini-extension.json')}
     if len(versions)!=1: errors.append('package.json, plugin.json and gemini-extension.json versions differ')
     if errors: print('\n'.join(errors),file=sys.stderr);return 1

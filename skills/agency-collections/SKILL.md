@@ -9,6 +9,8 @@ This stage follows issued and authorized sales documents from `agency-client-bil
 
 Read [control-contract.md](references/control-contract.md) first and apply it. Circuit map: [e2e-circuit.md](references/erp/e2e-circuit.md). Domain rules: [receivables.md](references/erp/receivables.md) (§2.18–2.22 processes P-17 to P-21, §4.5 receipt lifecycle, §5 rules 16, 18–24, 30, §6 receipt entries, §9 unpaid and delay reports, §10.3–10.4). `AR-Rn` = receivables §5 rule n.
 
+Agency policy: apply `currencies`, `approvals`, `commercial`, `collections` from the agency's `AGENCY.md` ([agency-policy.md](references/agency-policy.md)) and cite its `policy_version`. Route approvers with `approval_route`. Without a valid AGENCY.md these values are *confirm locally*; it never relaxes the control contract.
+
 ## Use when
 - "Apply this transfer to invoices 123 and 140", "registrar cobranza", "recibo de cobro", "aplicar retenciones".
 - Capturing customer withholding certificates (`Retenciones de Clientes`) suffered at collection.
